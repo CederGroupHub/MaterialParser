@@ -60,7 +60,7 @@ class MaterialParser:
 
         return str(new_value)
 
-    def get_sym_dict(self, f, factor):
+    def __get_sym_dict(self, f, factor):
         sym_dict = collections.defaultdict(str)
         r = "([A-Z]{1}[a-z]{0,1})\s*([-*\.\da-z"+''.join(self.__greek_letters)+"\+/]*)"
 
@@ -109,7 +109,7 @@ class MaterialParser:
 
             init_formula = init_formula.replace(m.group(0), '')
 
-        unit_sym_dict = self.get_sym_dict(init_formula, init_factor)
+        unit_sym_dict = self.__get_sym_dict(init_formula, init_factor)
         for el, amt in unit_sym_dict.items():
             if len(curr_dict[el]) == 0:
                 curr_dict[el] = amt
@@ -118,7 +118,7 @@ class MaterialParser:
 
         return curr_dict
 
-    def parse_formula(self, init_formula):
+    def __parse_formula(self, init_formula):
 
         formula_dict = collections.defaultdict(str)
 
@@ -190,7 +190,7 @@ class MaterialParser:
                 elements_variables['M'] = re.split(',', m.group(1))
                 formula = formula.replace('(' + m.group(1) + ')' + m.group(2), 'M' + m.group(2), 1)
 
-        composition = self.parse_formula(formula)
+        composition = self.__parse_formula(formula)
 
         # looking for variables in elements and stoichiometry
         for el, amt in composition.items():
@@ -233,7 +233,7 @@ class MaterialParser:
 
         return True
 
-    def get_mixture(self, material_name):
+    def __get_mixture(self, material_name):
 
         mixture = {}
         material_name = self.__check_parentheses(material_name)
@@ -292,7 +292,7 @@ class MaterialParser:
 
         material_name = re.sub('[∙⋅](.*)', '', material_name)
 
-        chemical_structure['mixture'] = self.get_mixture(material_name)
+        chemical_structure['mixture'] = self.__get_mixture(material_name)
 
         chemical_structure['formula'] = ''.join(chemical_structure['mixture'].keys())
         if chemical_structure['formula'] == '':
