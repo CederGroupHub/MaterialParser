@@ -6,20 +6,20 @@ Simple parser which allows for:
  * finding chemical names corresponding to abbreviations in text,
  * finding values of stoichiometric and elements parameters
  
-Installation:
+### Installation:
 ```
 git clone https://github.com/CederGroupHub/MaterialParser.git
 cd MaterialParser
 pip install .
 ```
 
-Initilization:
+### Initilization:
 ```
 from material_parser import MaterialParser
 mp = MaterialParser()
 ```
 
-Functions:
+### Functions:
 
  * get_structure_by_formula(chemical_formula)
 
