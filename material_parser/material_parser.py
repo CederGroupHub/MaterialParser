@@ -32,7 +32,7 @@ class MaterialParser:
                                      'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
                                      'Fl', 'Lv']
         self.__list_of_trash_words = ['bulk', 'coated', 'rare', 'earth', 'ceramics', 'undoped']
-        self.__greek_letters = ['α','δ', 'χ']
+        self.__greek_letters = [chr(i) for i in range(945,970)]
 
         self.__tp = TextPreprocessor('')
 
@@ -210,19 +210,18 @@ class MaterialParser:
             composition=composition,
             fraction_vars=stoichiometry_variables,
             elements_vars=elements_variables,
-            targets=[]
         )
 
         return formula_structure
 
     def __empty_structure(self):
         return dict(
-            formula_='',
+            composition={},
+            mixture={},
+            fraction_vars={},
+            elements_vars={},
             formula='',
-            composition=collections.defaultdict(str),
-            stoichiometry_vars=collections.defaultdict(str),
-            elements_vars=collections.defaultdict(str),
-            targets=[]
+            chemical_name=''
         )
 
     def __is_correct_composition(self, formula, chem_compos):
@@ -287,8 +286,15 @@ class MaterialParser:
             fraction_vars={},
             elements_vars={},
             formula='',
-            chemical_name=''
+            chemical_name='',
+            phase = ''
         )
+
+        phase = ''
+        if material_name[0].islower():
+            for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-(.*)', material_name):
+                phase = m.group(1)
+                material_name = m.group(2)
 
         material_name = re.sub('[∙⋅](.*)', '', material_name)
 
@@ -345,6 +351,8 @@ class MaterialParser:
 
         chemical_structure['name'] = material_name
 
+        chemical_structure['phase'] = phase
+
         # finally, check if there are variables in mixture
         for part  in chemical_structure['mixture'].values():
             for var in re.findall('[a-z'+''.join(self.__greek_letters)+']', part['fraction']):
@@ -373,19 +381,20 @@ class MaterialParser:
                 interval = [string[0].strip(' '), string[1].strip(' ')]
 
             if len(interval) > 0:
-                start = float(interval[0])
-                end = float(interval[1])
-                if incr != None:
-                    values = [round(start + i * incr, 4) for i in range(round((end - start) / incr))]
-                    values.append(interval[1])
-
-                if count != None:
-                    incr = (end - start) / count
-                    values = [round(start + i * incr, 4) for i in range(count)]
-                    values.append(interval[1])
-
-                if incr == None and count == None:
-                    values = [default_value]
+                values = [round(float(interval[0]), 4), round(float(interval[1]), 4)]
+                # start = float(interval[0])
+                # end = float(interval[1])
+                # if incr != None:
+                #     values = [round(start + i * incr, 4) for i in range(round((end - start) / incr))]
+                #     values.append(interval[1])
+                #
+                # if count != None:
+                #     incr = (end - start) / count
+                #     values = [round(start + i * incr, 4) for i in range(count)]
+                #     values.append(interval[1])
+                #
+                # if incr == None and count == None:
+                #     values = [default_value]
 
         """
         given list
