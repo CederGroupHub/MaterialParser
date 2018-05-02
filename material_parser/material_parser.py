@@ -199,6 +199,15 @@ class MaterialParser:
             for var in re.findall('[a-z'+''.join(self.__greek_letters)+']', amt):
                 stoichiometry_variables[var] = []
 
+        if 'R' in elements_variables and 'E' in elements_variables:
+            elements_variables['RE'] = []
+            del elements_variables['E']
+            del elements_variables['R']
+
+            composition['RE'] = composition['E']
+            del composition['R']
+            del composition['E']
+
         # print("Check sum:")
         # to_calc = ''.join([composition[el] + '+' for el in composition])
         # to_calc = "(" + to_calc.rstrip('+- ') + ")"
@@ -227,7 +236,7 @@ class MaterialParser:
     def __is_correct_composition(self, formula, chem_compos):
         if chem_compos == {}:
             return False
-        if any(el not in formula + 'M' or amt == '' for el, amt in chem_compos.items()):
+        if any(el not in formula + 'M' + 'Ln' or amt == '' for el, amt in chem_compos.items()):
             return False
 
         return True
@@ -319,7 +328,7 @@ class MaterialParser:
 
         # if material name is not proper formula look for it in DB (pubchem, ICSD)
         if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
-            # print('Looking in pubchem ' + material_name)
+            #print('Looking in pubchem ' + material_name)
             chemical_structure['composition'] = collections.defaultdict(str)
             # chemical_structure['stoichiometry_vars'] = collections.defaultdict(str)
             chemical_structure['elements_vars'] = collections.defaultdict(str)
@@ -337,7 +346,7 @@ class MaterialParser:
         # if still cannot find composition look word by word <- this is a quick fix due to wrong tokenization,
         # will be removed probably
         if chemical_structure['composition'] == {}:
-            # print('Looking part by part ' + material_name)
+            #print('Looking part by part ' + material_name)
             for word in material_name.split(' '):
                 try:
                     t_struct = self.get_structure_by_formula(word)
@@ -352,6 +361,7 @@ class MaterialParser:
         chemical_structure['name'] = material_name
 
         chemical_structure['phase'] = phase
+
 
         # finally, check if there are variables in mixture
         for part  in chemical_structure['mixture'].values():
