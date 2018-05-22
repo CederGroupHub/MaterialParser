@@ -9,6 +9,7 @@ setup(name='MaterialParser',
       install_requires=[
           'sympy',
           'pubchempy',
-          'chemdataextractor==1.3.0'
+          'chemdataextractor==1.3.0',
+          'regex',
       ],
       zip_safe=False)

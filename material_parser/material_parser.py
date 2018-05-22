@@ -19,7 +19,6 @@ __email__ = "0lgagkononova@gmail.com"
 # Check if stoichiometry in () sums to 1.0 or integer
 # Correct () pairs
 
-
 class MaterialParser:
     def __init__(self):
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
@@ -35,6 +34,12 @@ class MaterialParser:
         self.__greek_letters = [chr(i) for i in range(945,970)]
 
         self.__tp = TextPreprocessor('')
+
+        self.__filename = '/home/olga/PycharmProjects/CederGroup_IMaSynProject/MaterialParser/material_parser/'
+
+        self.__chemical_names = self.__build_names_dictionary()
+
+
 
     ###################################################################################################################
     ### Methods to build chemical structure
@@ -305,7 +310,7 @@ class MaterialParser:
                 phase = m.group(1)
                 material_name = m.group(2)
 
-        material_name = re.sub('[∙⋅](.*)', '', material_name)
+        material_name = re.sub('['+chr(183)+'](.*)', '', material_name)
 
         chemical_structure['mixture'] = self.__get_mixture(material_name)
 
@@ -321,42 +326,63 @@ class MaterialParser:
             #print('Something went wrong!' + material_name)
             # return self.__empty_structure()
 
-        chemical_structure['composition'] = t_struct['composition']
-        chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-        chemical_structure['elements_vars'] = t_struct['elements_vars']
+        if t_struct['composition'] != {}:
+            chemical_structure['composition'] = t_struct['composition']
+            chemical_structure['fraction_vars'] = t_struct['fraction_vars']
+            chemical_structure['elements_vars'] = t_struct['elements_vars']
+
         # TODO: merge fraction variables
 
         # if material name is not proper formula look for it in DB (pubchem, ICSD)
         if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
-            #print('Looking in pubchem ' + material_name)
-            chemical_structure['composition'] = collections.defaultdict(str)
-            # chemical_structure['stoichiometry_vars'] = collections.defaultdict(str)
-            chemical_structure['elements_vars'] = collections.defaultdict(str)
-
-            pcp_compounds = pcp.get_compounds(material_name, 'name')
-            if len(pcp_compounds) > 0:
+            if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
+                formula = self.__chemical_names[material_name.lower()]
+                formula = re.sub('[' + chr(183) + '](.*)', '', formula)
+                chemical_structure['elements_vars'] = collections.defaultdict(str)
+                chemical_structure['fraction_vars'] = collections.defaultdict(str)
                 try:
-                    t_struct = self.get_structure_by_formula(pcp_compounds[0].molecular_formula)
-                    chemical_structure['composition'] = t_struct['composition']
-                    chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-                    chemical_structure['elements_vars'] = t_struct['elements_vars']
+                    t_struct = self.get_structure_by_formula(formula)
                 except:
                     chemical_structure['composition'] = collections.defaultdict(str)
+                    chemical_structure['formula'] = ''
 
-        # if still cannot find composition look word by word <- this is a quick fix due to wrong tokenization,
-        # will be removed probably
-        if chemical_structure['composition'] == {}:
-            #print('Looking part by part ' + material_name)
-            for word in material_name.split(' '):
-                try:
-                    t_struct = self.get_structure_by_formula(word)
-                except:
-                    t_struct = self.__empty_structure()
-                    #print('Something went wrong!' + material_name)
-                if self.__is_correct_composition(word, t_struct['composition']):
+                if t_struct['composition'] != {}:
                     chemical_structure['composition'] = t_struct['composition']
-                    chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-                    chemical_structure['elements_vars'] = t_struct['elements_vars']
+                    chemical_structure['formula'] = formula
+
+        # if material name is not proper formula look for it in DB (pubchem, ICSD)
+        # if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
+        #     #print('Looking in pubchem ' + material_name)
+        #     chemical_structure['composition'] = collections.defaultdict(str)
+        #     # chemical_structure['stoichiometry_vars'] = collections.defaultdict(str)
+        #     chemical_structure['elements_vars'] = collections.defaultdict(str)
+        #     chemical_structure['fraction_vars'] = collections.defaultdict(str)
+        #
+        #     pcp_compounds = pcp.get_compounds(material_name, 'name')
+        #     if len(pcp_compounds) > 0:
+        #         try:
+        #             t_struct = self.get_structure_by_formula(pcp_compounds[0].molecular_formula)
+        #             chemical_structure['composition'] = t_struct['composition']
+        #             chemical_structure['formula'] = t_struct['formula']
+        #         except:
+        #             chemical_structure['composition'] = collections.defaultdict(str)
+        #             chemical_structure['formula'] = ''
+        #
+        # # if still cannot find composition look word by word <- this is a quick fix due to wrong tokenization,
+        # # will be removed probably
+        # if chemical_structure['composition'] == {}:
+        #     #print('Looking part by part ' + material_name)
+        #     for word in material_name.split(' '):
+        #         try:
+        #             t_struct = self.get_structure_by_formula(word)
+        #         except:
+        #             t_struct = self.__empty_structure()
+        #             #print('Something went wrong!' + material_name)
+        #         if self.__is_correct_composition(word, t_struct['composition']):
+        #             chemical_structure['composition'] = t_struct['composition']
+        #             chemical_structure['fraction_vars'] = t_struct['fraction_vars']
+        #             chemical_structure['elements_vars'] = t_struct['elements_vars']
+        #             chemical_structure['formula'] = t_struct['formula']
 
         chemical_structure['name'] = material_name
 
@@ -416,25 +442,30 @@ class MaterialParser:
 
     def get_stoichiometric_values(self, var, sentence):
         values = []
+        mode = ''
         # equal to exact values
         if len(values) == 0:
             values = self.__get_values(re.findall(var + '\s*=\s*([0-9\.\,/and\s]+)[\s\)\]\,]', sentence), mode='values')
+            mode = 'values'
         # equal to range
         if len(values) == 0:
             values = self.__get_values(re.findall(var + '\s*=\s*([0-9-–\.\s]+)[\s\)\]\,m\%]', sentence), mode='range',
                                        count=5)
+            mode = 'range'
         # within range
         if len(values) == 0:
             values = self.__get_values(
                 re.findall('([0-9\.\s]*)\s*[<≤⩽]{0,1}\s*' + var + '\s*[<≤⩽>]{1}\s*([0-9.\s]+)[\s\)\]\.\,]', sentence),
                 mode='range', count=5)
+            mode = 'range'
 
         # from ... to ...
         if len(values) == 0:
             values = self.__get_values(
                 re.findall(var + '[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)', sentence), mode='range', count=5)
+            mode = 'range'
 
-        return values
+        return values, mode
 
     def get_elements_values(self, var, sentence):
         values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z,\s]+)', sentence)
@@ -444,76 +475,6 @@ class MaterialParser:
 
         return values
 
-    # def replace_stoichiometry(self, string, variable, amount):
-    #     new_string = '0'
-    #     if len(re.findall('([0-9]*[a-z]*)' + variable, string)) != 0:
-    #         if re.findall('([0-9]*[a-z]*)' + variable, string)[0] != '':
-    #             new_string = string.replace(variable, '*' + str(amount))
-    #     else:
-    #         new_string = string.replace(variable, str(amount))
-    #
-    #     return new_string
-    #
-    # def substitute_elements(self, structure):
-    #     output = []
-    #     for elem, values in structure['elements_vars'].items():
-    #         # print('For element', elem, values)
-    #         for v in values:
-    #             target = dict(structure['composition'])
-    #             target[v] = target[elem]
-    #             del target[elem]
-    #             output.append(dict(
-    #                 formula_=structure['formula_'],
-    #                 formula=structure['formula'],
-    #                 composition=dict(target),
-    #                 stoichiometry_vars=structure['stoichiometry_vars'],
-    #                 elements_vars=structure['elements_vars'],
-    #                 targets=structure['targets']
-    #             ))
-    #
-    #     return output
-    #
-    # def substitute_stoichiometry(self, structure):
-    #     output = []
-    #     for var, amounts in structure['stoichiometry_vars'].items():
-    #         for amt in amounts:
-    #             target_var = dict(structure['composition'])
-    #             for el in target_var:
-    #                 target_var[el] = eval(self.replace_stoichiometry(target_var[el], var, amt))
-    #             output.append(target_var)
-    #
-    #     return output
-    #
-    # def test_parsing(self, material_name, sentence):
-    #     formula_structure = self.get_structure_by_formula(material_name)
-    #
-    #     # find stoichiometric variables in text
-    #     for var in list(formula_structure['stoichiometry_vars'].keys()):
-    #         if len(formula_structure['stoichiometry_vars'][var]) == 0:
-    #             formula_structure['stoichiometry_vars'][var] = self.get_stoichiometric_values(var, sentence)
-    #
-    #     # find element variables
-    #     for var in list(formula_structure['elements_vars'].keys()):
-    #         if len(formula_structure['elements_vars'][var]) == 0:
-    #             formula_structure['elements_vars'][var] = self.get_elements_values(var, sentence)
-    #
-    #     # substitute
-    #     targets = self.substitute_elements(formula_structure)
-    #
-    #     if len(targets) == 0:
-    #         targets.append(dict(
-    #             formula_=formula_structure['formula_'],
-    #             formula=formula_structure['formula'],
-    #             composition=formula_structure['composition'],
-    #             stoichiometry_vars=formula_structure['stoichiometry_vars'],
-    #             elements_vars=formula_structure['elements_vars'],
-    #             targets=formula_structure['targets']
-    #         ))
-    #
-    #     for target in targets:
-    #         formula_structure['targets'].extend(dict(t) for t in self.substitute_stoichiometry(target))
-    #
-    #     return formula_structure
 
     ###################################################################################################################
     ### Methods to resolve abbreviations
@@ -581,35 +542,193 @@ class MaterialParser:
         new_material_name = material_name
         dopants = []
 
-        s = re.split('doped with', new_material_name)
-        new_material_name = s[0].strip(' -+')
-        if len(s) > 1:
-            dopants.append(s[1].strip())
+        #additions = ['doped', 'stabilized', 'activated','coated', 'modified']
+
+        for r in ['coated', 'activated', 'modified', 'stabilized', 'doped']:
+            parts = [w for w in re.split('r'+' with', new_material_name) if w != '']
+            if len(parts) > 1:
+                new_material_name = parts[0].strip(' -+')
+                dopants.append(parts[1].strip())
+
 
         # checking for doped element prefix
         new_material_name = new_material_name.replace('codoped', 'doped')
         dopant = ''
-        r = "(.*)\s*[-]*\s*doped\s*"
-        # r = "(\w*)-doped\s*"
-        for m in re.finditer(r, new_material_name):
-            dopant = m.group(1).strip(' -')
-            new_material_name = new_material_name.replace(m.group(0), '')
+        # r = "(.*)\s*[-]*\s*doped\s*"
+        # # r = "(\w*)-doped\s*"
+        # for m in re.finditer(r, new_material_name):
+        #     dopant = m.group(1).strip(' -')
+        #     new_material_name = new_material_name.replace(m.group(0), '')
+
+        for r in ['coated', 'activated', 'modified', 'stabilized', 'doped']:
+            parts = [w for w in re.split('(.*)[-\s]{1}' + r + ' (.*)', new_material_name) if w != '']
+            if len(parts) > 1:
+                new_material_name = parts.pop()
+                dopants.extend(p for p in parts)
+
 
         if dopant != '':
             dopants.append(dopant)
 
-        s = re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[mol]{3}\.{0,1}\%{0,1}', new_material_name) + \
-            re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[wt]{2}\.{0,1}\%{0,1}', new_material_name)
-        s = sorted(list(set(s) - set([new_material_name])), key=lambda x: len(x), reverse=True)
+        if any(w in new_material_name for w in ['mol', 'wt']):
 
-        if len(s) > 0:
-            new_material_name = s[0].strip(' -+')
-            dopants.extend(d.strip() for d in s[1:] if d != '')
+            parts = re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[mol]{3}\.{0,1}\%{0,1}', new_material_name) + \
+                re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[wt]{2}\.{0,1}\%{0,1}', new_material_name)
+            parts = sorted(list(set(parts) - set([new_material_name])), key=lambda x: len(x), reverse=True)
+
+
+        if len(parts) > 1:
+            new_material_name = parts[0].strip(' -+')
+            dopants.extend(d.strip() for d in parts[1:] if d != '')
 
         # checking for dopants in formula
         parts = sorted(new_material_name.split(':'), key=lambda x: len(x), reverse=True)
-        new_material_name = parts[0]
         if len(parts) > 1:
+            new_material_name = parts[0]
             dopants.append(parts[1])
 
         return dopants, new_material_name
+
+    ###################################################################################################################
+    ### Methods to call dictionary of inorganic compounds
+    ###################################################################################################################
+
+    def get_compounds_dictionary(self):
+        names_dict = {}
+
+        for line in open(self.__filename+'inorganic_compounds_dictionary'):
+            name, formula = line.strip().split(' – ')
+            name = name[0].lower() + name[1:]
+            names_dict[name] = formula
+
+        for line in open(self.__filename+'pub_chem_dictionary'):
+            name, formula = line.strip().split(' – ')
+            name = name[0].lower() + name[1:]
+            names_dict[name] = formula
+
+        formulas_dict = {formula: [] for formula in names_dict.values()}
+        for name, formula in names_dict.items():
+            formulas_dict[formula].append(name)
+
+        return names_dict, formulas_dict
+
+    def __build_names_dictionary(self):
+
+        names_dict, formulas_dict = self.get_compounds_dictionary()
+        chemical_names = {}
+        for name in names_dict.keys():
+            chemical_names[name] = names_dict[name]
+            chemical_names[re.sub('(\s*\([IV,]+\))', '', name)] = names_dict[name]
+
+
+        return chemical_names
+
+    def clean_up_material_name(self, material_name):
+
+        """
+        this is a fix of incorrect tokenization of chemical names
+        tested on specific sample of papers from 20K solid-state paragraphs
+        use at your own risk
+        :param material_name: string
+        :return: string
+        """
+
+        updated_name = ''
+        remove_list = ['SOFCs', 'LT-SOFCs', 'IT-SOFCs', '(IT-SOFCs']
+
+        # this is mostly for precursors
+        for c in ['\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
+                  '\(A.G', '\(Fuchen', '\(Furuuchi', '(AR)']:
+            material_name = re.split(c, material_name)[0]
+        material_name = material_name.rstrip('(-')
+
+        # unifying hydrates representation
+        dots = [8901, 8729, 65381, 120, 42, 215, 8226]
+        if 'H2O' in material_name:
+            for c in dots:
+                material_name = material_name.replace(chr(c), chr(183))
+
+        # symbols from phase... need to move it to phase section
+        for c in ['″', '′', 'and']:
+            material_name = material_name.replace(c, '')
+
+        # leftovers from references
+        for c in re.findall('\[[0-9]+\]', material_name):
+            material_name = material_name.replace(c, '')
+
+        # can be used to remove unresolved stoichiometry symbol at the end of the formula
+        #     if material_name != '':
+        #         if material_name[-1] == 'δ' and len(re.findall('δ', material_name)) == 1:
+        #             material_name = material_name[0:-1]
+        #             material_name = material_name.rstrip('- ')
+
+        # getting rid of trash words
+        material_name = material_name.replace('ceramics', '')
+        material_name = material_name.replace('ceramic', '')
+        material_name = material_name.replace('layered', '')
+
+        material_name = material_name.strip(' ')
+
+        # standartize aluminium name
+        material_name = material_name.replace('aluminum', 'aluminium')
+        material_name = material_name.replace('Aluminum', 'Aluminium')
+
+        if material_name in remove_list or material_name == '':
+            return ''
+
+        # make single from plurals
+        if material_name != '':
+            if material_name[-2:] not in ['As', 'Cs', 'Os', 'Es', 'Hs', 'Ds']:
+                material_name = material_name.rstrip('s')
+
+        # removing valency - that's bad thing actually...
+        material_name = re.sub('(\s*\([IV,]+\))', '', material_name)
+
+        material_name = material_name.strip(' ')
+
+        # checking if the name in form of "chemical name [formula]"
+        if material_name[0].islower() and material_name[0] != 'x':
+            parts = [s for s in re.split('([a-z\-\s]+)\s*\[(.*)\]', material_name) if s != '']
+            if len(parts) == 2:
+                return parts.pop()
+
+        # trying to split correctly name, irrelevant words and formula
+        parts_1 = [w for w in re.split('\s', material_name) if len(w) > 2]
+        parts_2 = [w for w in re.findall('[a-z]+', material_name) if len(w) > 2]
+
+        if len(parts_1) > 1:
+            if len(parts_1) == len(parts_2):
+                if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
+                    updated_name = self.__chemical_names[material_name.lower()]
+
+                    # pubchem can be used to look for chemical names
+                    #             else:
+                    #                 comp = pcp.get_compounds(material_name.lower(), 'name')
+                    #                 if len(comp) > 0:
+                    #                     pub_chem_found.append((material_name.lower(), comp[0].molecular_formula))
+
+            if len(parts_1) - len(parts_2) == 1:
+                try:
+                    t_struct = self.get_structure_by_formula(parts_1[-1])
+                    if t_struct['composition'] != {}:
+                        updated_name = parts_1[-1]
+                except:
+                    updated_name = ''
+
+            if len(updated_name) == 0:
+                updated_name = material_name
+
+
+        else:
+            updated_name = material_name
+
+        # in case there are parenthensis around
+        if len(re.findall('[\[\]]', updated_name)) == 2 and updated_name[0] == '[' and updated_name[-1] == ']':
+            updated_name = updated_name.replace('[', '')
+            updated_name = updated_name.replace(']', '')
+
+        return updated_name
+
+
+
+
