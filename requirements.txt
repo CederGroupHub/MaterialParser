@@ -1,0 +1,6 @@
+regex==2017.4.5
+pubchempy
+sympy
+spacy
+chemdataextractor
+-e git+https://github.com/CederGroupHub/synthesis-project.git#egg=synthesis-project-ceder

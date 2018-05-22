@@ -1,0 +1,11 @@
+src/
+build/
+dist/
+*.egg-info/
+
+# mac specific #
+.DS_store
+
+# pycharm files #
+*/.idea/**
+.idea/

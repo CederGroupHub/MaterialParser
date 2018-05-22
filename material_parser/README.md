@@ -10,12 +10,13 @@ Simple parser which allows for:
 ```
 git clone https://github.com/CederGroupHub/MaterialParser.git
 cd MaterialParser
-pip install .
+pip install -r requirements.txt
+python setup.py install
 ```
 
 ### Initilization:
 ```
-from material_parser import MaterialParser
+from material_parser.parser import MaterialParser
 mp = MaterialParser()
 ```
 

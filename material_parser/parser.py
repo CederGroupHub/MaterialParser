@@ -1,4 +1,5 @@
 import re
+import os
 import regex
 import collections
 import sympy
@@ -13,11 +14,11 @@ __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgagkononova@gmail.com"
 
-
 # TODO
 # Rising errors
 # Check if stoichiometry in () sums to 1.0 or integer
 # Correct () pairs
+
 
 class MaterialParser:
     def __init__(self):
@@ -35,7 +36,7 @@ class MaterialParser:
 
         self.__tp = TextPreprocessor('')
 
-        self.__filename = '/home/olga/PycharmProjects/CederGroup_IMaSynProject/MaterialParser/material_parser/'
+        self.__filename = os.path.dirname(os.path.realpath(__file__))
 
         self.__chemical_names = self.__build_names_dictionary()
 
@@ -596,12 +597,12 @@ class MaterialParser:
     def get_compounds_dictionary(self):
         names_dict = {}
 
-        for line in open(self.__filename+'inorganic_compounds_dictionary'):
+        for line in open(os.path.join(self.__filename, 'rsc/inorganic_compounds_dictionary')):
             name, formula = line.strip().split(' – ')
             name = name[0].lower() + name[1:]
             names_dict[name] = formula
 
-        for line in open(self.__filename+'pub_chem_dictionary'):
+        for line in open(os.path.join(self.__filename, 'rsc/pub_chem_dictionary')):
             name, formula = line.strip().split(' – ')
             name = name[0].lower() + name[1:]
             names_dict[name] = formula
