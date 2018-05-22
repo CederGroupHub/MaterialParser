@@ -9,3 +9,6 @@ dist/
 # pycharm files #
 */.idea/**
 .idea/
+.idea/**
+
+*/__pycache__/
