@@ -3,4 +3,4 @@ pubchempy
 sympy
 spacy
 chemdataextractor
--e git+https://github.com/CederGroupHub/synthesis-project.git#egg=synthesis-project-ceder
+TextCleanUp
