@@ -501,10 +501,6 @@ class RecipeExtractor:
 
         if any(el in p_composition for el in t_composition.keys() if el != 'O') \
                 and len(p_composition) <= len(t_composition) and p_composition != t_composition:
-            print('-----')
-            print(p_composition)
-            print (t_composition)
-            print ('-----')
             return True
 
         return False
