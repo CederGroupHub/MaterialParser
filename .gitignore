@@ -12,3 +12,7 @@ dist/
 .idea/**
 
 */__pycache__/
+
+material_parser/pub_chem_dictionary_x
+material_parser/run.py
+recipe_extractor/run.py
