@@ -301,7 +301,7 @@ class RecipeExtractor:
                             except:
                                 obtained = False
 
-                            composition[el] = stoich
+                            composition[el] = str(stoich)
 
                         if obtained:
                             new_compositions.append(dict(
@@ -320,7 +320,7 @@ class RecipeExtractor:
                         except:
                             obtained = False
 
-                        composition[el] = stoich
+                        composition[el] = str(stoich)
 
                     if obtained and all(composition != c['compos'] for c in new_compositions):
                         new_compositions.append(dict(
@@ -337,7 +337,7 @@ class RecipeExtractor:
                 formula = ''
                 zero_vals = []
                 for el, val in composition['compos'].items():
-                    if val != 0.0:
+                    if float(val) != 0.0:
                         formula = formula + el + self.__cast_stoichiometry(val)
                     else:
                         zero_vals.append(el)
@@ -357,10 +357,10 @@ class RecipeExtractor:
                         composition = composition['compos'],
                         substitutions = composition['subs'],
                         precursors = precursors,
-                        # precursors_compositions = {prec: precursors_struct[prec] for prec in precursors},
-                        # doi = doi,
-                        # syn_paragraph = syn_paragraph,
-                        # abstract = abstract
+                        precursors_compositions = {prec: precursors_struct[prec] for prec in precursors},
+                        doi = doi,
+                        syn_paragraph = syn_paragraph,
+                        abstract = abstract
                     ))
 
 
@@ -500,13 +500,18 @@ class RecipeExtractor:
     def __is_precursor(self, p_composition, t_composition):
 
         if any(el in p_composition for el in t_composition.keys() if el != 'O') \
-                and len(p_composition) <= len(t_composition) and p_composition.keys() != t_composition.keys():
+                and len(p_composition) <= len(t_composition) and p_composition != t_composition:
+            print('-----')
+            print(p_composition)
+            print (t_composition)
+            print ('-----')
             return True
 
         return False
 
     def __cast_stoichiometry(self, value):
 
+        value = float(value)
         if value == 1.0:
             return ''
         if value * 1000 % 1000 == 0.0:
