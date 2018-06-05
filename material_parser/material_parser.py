@@ -56,7 +56,7 @@ class MaterialParser:
         for i, m in enumerate(re.finditer('(?<=[0-9])([a-z' + ''.join(self.__greek_letters) + '])', new_value)):
             new_value = new_value[0:m.start(1) + i] + '*' + new_value[m.start(1) + i:]
         new_value = sympy.simplify(sympy.sympify(new_value, _clash))
-        if new_value.is_Float:
+        if new_value.is_Number:
             new_value = round(float(new_value), 3)
 
         return str(new_value)
