@@ -522,16 +522,16 @@ class MaterialParser:
 
         return abbreviations_dict
 
-    def substitute_abbreviations(self, materials_list, abbreviations_dict):
-
-        updated_list = []
-        for name in materials_list:
-            if name in abbreviations_dict:
-                updated_list.append(abbreviations_dict[name])
-            else:
-                updated_list.append(name)
-
-        return list(set(m for m in updated_list if m != ''))
+    # def substitute_abbreviations(self, materials_list, abbreviations_dict):
+    #
+    #     updated_list = []
+    #     for name in materials_list:
+    #         if name in abbreviations_dict:
+    #             updated_list.append(abbreviations_dict[name])
+    #         else:
+    #             updated_list.append(name)
+    #
+    #     return list(set(m for m in updated_list if m != ''))
 
     ###################################################################################################################
     ### Methods to separate doped part
