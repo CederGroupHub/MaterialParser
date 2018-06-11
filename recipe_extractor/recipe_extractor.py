@@ -358,9 +358,9 @@ class RecipeExtractor:
                         substitutions = composition['subs'],
                         precursors = precursors,
                         precursors_compositions = {prec: precursors_struct[prec] for prec in precursors},
-                        doi = doi,
-                        syn_paragraph = syn_paragraph,
-                        abstract = abstract
+                        #doi = doi,
+                        #syn_paragraph = syn_paragraph,
+                        #abstract = abstract
                     ))
 
 
@@ -396,7 +396,7 @@ class RecipeExtractor:
 
             if len(parts_1) - len(parts_2) == 1:
                 try:
-                    t_struct = self.get_structure_by_formula(parts_1[-1])
+                    t_struct = self.__mp.get_structure_by_formula(parts_1[-1])
                     if t_struct['composition'] != {}:
                         updated_name = parts_1[-1]
                 except:
