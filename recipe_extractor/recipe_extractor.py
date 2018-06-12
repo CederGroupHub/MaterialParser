@@ -358,9 +358,9 @@ class RecipeExtractor:
                         substitutions = composition['subs'],
                         precursors = precursors,
                         precursors_compositions = {prec: precursors_struct[prec] for prec in precursors},
-                        #doi = doi,
-                        #syn_paragraph = syn_paragraph,
-                        #abstract = abstract
+                        doi = doi,
+                        syn_paragraph = syn_paragraph,
+                        abstract = abstract
                     ))
 
 
