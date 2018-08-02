@@ -436,7 +436,7 @@ class MaterialParser:
         mode = ''
         # equal to exact values
         if len(values) == 0:
-            values = self.__get_values(re.findall(var + '\s*=\s*([0-9\.\,/and\s-]+)[\s\)\]\,]', sentence), mode='values')
+            values = self.__get_values(re.findall(var + '\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]', sentence), mode='values')
             mode = 'values'
         # equal to range
         if len(values) == 0:

@@ -4,6 +4,8 @@ from material_parser.material_parser import MaterialParser
 from chemdataextractor.doc import Paragraph
 import re
 import itertools
+import sympy
+from sympy.abc import _clash
 
 from pprint import pprint
 
@@ -15,6 +17,7 @@ class RecipeExtractor:
         self.__chemical_names = self.__mp.build_names_dictionary()
         self.__verbose = verbose
         self.__pubchem = pubchem_lookup
+        self.__greek_letters = [chr(i) for i in range(945, 970)]
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -26,10 +29,15 @@ class RecipeExtractor:
                                      'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
                                      'Fl', 'Lv']
 
-    def get_materials(self, doi, abstract_, syn_paragraph_, split_mixture=False):
+    def get_materials(self, doi, abstract_, syn_paragraph_, split_mixture=True):
 
         structures_list = []
         data_structure = {}
+
+        fails = {'targets': [],
+                 'precursors':[],
+                 'abstracts': [],
+                 'obtained_reactions': False}
 
         # Text preprocessing: cleaning up paragraphs
         abstract = self.__tp.cleanup_text(abstract_)
@@ -124,7 +132,7 @@ class RecipeExtractor:
         #clean up materials names
         abstract_materials_upd_3 = []
         for material in abstract_materials_upd_2:
-            new_name = self.__tp.clean_up_material_name(material)
+            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
             new_name = self.split_material_name(new_name)
             if new_name != '':
                 abstract_materials_upd_3.append(new_name)
@@ -134,7 +142,7 @@ class RecipeExtractor:
 
         targets_upd_3 = []
         for material in targets_upd_2:
-            new_name = self.__tp.clean_up_material_name(material)
+            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
             new_name = self.split_material_name(new_name)
             if new_name != '':
                 targets_upd_3.append(new_name)
@@ -144,7 +152,7 @@ class RecipeExtractor:
 
         precursors_upd_3 = []
         for material in precursors:
-            new_name = self.__tp.clean_up_material_name(material)
+            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
             new_name = self.split_material_name(new_name)
             if new_name != '':
                 precursors_upd_3.append(new_name)
@@ -169,7 +177,8 @@ class RecipeExtractor:
                 t_struct = self.__mp.get_chemical_structure(material)
             except:
                 t_struct['composition'] = {}
-                print ('Failed: '+material)
+                #print ('Failed: '+material)
+                fails['abstracts'].append(material)
             if len(t_struct['composition']) > 1:
                 abstract_materials_struct[material] = t_struct
 
@@ -180,7 +189,8 @@ class RecipeExtractor:
                 t_struct = self.__mp.get_chemical_structure(material)
             except:
                 t_struct['composition'] = {}
-                print ('Failed: ' + material)
+                #print ('Failed: ' + material)
+                fails['targets'].append(material)
             if len(t_struct['composition']) > 1:
                 targets_struct[material] = t_struct
 
@@ -191,7 +201,8 @@ class RecipeExtractor:
                 t_struct = self.__mp.get_chemical_structure(material)
             except:
                 t_struct['composition'] = {}
-                print ('Failed: ' + material)
+                #print ('Failed: ' + material)
+                fails['precursors'].append(material)
             if len(t_struct['composition']) > 1 and \
                     all(el in self.__list_of_elements_1+self.__list_of_elements_2 for el in t_struct['composition']):
                 precursors_struct[material] = t_struct
@@ -238,10 +249,12 @@ class RecipeExtractor:
         for name, struct in targets_struct.items():
             struct['is_abbreviation_like'] = self.is_abbreviation_like(struct)
 
+        if targets_struct == {}:
+            targets_struct = abstract_materials_struct
         final_targets = {name: struct for name, struct in targets_struct.items() if struct['composition'] != {} and not struct['is_abbreviation_like']}
-        for name, struct in abstract_materials_struct.items():
-            if not name in final_targets and struct['composition'] != {} and not struct['is_abbreviation_like']:
-                final_targets[name] = struct
+        # for name, struct in abstract_materials_struct.items():
+        #     if not name in final_targets and struct['composition'] != {} and not struct['is_abbreviation_like']: #compare with precursors as well
+        #         final_targets[name] = struct
 
         #split mixtures if required
         if split_mixture:
@@ -346,7 +359,7 @@ class RecipeExtractor:
 
                 precursors = []
                 for prec, p_struct in precursors_struct.items():
-                    if self.__is_precursor(p_struct['composition'], composition['compos']):
+                    if self.__is_precursor(p_struct['composition'], composition['compos']) and prec not in final_targets:
                         precursors.append(prec)
 
                 if len(precursors) > 1:
@@ -357,14 +370,19 @@ class RecipeExtractor:
                         composition = composition['compos'],
                         substitutions = composition['subs'],
                         precursors = precursors,
-                        precursors_compositions = {prec: precursors_struct[prec] for prec in precursors},
+                        precursors_compositions = {prec: precursors_struct[prec]['composition'] for prec in precursors},
+                        #all_precursors = precursors_struct,
                         doi = doi,
                         syn_paragraph = syn_paragraph,
                         abstract = abstract
                     ))
 
+        fails['targets'] = list(set(fails['targets']))
+        fails['precursors'] = list(set(fails['precursors']))
+        fails['abstracts'] = list(set(fails['abstracts']))
+        fails['obtained_reactions'] = len(structures_list)>0
 
-        return structures_list
+        return structures_list, fails
 
     def split_material_name(self, material_name, pubchem_lookup=False):
 
@@ -464,11 +482,11 @@ class RecipeExtractor:
                 all(len(values) == 0 for values in structure['elements_vars'].values()):
             return True
 
-        if all(el[0].isupper() and len(el) == 1 and value == '1' for el, value in structure['composition'].items()) \
+        if all(el[0].isupper() and len(el) == 1 and value in ['1', '1.0'] for el, value in structure['composition'].items()) \
                 and structure['composition'] != {}:
             return True
 
-        if any(all(el[0].isupper() and len(el) == 1 and v == '1' for el, v in compos['composition'].items()) for compos in structure['mixture'].values()):
+        if any(all(el[0].isupper() and len(el) == 1 and v in ['1', '1.0'] for el, v in compos['composition'].items()) for compos in structure['mixture'].values()):
             return True
 
         return False
@@ -499,8 +517,19 @@ class RecipeExtractor:
 
     def __is_precursor(self, p_composition, t_composition):
 
-        if any(el in p_composition for el in t_composition.keys() if el != 'O') \
-                and len(p_composition) <= len(t_composition) and p_composition != t_composition:
+        for l in self.__greek_letters:
+            _clash[l] = sympy.Symbol(l)
+
+        if any( not sympy.sympify(v, _clash).is_Number for v in p_composition.values()):
+            return False
+
+        precursors_Me = [p for p in p_composition.keys() if p not in ['0', 'H', 'N', 'C', 'P']]
+        target_Me = [p for p in t_composition.keys() if p not in ['0', 'H', 'N', 'C', 'P']]
+        if len(precursors_Me) > len(target_Me):
+            return False
+
+        if any(el in p_composition for el in t_composition.keys() if el not in ['O', 'H', 'C']) \
+                and t_composition.keys() != p_composition.keys():
             return True
 
         return False
