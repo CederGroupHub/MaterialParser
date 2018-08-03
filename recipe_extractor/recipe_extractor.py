@@ -1,13 +1,15 @@
-from text_cleanup import TextCleanUp
-from materials_entity_recognition import MatRecognition
-from material_parser.material_parser import MaterialParser
-from chemdataextractor.doc import Paragraph
-import re
 import itertools
-import sympy
-from sympy.abc import _clash
-
+import re
 from pprint import pprint
+
+import sympy
+from chemdataextractor.doc import Paragraph
+from materials_entity_recognition import MatRecognition
+from sympy.abc import _clash
+from text_cleanup import TextCleanUp
+
+from material_parser.material_parser import MaterialParser
+
 
 class RecipeExtractor:
     def __init__(self, verbose=False, pubchem_lookup=False):
