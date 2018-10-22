@@ -11,6 +11,7 @@ from pprint import pprint
 
 class RecipeExtractor:
     def __init__(self, verbose=False, pubchem_lookup=False):
+        print('RecipeExtractor version 2.0')
         self.__tp = TextCleanUp()
         self.__mer = MatRecognition()
         self.__mp = MaterialParser(pubchem_lookup=pubchem_lookup)
@@ -29,15 +30,13 @@ class RecipeExtractor:
                                      'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
                                      'Fl', 'Lv']
 
-    def get_materials(self, doi, abstract_, syn_paragraph_, split_mixture=True):
+    def get_materials(self, doi, abstract_, syn_paragraph_):
 
-        structures_list = []
         data_structure = {}
 
         fails = {'targets': [],
                  'precursors':[],
-                 'abstracts': [],
-                 'obtained_reactions': False}
+                 'abstracts': []}
 
         # Text preprocessing: cleaning up paragraphs
         abstract = self.__tp.cleanup_text(abstract_)
@@ -61,28 +60,20 @@ class RecipeExtractor:
             print('\ttargets from synthesis paragaph', targets)
             print('\tprecursors from synthesis paragaph', precursors)
 
-        #get dopants
-        abstract_dopants = []
-        abstract_materials_upd_1 = []
-        for material in abstract_materials:
-            dopants, new_name = self.__mp.get_dopants(material)
+        # Getting dopants
+        def extracting_dopants(materials_list=[]):
+            materials_list_upd = []
+            dopants_list = []
+            for material in materials_list:
+                dopants, new_name = self.__mp.get_dopants(material)
 
-            abstract_dopants.extend(d for d in dopants)
-            abstract_materials_upd_1.append(new_name)
+                dopants_list.extend(d for d in dopants)
+                materials_list_upd.append(new_name)
 
-        abstract_dopants = set(abstract_dopants)
-        abstract_materials_upd_1 = list(set(abstract_materials_upd_1))
+            return list(set(materials_list_upd)), set(dopants_list)
 
-        targets_dopants = []
-        targets_upd_1 = []
-        for material in targets:
-            dopants, new_name = self.__mp.get_dopants(material)
-
-            targets_dopants.extend(d for d in dopants)
-            targets_upd_1.append(new_name)
-
-        targets_dopants = set(targets_dopants)
-        targets_upd_1 = list(set(targets_upd_1))
+        abstract_materials_upd_1, abstract_dopants = extracting_dopants(abstract_materials)
+        targets_upd_1, targets_dopants = extracting_dopants(targets)
 
         data_structure['dopants'] = list(targets_dopants.union(abstract_dopants))
 
@@ -92,7 +83,7 @@ class RecipeExtractor:
             print('\tabstract materials', abstract_materials_upd_1)
             print('\ttargets', targets_upd_1)
 
-        #build abbreviations dictionary
+        # Building abbreviations dictionary
         materials = list(set(abstract_materials_upd_1+targets_upd_1))
         abbreviations = self.__mp.build_abbreviations_dict(materials, [abstract, syn_paragraph])
 
@@ -100,65 +91,46 @@ class RecipeExtractor:
             print('Abbreviations dictionary:')
             pprint(abbreviations)
 
-        abstract_materials_upd_2 = []
-        for material in abstract_materials_upd_1:
-            if material in abbreviations:
-                abstract_materials_upd_2.append(abbreviations[material])
-            else:
-                abstract_materials_upd_2.append(material)
+        def substitute_abbreviations(materials_list = [], abbreviations_dict = {}):
+            materials_list_upd = []
+            for material in materials_list:
+                if material in abbreviations_dict:
+                    materials_list_upd.append(abbreviations_dict[material])
+                else:
+                    materials_list_upd.append(material)
 
-        targets_upd_2 = []
-        for material in targets_upd_1:
-            if material in abbreviations:
-                targets_upd_2.append(abbreviations[material])
-            else:
-                targets_upd_2.append(material)
+            return list(set(materials_list_upd))
 
-        abstract_materials_upd_2 = list(set(abstract_materials_upd_2))
-        targets_upd_2 = list(set(targets_upd_2))
+        abstract_materials_upd_2 = substitute_abbreviations(abstract_materials_upd_1, abbreviations)
+        targets_upd_2 = substitute_abbreviations(targets_upd_1, abbreviations)
 
         if self.__verbose:
             print('After abbreviations substitution:')
             print('\tabstract:', abstract_materials_upd_2)
             print('\ttargets:', targets_upd_2)
 
-        #checking valency
+        # Checking for valency
         valency = ''
         for material in abstract_materials_upd_2+targets_upd_2:
             v = re.findall('\s*\(([IV,]+)\)', material)
             if len(v) > 0:
                 valency = v[0]
 
-        #clean up materials names
-        abstract_materials_upd_3 = []
-        for material in abstract_materials_upd_2:
-            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
-            new_name = self.split_material_name(new_name)
-            if new_name != '':
-                abstract_materials_upd_3.append(new_name)
-            else:
-                abstract_materials_upd_3.append(material)
-        abstract_materials_upd_3 = list(set(abstract_materials_upd_3))
+        # Cleaning up materials names
+        def cleaning_names(materials_list=[]):
+            materials_list_upd = []
+            for material in materials_list:
+                new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
+                new_name = self.split_material_name(new_name)
+                if new_name != '':
+                    materials_list_upd.append(new_name)
+                else:
+                    materials_list_upd.append(material)
+            return list(set(materials_list_upd))
 
-        targets_upd_3 = []
-        for material in targets_upd_2:
-            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
-            new_name = self.split_material_name(new_name)
-            if new_name != '':
-                targets_upd_3.append(new_name)
-            else:
-                targets_upd_3.append(material)
-        targets_upd_3 = list(set(targets_upd_3))
-
-        precursors_upd_3 = []
-        for material in precursors:
-            new_name = self.__tp.clean_up_material_name(material, remove_offstoichiometry=True)
-            new_name = self.split_material_name(new_name)
-            if new_name != '':
-                precursors_upd_3.append(new_name)
-            else:
-                precursors_upd_3.append(material)
-        precursors_upd_3 = list(set(precursors_upd_3))
+        abstract_materials_upd_3 = cleaning_names(abstract_materials_upd_2)
+        targets_upd_3 = cleaning_names(targets_upd_2)
+        precursors_upd_3 = cleaning_names(precursors)
 
         if self.__verbose:
             print("After cleaning up names:")
@@ -166,73 +138,49 @@ class RecipeExtractor:
             print ('\ttargets:', targets_upd_3)
             print ('\tprecursors:', precursors_upd_3)
 
-        # parse chemical formulas of materials
+        # Parsing chemical formulas of materials
         if self.__verbose:
             print('Extracting chemical composition:')
 
-        abstract_materials_struct = {}
-        for material in abstract_materials_upd_3:
-            t_struct = {}
-            try:
-                t_struct = self.__mp.get_chemical_structure(material)
-            except:
-                t_struct['composition'] = {}
-                #print ('Failed: '+material)
-                fails['abstracts'].append(material)
-            if len(t_struct['composition']) > 1:
-                abstract_materials_struct[material] = t_struct
+        def chemical_structure(materials_list = []):
+            materials_structures = {}
+            fails = []
+            for material in materials_list:
+                t_struct = {}
+                try:
+                    t_struct = self.__mp.get_chemical_structure(material)
+                except:
+                    t_struct['composition'] = {}
+                    # print ('Failed: '+material)
+                    fails.append(material)
+                if len(t_struct['composition']) > 1:
+                    materials_structures[material] = t_struct
+            return materials_structures, fails
 
-        targets_struct = {}
-        for material in targets_upd_3:
-            t_struct = {}
-            try:
-                t_struct = self.__mp.get_chemical_structure(material)
-            except:
-                t_struct['composition'] = {}
-                #print ('Failed: ' + material)
-                fails['targets'].append(material)
-            if len(t_struct['composition']) > 1:
-                targets_struct[material] = t_struct
+        abstract_materials_struct, fails['abstracts'] = chemical_structure(abstract_materials_upd_3)
+        targets_struct, fails['targets'] = chemical_structure(targets_upd_3)
+        precursors_struct, fails['precursors'] = chemical_structure(precursors_upd_3)
 
-        precursors_struct = {}
-        for material in precursors_upd_3:
-            t_struct = {}
-            try:
-                t_struct = self.__mp.get_chemical_structure(material)
-            except:
-                t_struct['composition'] = {}
-                #print ('Failed: ' + material)
-                fails['precursors'].append(material)
-            if len(t_struct['composition']) > 1 and \
-                    all(el in self.__list_of_elements_1+self.__list_of_elements_2 for el in t_struct['composition']):
-                precursors_struct[material] = t_struct
+        # Resolving variables
+        def resolve_valiables(materials_structures = {}):
 
-        #resolving fraction variables
-        for material, struct in abstract_materials_struct.items():
-            for var in struct['fraction_vars']:
-                values, mode = self.get_values(var, syn_paragraph)
-                if len(values) == 0:
-                    values, mode = self.get_values(var, abstract)
-                struct['fraction_vars'][var] = values
+            for material, struct in materials_structures.items():
+                for var in struct['fraction_vars']:
+                    values, mode = self.get_values(var, syn_paragraph)
+                    if len(values) == 0:
+                        values, mode = self.get_values(var, abstract)
+                    struct['fraction_vars'][var] = values
 
-            for var in struct['elements_vars']:
-                values, mode = self.get_values(var, syn_paragraph, elements=True)
-                if len(values) == 0:
-                    values, mode = self.get_values(var, abstract, elements=True)
-                struct['elements_vars'][var] = values
+                for var in struct['elements_vars']:
+                    values, mode = self.get_values(var, syn_paragraph, elements=True)
+                    if len(values) == 0:
+                        values, mode = self.get_values(var, abstract, elements=True)
+                    struct['elements_vars'][var] = values
 
-        for material, struct in targets_struct.items():
-            for var in struct['fraction_vars']:
-                values, mode = self.get_values(var, syn_paragraph)
-                if len(values) == 0:
-                    values, mode = self.get_values(var, abstract)
-                struct['fraction_vars'][var] = values
+            return materials_structures
 
-            for var in struct['elements_vars']:
-                values, mode = self.get_values(var, syn_paragraph, elements=True)
-                if len(values) == 0:
-                    values, mode = self.get_values(var, abstract, elements=True)
-                struct['elements_vars'][var] = values
+        abstract_materials_struct = resolve_valiables(abstract_materials_struct)
+        targets_struct = resolve_valiables(targets_struct)
 
         if self.__verbose:
             print('Materials structures from abstract:')
@@ -256,33 +204,55 @@ class RecipeExtractor:
         #     if not name in final_targets and struct['composition'] != {} and not struct['is_abbreviation_like']: #compare with precursors as well
         #         final_targets[name] = struct
 
-        #split mixtures if required
+        mer_materials = dict(
+            abstract=abstract_materials,
+            targets=targets,
+            precursors=precursors
+        )
+
+        data_structure['targets'] = final_targets
+        data_structure['precursors'] = precursors_struct
+        data_structure['abstract_materials'] = abstract_materials_struct
+
+        return data_structure, mer_materials, fails
+
+
+    ###############################################################################################################
+
+    def get_reactions(self, targets_list, precursors_list, split_mixture=True):
+
+        all_targets = targets_list.copy()
+        all_precursors = precursors_list.copy()
+        reactions_list = []
+
+        # Splitting mixtures if required
         if split_mixture:
-            mixtures = [material for material, struct in final_targets.items() if struct['mixture'] != {}]
+            mixtures = [material for material, struct in all_targets.items() if struct['mixture'] != {}]
             for material in mixtures:
-                struct = final_targets[material]
+                struct = all_targets[material]
                 for compound, compos in struct['mixture'].items():
-                    if compound not in final_targets:
-                        final_targets[compound] = {}
-                        final_targets[compound]['chemical_name'] = ''
-                        final_targets[compound]['composition'] = compos['composition']
-                        final_targets[compound]['elements_vars'] = struct['elements_vars']
+                    if compound not in all_targets:
+                        all_targets[compound] = {}
+                        all_targets[compound]['chemical_name'] = ''
+                        all_targets[compound]['composition'] = compos['composition']
+                        all_targets[compound]['elements_vars'] = struct['elements_vars']
                         if any(not v.replace('.', '').replace('/','').isdigit() for v in compos['composition'].values()):
-                            final_targets[compound]['fraction_vars'] = struct['fraction_vars']
+                            all_targets[compound]['fraction_vars'] = struct['fraction_vars']
                         else:
-                            final_targets[compound]['fraction_vars'] = {}
-                        final_targets[compound]['formula'] = compound
-                        final_targets[compound]['name'] = struct['name']
-                        final_targets[compound]['phase'] = struct['phase']
-                        final_targets[compound]['mixture'] = {}
-                del final_targets[material]
+                            all_targets[compound]['fraction_vars'] = {}
+                        all_targets[compound]['formula'] = compound
+                        all_targets[compound]['name'] = struct['name']
+                        all_targets[compound]['phase'] = struct['phase']
+                        all_targets[compound]['mixture'] = {}
+                del all_targets[material]
 
 
         if self.__verbose:
-            print('List of final targets:')
-            pprint(final_targets)
+            print('List of targets after splitting:')
+            pprint(all_targets)
 
-        for material, struct in final_targets.items():
+        # Obtaining values to substitute
+        for material, struct in all_targets.items():
             elements_array = self.get_substitutions_array(struct['elements_vars'])
 
             new_materials_array = []
@@ -358,31 +328,26 @@ class RecipeExtractor:
                     del composition['compos'][el]
 
                 precursors = []
-                for prec, p_struct in precursors_struct.items():
-                    if self.__is_precursor(p_struct['composition'], composition['compos']) and prec not in final_targets:
+                for prec, p_struct in all_precursors.items():
+                    if self.__is_precursor(p_struct['composition'], composition['compos']) and prec not in all_targets:
                         precursors.append(prec)
 
                 if len(precursors) > 1:
-                    structures_list.append(dict(
-                        init_name = material,
+                    reactions_list.append(dict(
                         formula = formula,
                         correct_formula = correct_formula,
-                        composition = composition['compos'],
-                        substitutions = composition['subs'],
+                        #composition = composition['compos'],
+                        #substitutions = composition['subs'],
                         precursors = precursors,
-                        precursors_compositions = {prec: precursors_struct[prec]['composition'] for prec in precursors},
+                        #precursors_compositions = {prec: precursors_struct[prec]['composition'] for prec in precursors},
                         #all_precursors = precursors_struct,
-                        doi = doi,
-                        syn_paragraph = syn_paragraph,
-                        abstract = abstract
+                        #doi = doi,
+                        #syn_paragraph = syn_paragraph,
+                        #abstract = abstract
                     ))
 
-        fails['targets'] = list(set(fails['targets']))
-        fails['precursors'] = list(set(fails['precursors']))
-        fails['abstracts'] = list(set(fails['abstracts']))
-        fails['obtained_reactions'] = len(structures_list)>0
 
-        return structures_list, fails
+        return reactions_list
 
     def split_material_name(self, material_name, pubchem_lookup=False):
 
