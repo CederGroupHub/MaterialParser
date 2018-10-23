@@ -1,10 +1,22 @@
-# Material Parser
+# Material Parser and Reactions Extractor
 
-Simple parser which allows for:
+The package consists of two modules:
 
- * extraction of composition from chemical formulas, 
- * finding chemical names corresponding to abbreviations in text,
- * finding values of stoichiometric and elements parameters
+ * Material parser
+ * Recipe extractor
+
+Material parser allows for:
+
+ * extracting composition from chemical formulas,
+ * constructing dictionary of materials abbreviations,
+ * finding values of stoichiometric and elements parameters,
+ * splitting mixtures into compounds
+
+Recipe extractor:
+
+ * obtain materials and their compositions using Material parser
+ * substitutes values of stoichiometric and elements parameters
+ * constructs non-ballanced reactions from list of available targets and precursors
  
 ### Installation:
 ```
@@ -16,11 +28,14 @@ python setup.py install
 
 ### Initilization:
 ```
-from material_parser.parser import MaterialParser
+from material_parser import MaterialParser
 mp = MaterialParser()
+
+from recipe_extractor import recipe_extractor
+rex = recipe_extractor.RecipeExtractor()
 ```
 
-### Functions:
+### Material parser methods:
 
  * get_structure_by_formula(chemical_formula)
 
@@ -69,5 +84,21 @@ mp = MaterialParser()
  * get_elements_values(variable, sentence)
  
     *Return:* list of elements for variable found in the sentence
- 
- 
+
+
+### Recipe extractor methods:
+
+ * get_materials(doi, abstract, paragraph)
+
+    *Return*: data structure, MER-found materials, failed materials
+    ```
+    {
+    targets: list of targets compoisitions,
+    precursors: list of precursors composition,
+    abstract_materials: list of composition of materials found in abstract
+    }
+    ```
+
+ * get_reactions(targets_list, precursors_list, split_mixture=True):
+
+     *Return*: list of reactions
