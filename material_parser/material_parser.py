@@ -1,4 +1,10 @@
 # coding=utf-8
+
+__author__ = "Olga Kononova"
+__maintainer__ = "Olga Kononova"
+__email__ = "0lgaGkononova@yandex.ru"
+__version__ = "1.0"
+
 import re
 import regex
 import collections
@@ -8,16 +14,14 @@ import pubchempy as pcp
 from chemdataextractor.doc import Paragraph
 import os
 
-__author__ = "Olga Kononova"
-__maintainer__ = "Olga Kononova"
-__email__ = "0lgaGkononova@yandex.ru"
-
 
 # TODO
 # Check if stoichiometry in () sums to 1.0 or integer
 
 class MaterialParser:
     def __init__(self, pubchem_lookup=False):
+        print('MaterialParser version 1.2')
+
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
                                      'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr',
@@ -32,6 +36,9 @@ class MaterialParser:
         self.__filename = os.path.dirname(os.path.realpath(__file__))
 
         self.__chemical_names = self.build_names_dictionary()
+
+        self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'w')
+        self.__pubchem_file.close()
 
         self.__pubchem = pubchem_lookup
         if pubchem_lookup:
@@ -300,6 +307,9 @@ class MaterialParser:
         :param material_name: string of material name
         :return: dictionary composition and stoichiometric variables
         """
+
+        self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'a')
+
         chemical_structure = dict(
             composition={},
             mixture={},
@@ -312,11 +322,19 @@ class MaterialParser:
 
         phase = ''
         if material_name[0].islower():
-            for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-(.*)', material_name):
-                phase = m.group(1)
-                material_name = m.group(2)
+            #print([(m.group(1), m.group(2)) for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', material_name)])
+            for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', material_name):
+                if m.group(2) != '':
+                    phase = m.group(1)
+                    material_name = m.group(2)
+                #print(m.group(1))
+                #print(m.group(2))
+
+        #print('Phase extraction: '+material_name)
 
         material_name = re.sub('[' + chr(183) + '](.*)', '', material_name)
+
+        #print('Symbol substitution: ' + material_name)
 
         chemical_structure['mixture'] = self.__get_mixture(material_name)
 
@@ -369,6 +387,12 @@ class MaterialParser:
             if len(pcp_compounds) > 0:
                 try:
                     t_struct = self.get_structure_by_formula(pcp_compounds[0].molecular_formula)
+                    # if len(t_struct['composition']) > 1:
+                    #     print('Found in Pubchem:')
+                    #     print(material_name)
+                    #     print(pcp_compounds[0].molecular_formula)
+                    self.__pubchem_file.write(str(material_name) + ' ' + str(pcp_compounds[0].molecular_formula)+'\n')
+                        #print (t_struct)
                 except:
                     t_struct = self.__empty_structure()
 
@@ -385,6 +409,8 @@ class MaterialParser:
         for part in chemical_structure['mixture'].values():
             for var in re.findall('[a-z' + ''.join(self.__greek_letters) + ']', part['fraction']):
                 chemical_structure['fraction_vars'][var] = []
+
+        self.__pubchem_file.close()
 
         return chemical_structure
 
@@ -455,6 +481,9 @@ class MaterialParser:
             values = self.__get_values(
                 re.findall(var + '[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)', sentence), mode='range', count=5)
             mode = 'range'
+        #
+        # if values == []:
+        #     values = [0.0]
 
         return values, mode
 
