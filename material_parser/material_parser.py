@@ -5,22 +5,21 @@ __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
 __version__ = "1.0"
 
-import re
-import regex
+import regex as re
 import collections
 import sympy
 from sympy.abc import _clash
 import pubchempy as pcp
-from chemdataextractor.doc import Paragraph
+#from chemdataextractor.doc import Paragraph
 import os
-
+import json
 
 # TODO
 # Check if stoichiometry in () sums to 1.0 or integer
 
 class MaterialParser:
     def __init__(self, pubchem_lookup=False):
-        print('MaterialParser version 1.2')
+        print('MaterialParser version 1.3')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -36,6 +35,15 @@ class MaterialParser:
         self.__filename = os.path.dirname(os.path.realpath(__file__))
 
         self.__chemical_names = self.build_names_dictionary()
+
+        self.__ions = json.loads(open(os.path.join(self.__filename, 'rsc/ions_dictionary.json')).read())
+        self.__anions = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name'], 'n_atoms': ion['n_atoms']} for ion in self.__ions['anions']}
+        self.__cations = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name']} for ion in self.__ions['cations']}
+
+        self.__prefixes2num = {'': 1, 'mono': 1, 'di': 2, 'tri': 3, 'tetra': 4, 'penta': 5, 'hexa': 6, 'hepta': 7,
+                                'octa': 8,  'nona': 9, 'deca': 10 }
+
+        self.__rome2num = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5, 'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10}
 
         self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'w')
         self.__pubchem_file.close()
@@ -248,7 +256,8 @@ class MaterialParser:
             elements_vars={},
             formula='',
             chemical_name='',
-            phase=''
+            phase='',
+            hydrate = ''
         )
 
     def __is_correct_composition(self, formula, chem_compos):
@@ -310,19 +319,15 @@ class MaterialParser:
 
         self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'a')
 
-        chemical_structure = dict(
-            composition={},
-            mixture={},
-            fraction_vars={},
-            elements_vars={},
-            formula='',
-            chemical_name='',
-            phase=''
-        )
+        chemical_structure = self.__empty_structure().copy()
 
+        # making sure the compound if not just ion
+        if material_name[-1] == '+':
+            return self.__empty_structure()
+
+        # is there any phase specified
         phase = ''
         if material_name[0].islower():
-            #print([(m.group(1), m.group(2)) for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', material_name)])
             for m in re.finditer('([a-z' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', material_name):
                 if m.group(2) != '':
                     phase = m.group(1)
@@ -332,10 +337,31 @@ class MaterialParser:
 
         #print('Phase extraction: '+material_name)
 
-        material_name = re.sub('[' + chr(183) + '](.*)', '', material_name)
+        #material_name = re.sub('[' + chr(183) + '](.*)', '', material_name)
+
+        # unifying hydrates names
+        if 'hydrate' in material_name:
+            for m in re.finditer('(.*) ([a-z]*)hydrate', material_name):
+                if m.group(1) != '':
+                    material_name = m.group(1)
+                    chemical_structure['hydrate'] = self.__prefixes2num[m.group(2)]
+
+        dots = [8901, 8729, 65381, 120, 42, 215, 8226]
+        if 'H2O' in material_name:
+            for c in dots:
+                material_name = material_name.replace(chr(c), chr(183))
+            for m in re.finditer('(.*)·([1-9]){0,1}H2O', material_name):
+                if m.group(1) != '':
+                    material_name = m.group(1)
+                    chemical_structure['hydrate'] = m.group(2)
+
+        # checking valency
+        valency = [v.strip('()') for v in re.findall('(\s*\([IV,]+\))', material_name)]
+        material_name = re.sub('(\s*\([IV,]+\))', '', material_name)
 
         #print('Symbol substitution: ' + material_name)
 
+        # splitting mixture into compounds
         chemical_structure['mixture'] = self.__get_mixture(material_name)
 
         if chemical_structure['mixture'] != {}:
@@ -343,13 +369,11 @@ class MaterialParser:
         else:
             chemical_structure['formula'] = material_name
 
-        # trying to extract chemical structure
+        # trying to extract chemical structure for entire mixture or initial materials name
         try:
             t_struct = self.get_structure_by_formula(chemical_structure['formula'])
         except:
-            t_struct = self.__empty_structure()
-            # print('Something went wrong!' + material_name)
-            # return self.__empty_structure()
+            t_struct = self.__empty_structure().copy()
 
         #if t_struct['composition'] != {}:
         chemical_structure['formula'] = t_struct['formula']
@@ -360,23 +384,38 @@ class MaterialParser:
         # TODO: merge fraction variables
 
         # if material name is not proper formula look for it in dictionary
-        if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
-            if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
-                formula = self.__chemical_names[material_name.lower()]
-                formula = re.sub('[' + chr(183) + '](.*)', '', formula)
-                chemical_structure['elements_vars'] = collections.defaultdict(str)
-                chemical_structure['fraction_vars'] = collections.defaultdict(str)
-                try:
-                    t_struct = self.get_structure_by_formula(formula)
-                except:
-                    t_struct = self.__empty_structure()
+        # if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
+        #     if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
+        #         formula = self.__chemical_names[material_name.lower()]
+        #         formula = re.sub('[' + chr(183) + '](.*)', '', formula)
+        #         chemical_structure['elements_vars'] = collections.defaultdict(str)
+        #         chemical_structure['fraction_vars'] = collections.defaultdict(str)
+        #         try:
+        #             t_struct = self.get_structure_by_formula(formula)
+        #         except:
+        #             t_struct = self.__empty_structure()
+        #
+        #         #if t_struct['composition'] != {}:
+        #         chemical_structure['composition'] = t_struct['composition']
+        #         chemical_structure['formula'] = t_struct['formula']
+        #         chemical_structure['fraction_vars'] = t_struct['fraction_vars']
+        #         chemical_structure['elements_vars'] = t_struct['elements_vars']
 
-                #if t_struct['composition'] != {}:
-                chemical_structure['composition'] = t_struct['composition']
-                chemical_structure['formula'] = t_struct['formula']
-                chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-                chemical_structure['elements_vars'] = t_struct['elements_vars']
+        # if material is not proper formula
+        # first, trying to reconstruct formula and composition by name
+        chem_terms = material_name.split(' ')
+        if  len(chem_terms) == 1 and chem_terms[0].lower() in self.__cations|self.__anions:
+            return self.__empty_structure()
 
+        formula = self.reconstruct_by_name(chem_terms, valency)
+        if formula != '':
+            t_struct = self.get_structure_by_formula(formula)
+            chemical_structure['formula'] = t_struct['formula']
+            chemical_structure['composition'] = t_struct['composition']
+            chemical_structure['fraction_vars'] = t_struct['fraction_vars']
+            chemical_structure['elements_vars'] = t_struct['elements_vars']
+
+        # second, trying PubChem
         if chemical_structure['composition'] == {} and self.__pubchem:
             chemical_structure['composition'] = collections.defaultdict(str)
             chemical_structure['elements_vars'] = collections.defaultdict(str)
@@ -386,22 +425,19 @@ class MaterialParser:
             pcp_compounds = pcp.get_compounds(material_name, 'name')
             if len(pcp_compounds) > 0:
                 try:
-                    t_struct = self.get_structure_by_formula(pcp_compounds[0].molecular_formula)
+                    formula = str(pcp_compounds[0].molecular_formula)
+                    t_struct = self.get_structure_by_formula(formula)
                     # if len(t_struct['composition']) > 1:
                     #     print('Found in Pubchem:')
                     #     print(material_name)
                     #     print(pcp_compounds[0].molecular_formula)
-                    self.__pubchem_file.write(str(material_name) + ' ' + str(pcp_compounds[0].molecular_formula)+'\n')
+                    self.__pubchem_file.write(str(material_name) + ' ' + formula+'\n')
                         #print (t_struct)
                 except:
-                    t_struct = self.__empty_structure()
+                    t_struct = self.__empty_structure().copy()
 
                 chemical_structure['composition'] = t_struct['composition']
                 chemical_structure['formula'] = t_struct['formula']
-                chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-                chemical_structure['elements_vars'] = t_struct['elements_vars']
-
-        chemical_structure['name'] = material_name
 
         chemical_structure['phase'] = phase
 
@@ -642,6 +678,124 @@ class MaterialParser:
 
         return chemical_names
 
+    def reconstruct_by_name(self, terms_list, name_valency_):
+
+        chem_name = ''.join(c+' ' for c in terms_list).strip(' ')
+
+        output_formula = ''
+
+        if len(terms_list) < 2:
+            return output_formula
+
+        anion = terms_list.pop().lower()
+        next_term = terms_list.pop().lower()
+        guess_valency = 0
+        name_valency = [self.__rome2num[v.upper()] for v in name_valency_]
+        if len(name_valency) > 1:
+            print ('WARNING! Found many valencies per chemical name '+ chem_name)
+            print (name_valency)
+
+        if 'hydrogen' in next_term:
+            anion = next_term + ' ' + anion
+        else:
+            terms_list = terms_list + [next_term]
+            for p in self.__prefixes2num.keys():
+                if anion.find(p) == 0 and p != '':
+                    guess_valency = self.__prefixes2num[p]
+                    anion = re.sub('^'+p, '', anion).strip('-')
+                    if anion == 'xide':
+                        anion = 'o'+anion
+
+        if anion in self.__anions:
+           anion_data = self.__anions[anion]
+        else:
+            return output_formula
+
+        if len(terms_list) != 1:
+            return output_formula
+
+        if terms_list[0] in self.__cations:
+            cation_data = self.__cations[terms_list[0]]
+        else:
+            return output_formula
+
+        true_valency = -1
+        formulas = []
+        for i, v_cation in enumerate(cation_data['valency']):
+            v_anion = abs(anion_data['valency'][0])
+
+            if v_cation in name_valency:
+                true_valency = i
+
+            cm = self.__lcm(v_cation, v_anion)
+            v_cation = cm // v_cation
+            v_anion = cm // v_anion
+
+            if v_anion == guess_valency and guess_valency != 0:
+                if true_valency not in [-1, i]:
+                    print ('WARNING! Valencies mismatch for chemical name ' + chem_name)
+                    print (name_valency, guess_valency)
+
+                true_valency = i
+
+            el_anion = anion_data['e_name']
+            if v_anion > 1 and anion_data['n_atoms'] > 1:
+                el_anion = '(' + el_anion + ')'
+
+            formulas.append(cation_data['e_name'] + self.__cast_stoichiometry(v_cation)
+                            + el_anion + self.__cast_stoichiometry(v_anion))
+
+        true_valency = true_valency * int(len(cation_data['valency']) > 1)
+
+        if true_valency == -1:
+            print ('WARNING! Ambiguous valency for chemical name '+ chem_name)
+            print ('Stoichiometry of compound will be undefined.')
+
+            output_formula = cation_data['e_name'] + self.__cast_stoichiometry(abs(anion_data['valency'][0])) \
+                             + el_anion + 'x'
+
+        else:
+            output_formula = formulas[true_valency]
+
+        return output_formula
+
+    def __valencies_combinations(self, v_list):
+        output = []
+        output_num = 1
+        for l in v_list:
+            output_num = output_num * len(l)
+        output_size = len(v_list)
+        for i, l in enumerate(v_list):
+            period = output_num // len(l)
+            output.append([el for i in range(period) for el in l])
+
+        output = np.reshape(output, (output_num, output_size))
+        return output
+
+    def __lcm(self, x, y):
+        """This function takes two
+        integers and returns the L.C.M."""
+
+        # choose the greater number
+        if x > y:
+            greater = x
+        else:
+            greater = y
+
+        found = False
+        while (not found):
+            if ((greater % x == 0) and (greater % y == 0)):
+                lcm = greater
+                found = True
+            greater += 1
+
+        return lcm
+
+    def __cast_stoichiometry(self, value):
+        if value == 1:
+            return ''
+
+        return str(value)
 
     ###################################################################################################################
     ### Misc
