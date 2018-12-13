@@ -1,6 +1,5 @@
 from synthesis_api_hub import api_method, Client
 from synthesis_api_hub.apiegg import APIEgg
-from synthesis_project_ceder.utils.environments import request_linear_algebra_single_threaded
 
 from recipe_extractor.recipe_extractor import RecipeExtractor
 
@@ -12,8 +11,6 @@ class RecipeExtractorWorker(APIEgg):
     version = '2018121300'
 
     def __init__(self):
-        request_linear_algebra_single_threaded()
-
         self.re = RecipeExtractor()
 
     @api_method
