@@ -14,7 +14,7 @@ class RecipeExtractorWorker(APIEgg):
         self.re = RecipeExtractor()
 
     @api_method
-    def infer_topics(self, documents):
+    def extract(self, documents):
         if not isinstance(documents, list):
             raise ValueError('documents must be a list')
 
@@ -29,11 +29,12 @@ class RecipeExtractorWorker(APIEgg):
         results = []
 
         for doc in documents:
-            structures_list, fails = self.re.get_materials(
+            data_structure, mer_materials, fails = self.re.get_materials(
                 doc['doi'], doc['abstract'], doc['syn_paragraph']
             )
             result = {
-                'structures': structures_list,
+                'structures': data_structure,
+                'mer_materials': mer_materials,
                 'failed': fails,
             }
 
