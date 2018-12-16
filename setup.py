@@ -13,6 +13,5 @@ setup(name='MaterialParser',
           'regex',
           'sympy',
           'text-cleanup',
-          'tornado',
       ],
       zip_safe=False)
