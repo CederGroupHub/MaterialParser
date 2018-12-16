@@ -14,30 +14,8 @@ class RecipeExtractorWorker(APIEgg):
         self.re = RecipeExtractor()
 
     @api_method
-    def extract(self, documents):
-        if not isinstance(documents, list):
-            raise ValueError('documents must be a list')
-
-        for x in documents:
-            if not isinstance(x, dict) \
-                    or 'syn_paragraph' not in x \
-                    or 'doi' not in x \
-                    or 'abstract' not in x:
-                raise ValueError('document must be a dict with keys '
-                                 '"syn_paragraph", "doi" and "abstract"')
-
-        results = []
-
-        for doc in documents:
-            data_structure, mer_materials, fails = self.re.get_materials(
-                doc['doi'], doc['abstract'], doc['syn_paragraph']
-            )
-            result = {
-                'structures': data_structure,
-                'mer_materials': mer_materials,
-                'failed': fails,
-            }
-
-            results.append(result)
-
-        return results, self.version
+    def extract(self, doi, abstract, syn_paragraph):
+        data_structure, mer_materials, fails = self.re.get_materials(
+            doi, abstract, syn_paragraph
+        )
+        return data_structure, mer_materials, fails
