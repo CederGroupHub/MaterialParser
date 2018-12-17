@@ -2,7 +2,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "2.0"
+__version__ = "3.0"
 
 import itertools
 import re
@@ -18,14 +18,17 @@ from material_parser.material_parser import MaterialParser
 from materials_entity_recognition import MatRecognition
 
 class RecipeExtractor:
-    def __init__(self, verbose=False, pubchem_lookup=False):
-        print('RecipeExtractor version 2.2')
+    def __init__(self, verbose=False, pubchem_lookup=False, parse_dependency=False):
+        print('RecipeExtractor version 3.3')
         #self.__tp = TextCleanUp()
-        self.__mer = MatRecognition()
+        if parse_dependency:
+            print ('Using dependency parse tree for MER.')
+        self.__mer = MatRecognition(parse_dependency=parse_dependency)
         self.__mp = MaterialParser(pubchem_lookup=pubchem_lookup)
-        self.__chemical_names = self.__mp.build_names_dictionary()
+        #self.__chemical_names = self.__mp.build_names_dictionary()
         self.__verbose = verbose
         self.__pubchem = pubchem_lookup
+
         self.__greek_letters = [chr(i) for i in range(945, 970)]
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
@@ -40,12 +43,6 @@ class RecipeExtractor:
 
     def get_materials(self, doi, abstract, syn_paragraph):
 
-        data_structure = {}
-
-        fails = {'targets': [],
-                 'precursors':[],
-                 'abstracts': []}
-
         # Text preprocessing: cleaning up paragraphs
         # abstract = self.__tp.cleanup_text(abstract_)
         # syn_paragraph = self.__tp.cleanup_text(syn_paragraph_)
@@ -58,15 +55,42 @@ class RecipeExtractor:
         abstract_all, abstract_precursors, abstract_targets, abstract_others = self.__mer.mat_recognize(abstract)
         syn_all, syn_precursors, syn_targets, syn_others = self.__mer.mat_recognize(syn_paragraph)
 
-        abstract_materials = list(set([m['text'] for m in abstract_all]))
-        targets = list(set([m['text'] for m in syn_targets]))
-        precursors = list(set([m['text'] for m in syn_precursors]))
+        abstract_materials = dict(
+            targets = abstract_targets,
+            precursors = abstract_precursors,
+            others = abstract_others
+        )
+
+        synthesis_materials = dict(
+            targets = syn_targets,
+            precursors = syn_precursors,
+            others = syn_others
+        )
+
+        return abstract_materials, synthesis_materials
+
+
+    def get_composition(self, doi, abstract, syn_paragraph, abstract_materials, synthesis_materials):
+
+        data_structure = {}
+
+        fails = {'targets': [],
+                 'precursors':[],
+                 'abstracts': [],
+                 'others': []}
+
+        abstract_materials = list(set([m for _ in abstract_materials.values() for m in _]))
+        #abstract_materials = list(set([m for m in abstract_materials['targets']]))
+        targets = list(set([m for m in synthesis_materials['targets']]))
+        precursors = list(set([m for m in synthesis_materials['precursors']]))
+        others = list(set([m for m in synthesis_materials['others'] if m not in precursors+targets]))
 
         if self.__verbose:
             print('MER found materials')
             print('\tfrom abstract:', abstract_materials)
             print('\ttargets from synthesis paragaph', targets)
             print('\tprecursors from synthesis paragaph', precursors)
+
 
         # Getting dopants
         def extracting_dopants(materials_list=[]):
@@ -82,6 +106,7 @@ class RecipeExtractor:
 
         abstract_materials_upd_1, abstract_dopants = extracting_dopants(abstract_materials)
         targets_upd_1, targets_dopants = extracting_dopants(targets)
+        others_upd_1, _ = extracting_dopants(others)
 
         data_structure['dopants'] = list(targets_dopants.union(abstract_dopants))
 
@@ -111,6 +136,7 @@ class RecipeExtractor:
 
         abstract_materials_upd_2 = substitute_abbreviations(abstract_materials_upd_1, abbreviations)
         targets_upd_2 = substitute_abbreviations(targets_upd_1, abbreviations)
+        others_upd_2 = substitute_abbreviations(others_upd_1, abbreviations)
 
         if self.__verbose:
             print('After abbreviations substitution:')
@@ -128,8 +154,8 @@ class RecipeExtractor:
         def cleaning_names(materials_list=[]):
             materials_list_upd = []
             for material in materials_list:
-                new_name = self.clean_up_material_name(material, remove_offstoichiometry=True)
-                new_name = self.split_material_name(new_name)
+                new_name = self.__mp.clean_up_material_name(material, remove_offstoichiometry=True)
+                new_name = self.__mp.split_material_name(new_name)
                 if new_name != '':
                     materials_list_upd.append(new_name)
                 else:
@@ -139,6 +165,7 @@ class RecipeExtractor:
         abstract_materials_upd_3 = cleaning_names(abstract_materials_upd_2)
         targets_upd_3 = cleaning_names(targets_upd_2)
         precursors_upd_3 = cleaning_names(precursors)
+        others_upd_3 = cleaning_names(others_upd_2)
 
         if self.__verbose:
             print("After cleaning up names:")
@@ -168,6 +195,7 @@ class RecipeExtractor:
         abstract_materials_struct, fails['abstracts'] = chemical_structure(abstract_materials_upd_3)
         targets_struct, fails['targets'] = chemical_structure(targets_upd_3)
         precursors_struct, fails['precursors'] = chemical_structure(precursors_upd_3)
+        others_struct, fails['others'] = chemical_structure(others_upd_3)
 
         # Resolving variables
         def resolve_valiables(materials_structures = {}):
@@ -223,12 +251,14 @@ class RecipeExtractor:
         mer_materials = dict(
             abstract=abstract_materials,
             targets=targets,
-            precursors=precursors
+            precursors=precursors,
+            others = others
         )
 
         data_structure['targets'] = final_targets
         data_structure['precursors'] = precursors_struct
         data_structure['abstract'] = abstract_materials_struct
+        data_structure['others'] = others_struct
 
         return data_structure, mer_materials, fails
 
@@ -405,54 +435,6 @@ class RecipeExtractor:
 
         return reactions_list
 
-    def split_material_name(self, material_name, pubchem_lookup=False):
-
-        """
-        this is a fix of incorrect tokenization of chemical names
-        do not rely much on it
-        tested on specific sample of papers from 20K solid-state paragraphs
-        use at your own risk
-        :param
-        material_name: string - initial material string
-        pubchem_lookup: boolean - if True chemical name will be searched in pubchem DB
-        :return: string
-        """
-
-        updated_name = ''
-        # trying to split correctly name, irrelevant words and formula
-        parts_1 = [w for w in re.split('\s', material_name) if len(w) > 2]
-        parts_2 = [w for w in re.findall('[a-z]+', material_name) if len(w) > 2]
-
-        if len(parts_1) > 1:
-            if len(parts_1) == len(parts_2):
-                if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
-                    updated_name = self.__chemical_names[material_name.lower()]
-                # pubchem can be used to look for chemical names
-                elif pubchem_lookup:
-                    comp = pcp.get_compounds(material_name.lower(), 'name')
-                    if len(comp) > 0:
-                        updated_name = comp[0].molecular_formula
-
-            if len(parts_1) - len(parts_2) == 1:
-                try:
-                    t_struct = self.__mp.get_structure_by_formula(parts_1[-1])
-                    if t_struct['composition'] != {}:
-                        updated_name = parts_1[-1]
-                except:
-                    updated_name = ''
-
-            if len(updated_name) == 0:
-                updated_name = material_name
-
-        else:
-            updated_name = material_name
-
-        # in case there are parenthensis around
-        if len(re.findall('[\[\]]', updated_name)) == 2 and updated_name[0] == '[' and updated_name[-1] == ']':
-            updated_name = updated_name.replace('[', '')
-            updated_name = updated_name.replace(']', '')
-
-        return updated_name
 
     def get_values(self,var, text, elements=False):
 
@@ -565,86 +547,4 @@ class RecipeExtractor:
 
         return str(value)
 
-    def clean_up_material_name(self, material_name, remove_offstoichiometry=False):
 
-        """
-        this is a fix of incorrect tokenization of chemical names
-        do not rely much on it
-        tested on specific sample of papers from 20K solid-state paragraphs
-        use at your own risk
-        :param
-        material_name: string - initial material string
-        remove_offstoichiometry: boolean - if True greek symbols next to O at the end of formula will be removed
-        :return: string
-        """
-
-        updated_name = ''
-        remove_list = ['SOFCs', 'LT-SOFCs', 'IT-SOFCs', '(IT-SOFCs']
-
-        # this is mostly for precursors
-        for c in ['\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
-                  '\(A.G', '\(Fuchen', '\(Furuuchi', '(AR)']:
-            material_name = re.split(c, material_name)[0]
-        material_name = material_name.rstrip('(-,.')
-
-        material_name = material_name.replace('(s)', '')
-
-        # removing single parenthesis
-        if material_name[0] == '(' and ')' not in material_name:
-            material_name = material_name[1:]
-
-        if material_name[-1] == ')' and '(' not in material_name:
-            material_name = material_name[:-1]
-
-        # unifying hydrates representation
-        dots = [8901, 8729, 65381, 120, 42, 215, 8226]
-        if 'H2O' in material_name:
-            for c in dots:
-                material_name = material_name.replace(chr(c), chr(183))
-
-        # symbols from phase... need to move it to phase section
-        for c in ['″', '′', 'and']:
-            material_name = material_name.replace(c, '')
-
-        # leftovers from references
-        for c in re.findall('\[[0-9]+\]', material_name):
-            material_name = material_name.replace(c, '')
-
-        # can be used to remove unresolved stoichiometry symbol at the end of the formula
-        if remove_offstoichiometry and material_name != '':
-            if material_name[-1] == 'δ' and len(re.findall('δ', material_name)) == 1:
-                material_name = material_name[0:-1]
-                material_name = material_name.rstrip('- ')
-
-        # getting rid of trash words
-        material_name = material_name.replace('ceramics', '')
-        material_name = material_name.replace('ceramic', '')
-        trash_words = ['bulk', 'coated', 'rare', 'earth', 'undoped', 'layered']
-        for w in trash_words:
-            material_name = material_name.replace(w, '')
-
-        material_name = material_name.strip(' ')
-
-        # standartize aluminium name
-        material_name = material_name.replace('aluminum', 'aluminium')
-        material_name = material_name.replace('Aluminum', 'Aluminium')
-
-        if material_name in remove_list or material_name == '':
-            return ''
-
-        # make single from plurals
-        if material_name != '':
-            if material_name[-2:] not in ['As', 'Cs', 'Os', 'Es', 'Hs', 'Ds']:
-                material_name = material_name.rstrip('s')
-
-        # removing valency - that's not a good thing actually...
-        # assuming that we have read this value on earlier stages
-        material_name = re.sub('(\s*\([IV,]+\))', '', material_name)
-
-        # checking if the name in form of "chemical name [formula]"
-        if material_name[0].islower() and material_name[0] != 'x':
-            parts = [s for s in re.split('([a-z\-\s]+)\s*\[(.*)\]', material_name) if s != '']
-            if len(parts) == 2:
-                return parts.pop()
-
-        return material_name
