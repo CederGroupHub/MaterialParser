@@ -7,30 +7,38 @@ import random
 import json
 
 from pprint import pprint
+from text_cleanup import TextCleanUp
 
 #solid_state_papers = json.loads(open('/home/olga/Desktop/SynthesisProject/MaterialsDB/v2/solid_state_papers.json').read())
 #solid_state_data = [dict(doi=p['doi'], abstract='', synthesis=''.join([s+' ' for s in p['text']])) for p in solid_state_papers
 
-rex = recipe_extractor.RecipeExtractor(verbose=False, pubchem_lookup=True)
+rex = recipe_extractor.RecipeExtractor(verbose=True, pubchem_lookup=True)
+tp = TextCleanUp()
 
-solid_state_data = json.loads(open('/home/olga/Desktop/SynthesisProject/Materials&Operations/v1/failed_parser.json').read())
+solid_state_data = json.loads(open('/home/olga/Desktop/SynthesisProject/Materials&Operations/v1/all_fixed_paragraphs_MIT+new_abstracts+operations.json').read())
 
-doi = '10.1149/1.1350658'
+doi = '10.1149/1.1342168'
 
 
 updated = []
-for data in solid_state_data:
-    if data['doi'] == doi:
-        text = ''.join(sent+' ' for sent in data['text'])
-        extracted_materials, mer, failed_materials = rex.get_materials(data['doi'], '', text)
+idx = 10
+for data in solid_state_data[idx:idx+1]:
+    #if data['doi'] == doi:
+    abstract = tp.cleanup_text(data['abstract'])
+    for chunk in data['synthesis_chunks'][0:1]:
+        text = ''.join(tp.cleanup_text(''.join(w+' ' for w in sent))+' ' for sent in chunk['sentences'])
+        extracted_materials, mer, failed_materials = rex.get_materials(data['doi'], abstract, text)
         reactions = rex.get_reactions(extracted_materials['targets'], extracted_materials['precursors'], split_mixture=True)
 
-        print ('==='*30)
+        pprint("Extracted materials:")
         pprint(extracted_materials)
-        pprint (mer)
-        pprint (failed_materials)
+        pprint ("MER:")
+        pprint(mer)
+        pprint ("Failed:")
+        pprint(failed_materials)
         print ('\nReactions:')
         pprint (reactions)
+        print ('===' * 30)
 
 
 
