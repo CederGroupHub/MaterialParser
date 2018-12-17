@@ -30,6 +30,7 @@
     {"c_name" : "permanganate", "valency" : [-1], "e_name" : "MnO4", "n_atoms" : 5},
     {"c_name" : "peroxide", "valency" : [-2], "e_name" : "O2", "n_atoms" : 2},
     {"c_name" : "phosphate", "valency" : [-3], "e_name" : "PO4", "n_atoms" : 5},
+    {"c_name" : "metaphosphate", "valency" : [-1], "e_name" : "PO3", "n_atoms" : 4},
     {"c_name" : "orthophosphate", "valency" : [-3], "e_name" : "PO4", "n_atoms" : 5},
     {"c_name" : "pyrophosphate", "valency" : [-4], "e_name" : "P2O7", "n_atoms" : 9},
     {"c_name" : "phosphite", "valency" : [-3], "e_name" : "PO3", "n_atoms" : 5},
@@ -81,7 +82,9 @@
     {"c_name" : "bicarbonate", "valency" : [-1], "e_name" : "HCO3", "n_atoms" : 5},
     {"c_name" : "tungstate", "valency" : [-2], "e_name" : "WO4", "n_atoms" : 5},
     {"c_name" : "ferrocyanide", "valency" : [-4], "e_name" : "Fe(CN)6", "n_atoms" : 13},
-    {"c_name" : "ferricyanide", "valency" : [-3], "e_name" : "Fe(CN)6", "n_atoms" : 13}
+    {"c_name" : "ferricyanide", "valency" : [-3], "e_name" : "Fe(CN)6", "n_atoms" : 13},
+    {"c_name" : "pyridyl", "valency" : [-1], "e_name" : "C5H4N", "n_atoms" : 10},
+    {"c_name" : "molybdate", "valency" : [-2], "e_name" : "MoO4", "n_atoms" : 5}
 ],
 "cations" : [
     {"c_name" : "hydrogen", "valency" : [1], "e_name" : "H"},

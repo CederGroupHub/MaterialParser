@@ -1,6 +1,5 @@
-regex==2017.4.5
+regex
 pubchempy
 sympy
 spacy
 chemdataextractor
-TextCleanUp
