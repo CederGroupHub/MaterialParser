@@ -12,6 +12,6 @@ setup(name='MaterialParser',
           'pubchempy',
           'regex',
           'sympy',
-          'tornado'
+          'text-cleanup'
       ],
       zip_safe=False)
