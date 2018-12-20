@@ -15,7 +15,7 @@ class RecipeExtractorWorker(APIEgg):
 
     @api_method
     def extract(self, doi, abstract, syn_paragraph):
-        data_structure, mer_materials, fails = self.re.get_materials(
+        abstract_materials, synthesis_materials = self.re.get_materials(
             doi, abstract, syn_paragraph
         )
-        return data_structure, mer_materials, fails
+        return abstract_materials, synthesis_materials
