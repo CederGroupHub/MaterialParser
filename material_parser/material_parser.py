@@ -3,23 +3,21 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "2.0"
+__version__ = "3.0"
 
 import regex as re
 import collections
-import sympy
+import sympy as smp
 from sympy.abc import _clash
 import pubchempy as pcp
-from chemdataextractor.doc import Paragraph
 import os
 import json
 
-# TODO
-# Check if stoichiometry in () sums to 1.0 or integer
 
+# noinspection PyBroadException
 class MaterialParser:
-    def __init__(self, verbose=False, pubchem_lookup=False):
-        print('MaterialParser version 2.3')
+    def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False):
+        print('MaterialParser version 3.5')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -35,19 +33,26 @@ class MaterialParser:
         self.__filename = os.path.dirname(os.path.realpath(__file__))
 
         self.__ions = json.loads(open(os.path.join(self.__filename, 'rsc/ions_dictionary.json')).read())
-        self.__anions = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name'], 'n_atoms': ion['n_atoms']} for ion in self.__ions['anions']}
-        self.__cations = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name']} for ion in self.__ions['cations']}
-        self.__chemical_names = \
-            set(l.strip(' \n') for l in open(os.path.join(self.__filename, 'rsc/chem_terms')).readline())|\
-            self.__anions.keys()|self.__cations.keys()
+        self.__anions = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name'], 'n_atoms': ion['n_atoms']}
+                         for ion in self.__ions['anions']}
+        self.__cations = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name'], 'n_atoms': ion['n_atoms']}
+                          for ion in self.__ions['cations']}
+        self.__chemicals = self.__ions['chemicals']
+        self.__element2name = self.__ions['elements']
 
-        self.__prefixes2num = {'': 1, 'mono': 1, 'di': 2, 'tri': 3, 'tetra': 4, 'penta': 5, 'hexa': 6, 'hepta': 7,
-                                'octa': 8,  'nona': 9, 'deca': 10 }
+        self.__prefixes2num = {'': 1, 'mono': 1, 'di': 2, 'tri': 3, 'tetra': 4, 'pent': 5, 'penta': 5, 'hexa': 6,
+                               'hepta': 7, 'octa': 8, 'nano': 9, 'ennea': 9, 'nona': 9, 'deca': 10, 'undeca': 11,
+                               'dodeca': 12}
+        self.__neg_prefixes = ['an', 'de', 'non']
 
         self.__rome2num = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5, 'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10}
 
-        self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'w')
-        self.__pubchem_file.close()
+        self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, 'rsc/pubchem_dict.json')).read())
+
+        self.__fails_log = fails_log
+        if fails_log:
+            self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'w')
+            self.__pubchem_file.close()
 
         self.__pubchem = pubchem_lookup
         if pubchem_lookup:
@@ -56,39 +61,292 @@ class MaterialParser:
         self.__verbose = verbose
 
     ###################################################################################################################
-    ### Methods to build chemical structure
+    # Parsing material name
     ###################################################################################################################
 
-    def __simplify(self, value):
+    def parse_material(self, material_string_):
+        """
+        Method to parse material string into chemical structure and convert chemical name into chemical formula
+        :param material_string_: material name/formula
+        :return: dict(material_string: <str> initial material string,
+                     material_name: <str> chemical name of material found in the string
+                     material_formula: <str> chemical formula of material
+                     dopants: <list> list of dopped materials/elements appeared in material string
+                     phase: <str> material phase appeared in material string
+                     hydrate: <float> if material is hydrate fraction of H2O
+                     is_mixture: <bool> material is mixture/composite/alloy/solid solution
+                     is_abbreviation: <bool> material is similar to abbreviation
+                     fraction_vars: <dict> elements fraction variables and their values
+                     elements_vars: <dict> elements variables and their values
+                     composition: <dict> compound constitute of the material: its composition (element: fraction) and
+                                                                            fraction of compound)
+        """
+
+        material_string = self.cleanup_name(material_string_)
+
+        if self.__verbose:
+            print ('After cleaning up string:')
+            print (material_string_, '-->', material_string)
+
+        dopants, material_string = self.get_dopants(material_string)
+        if self.__verbose:
+            print ('After dopants extraction:')
+            print (material_string, 'with', dopants)
+
+        material_string = material_string.lstrip(') -').rstrip('( ,.:;-±/δ+')
+        material_name, material_formula, material_structure = self.split_material_name(material_string)
+
+        if self.__verbose:
+            print ('After material name parsing:')
+            print (material_string, '-->', material_name, 'and', material_formula)
+
+        # if material_string contains chemical formula
+        if material_structure['composition'] != {}:
+            output_structure = dict(
+                material_string=material_string_,
+                material_name=material_name,
+                material_formula=material_formula,
+                dopants=dopants,
+                phase=material_structure['phase'],
+                hydrate=material_structure['hydrate'],
+                is_mixture=False,
+                is_abbreviation_like=False,
+                fraction_vars=material_structure['fraction_vars'],
+                elements_vars=material_structure['elements_vars'],
+                composition={
+                    material_structure['formula']: dict(
+                        composition=material_structure['composition'],
+                        fraction='1'
+                    )
+                }
+            )
+            # noinspection PyBroadException
+            try:
+                output_structure['hydrate'] = float(output_structure['hydrate'])
+            except:
+                output_structure['hydrate'] = None
+
+            return output_structure
+        else:
+            material_formula = ''
+
+        # if material_string is chemical name reconstructing its formula
+        if len(material_name) > 0:
+            material_formula = self.reconstruct_formula(material_name)
+
+            if material_formula == '':
+                for m in [material_name,
+                          material_name.lower(),
+                          material_name.replace('-', ' '),
+                          material_name.replace('-', ' ').lower()]:
+                    if m in self.__pubchem_dictionary and material_formula == '':
+                        material_formula = self.__pubchem_dictionary[m]
+
+        if self.__verbose:
+            print ('After looking up in dictionary:')
+            print (material_string, '-->', material_name, 'and', material_formula)
+
+        material_formula = material_string if material_formula == '' else material_formula
+        # noinspection PyBroadException
+        try:
+            material_parts = self.split_material(material_formula)
+        except:
+            material_parts = [material_formula]
+
+        if self.__verbose:
+            print ('After splitting:')
+            print (material_string, '-->', material_name, material_parts)
+
+        output_structure = dict(
+            material_string=material_string_,
+            material_name=material_name,
+            material_formula=material_formula.replace(' ', ''),
+            phase='',
+            hydrate='',
+            dopants=dopants,
+            is_mixture=len(material_parts) > 1,
+            is_abbreviation_like=False,
+            fraction_vars={},
+            elements_vars={},
+            composition={}
+        )
+
+        for m, f in material_parts:
+            try:
+                m = self.__check_parentheses(m)
+                structure = self.get_structure_by_formula(m)
+                output_structure['phase'] = structure['phase']
+                output_structure['hydrate'] = structure['hydrate']
+                output_structure['fraction_vars'].update(structure['fraction_vars'])
+                output_structure['elements_vars'].update(structure['elements_vars'])
+                if m == 'H2O':
+                    output_structure['hydrate'] = f
+                elif structure['composition'] != {}:
+                    output_structure['composition'][structure['formula']] = dict(
+                        composition=structure['composition'],
+                        fraction=f
+                    )
+            except:
+                output_structure['composition'][m] = dict(
+                    composition={},
+                    fraction=f
+                )
+
+        if output_structure['composition'] == {} and self.__fails_log:
+            with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_pubchem:
+                f_pubchem.write(material_name + '\n')
+
+        try:
+            output_structure['hydrate'] = float(output_structure['hydrate'])
+        except:
+            output_structure['hydrate'] = None
+
+        return output_structure
+
+    def get_structure_by_formula(self, formula):
+
+        formula = formula.replace(' ', '')
+        formula = formula.replace('−', '-')
+        formula = formula.strip(' ')
+
+        # is there any phase specified
+        phase = ''
+        if formula[0].islower():
+            for m in re.finditer('([' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', formula):
+                if m.group(2) != '':
+                    phase = m.group(1)
+                    formula = m.group(2)
+
+        # checking for hydrate
+        hyd_i = formula.find('H2O') - 1
+        hydrate_num = []
+        while hyd_i > 0 and formula[hyd_i] not in ['·', '•', '-', '×', '⋅']:
+            hydrate_num.append(formula[hyd_i])
+            hyd_i -= 1
+        hydrate = ''.join([c for c in reversed(hydrate_num)])
+        if hyd_i > 0:
+            formula = formula[:hyd_i]
+
+        elements_variables = collections.defaultdict(str)
+        stoichiometry_variables = collections.defaultdict(str)
+
+        # convert fractions a(b-/+x) into a*b-/+a*x
+        for m in re.findall('([0-9\.]+)(\([0-9\.a-z]+[-+]+[0-9\.a-z]+\))', formula):
+            expr = str(smp.simplify(m[0] + '*' + m[1]))
+            if expr[0] == '-':
+                s_expr = re.split('\+', expr)
+                expr = s_expr[1] + s_expr[0]
+            expr = expr.replace(' ', '')
+            formula = formula.replace(m[0] + m[1], expr, 1)
+
+        # check for any weird syntax
+        r = "\(([^\(\)]+)\)\s*([-*\.\da-z\+/]*)"
+        for m in re.finditer(r, formula):
+            if ',' in m.group(1):
+                elements_variables['M'] = re.split(',', m.group(1))
+                formula = formula.replace('(' + m.group(1) + ')' + m.group(2), 'M' + m.group(2), 1)
+            if not m.group(1).isupper() and m.group(2) == '':
+                formula = formula.replace('(' + m.group(1) + ')', m.group(1), 1)
+
+        composition = self.__parse_formula(formula)
+
+        # looking for variables in elements and stoichiometry
+        for el, amt in composition.items():
+            if el not in self.__list_of_elements_1 + \
+                    self.__list_of_elements_2 + \
+                    list(elements_variables.keys()) + ['□']:
+                elements_variables[el] = []
+            for var in re.findall('[a-z' + ''.join(self.__greek_letters) + ']', amt):
+                stoichiometry_variables[var] = {}
+
+        if 'R' in elements_variables and 'E' in elements_variables:
+            elements_variables['RE'] = []
+            del elements_variables['E']
+            del elements_variables['R']
+            composition['RE'] = composition['E']
+            del composition['R']
+            del composition['E']
+
+        if 'A' in elements_variables and 'E' in elements_variables:
+            elements_variables['AE'] = []
+            del elements_variables['E']
+            del elements_variables['A']
+            composition['AE'] = composition['E']
+            del composition['R']
+            del composition['A']
+
+        if 'M' in elements_variables and 'e' in stoichiometry_variables:
+            elements_variables['Me'] = []
+            del elements_variables['M']
+            del stoichiometry_variables['e']
+            c = composition['M'][1:]
+            composition['Me'] = c if c != '' else '1.0'
+            del composition['M']
+
+        formula_structure = {'composition': composition,
+                             'fraction_vars': stoichiometry_variables,
+                             'elements_vars': elements_variables,
+                             'hydrate': hydrate,
+                             'phase': phase,
+                             'formula': formula}
+
+        return formula_structure
+
+    def __parse_formula(self, init_formula):
+
+        formula_dict = collections.defaultdict(str)
+
+        formula_dict = self.__parse_parentheses(init_formula, "1", formula_dict)
 
         """
-        simplifying stoichiometric expression
-        :param value: string
-        :return: string
+        refinement of non-variable values
         """
+        incorrect = []
+        for el, amt in formula_dict.items():
+            formula_dict[el] = self.__simplify(amt)
+            if any(len(c) > 1 for c in re.findall('[A-Za-z]+', formula_dict[el])):
+                incorrect.append(el)
 
-        for l in self.__greek_letters:
-            _clash[l] = sympy.Symbol(l)
+        for el in incorrect:
+            del formula_dict[el]
 
-        new_value = value
-        for i, m in enumerate(re.finditer('(?<=[0-9])([a-z' + ''.join(self.__greek_letters) + '])', new_value)):
-            new_value = new_value[0:m.start(1) + i] + '*' + new_value[m.start(1) + i:]
-        new_value = sympy.simplify(sympy.sympify(new_value, _clash))
-        if new_value.is_Number:
-            new_value = round(float(new_value), 3)
+        return formula_dict
 
-        return str(new_value)
+    def __parse_parentheses(self, init_formula, init_factor, curr_dict):
+        r = "\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
+
+        for m in re.finditer(r, init_formula):
+            factor = "1"
+            if m.group(2) != "":
+                factor = m.group(2)
+
+            factor = self.__simplify('(' + str(init_factor) + ')*(' + str(factor) + ')')
+
+            unit_sym_dict = self.__parse_parentheses(m.group(1), factor, curr_dict)
+
+            init_formula = init_formula.replace(m.group(0), '')
+
+        unit_sym_dict = self.__get_sym_dict(init_formula, init_factor)
+        for el, amt in unit_sym_dict.items():
+            if len(curr_dict[el]) == 0:
+                curr_dict[el] = amt
+            else:
+                curr_dict[el] = '(' + str(curr_dict[el]) + ')' + '+' + '(' + str(amt) + ')'
+
+        return curr_dict
 
     def __get_sym_dict(self, f, factor):
         sym_dict = collections.defaultdict(str)
-        r = "([A-Z]{1}[a-z]{0,1})\s*([-*\.\da-z" + ''.join(self.__greek_letters) + "\+/]*)"
+        r = "([A-Z□]{1}[a-z]{0,1})\s*([-*\.\da-z" + ''.join(self.__greek_letters) + "\+/]*)"
 
+        el = ""
+        amt = ""
         for m in re.finditer(r, f):
             """
             checking for correct elements names
             """
-            el_bin = "{0}{1}".format(str(int(m.group(1)[0] in self.__list_of_elements_1 + ['M'])), str(
-                int(m.group(1) in self.__list_of_elements_1 + self.__list_of_elements_2 + ['Ln', 'M'])))
+            el_bin = "{0}{1}".format(str(int(m.group(1)[0] in self.__list_of_elements_1 + ['M', '□'])), str(
+                int(m.group(1) in self.__list_of_elements_1 + self.__list_of_elements_2 + ['Ln', 'M', '□'])))
             if el_bin in ['01', '11']:
                 el = m.group(1)
                 amt = m.group(2)
@@ -114,521 +372,270 @@ class MaterialParser:
 
         return sym_dict
 
-    def __parse_parentheses(self, init_formula, init_factor, curr_dict):
-        r = "\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
+    ###################################################################################################################
+    # Reconstruct formula / dictionary lookup
+    ###################################################################################################################
 
-        for m in re.finditer(r, init_formula):
-            factor = "1"
-            if m.group(2) != "":
-                factor = m.group(2)
+    def split_material_name(self, material_string):
+        formula = ''
+        structure = self.__empty_structure().copy()
 
-            factor = self.__simplify('(' + str(init_factor) + ')*(' + str(factor) + ')')
+        split = re.split('\s', material_string)
 
-            unit_sym_dict = self.__parse_parentheses(m.group(1), factor, curr_dict)
+        if len(split) == 1:
+            return material_string, formula, structure
 
-            init_formula = init_formula.replace(m.group(0), '')
-
-        unit_sym_dict = self.__get_sym_dict(init_formula, init_factor)
-        for el, amt in unit_sym_dict.items():
-            if len(curr_dict[el]) == 0:
-                curr_dict[el] = amt
-            else:
-                curr_dict[el] = '(' + str(curr_dict[el]) + ')' + '+' + '(' + str(amt) + ')'
-
-        return curr_dict
-
-    def __parse_formula(self, init_formula):
-
-        formula_dict = collections.defaultdict(str)
-
-        formula_dict = self.__parse_parentheses(init_formula, "1", formula_dict)
-
-        """
-        refinement of non-variable values
-        """
-        incorrect = []
-        for el, amt in formula_dict.items():
-            formula_dict[el] = self.__simplify(amt)
-            if any(len(c) > 1 for c in re.findall('[A-Za-z]+', formula_dict[el])):
-                incorrect.append(el)
-
-        for el in incorrect:
-            del formula_dict[el]
-
-        return formula_dict
-
-    def __check_parentheses(self, formula):
-
-        new_formula = formula
-
-        new_formula = new_formula.replace('[', '(')
-        new_formula = new_formula.replace(']', ')')
-        new_formula = new_formula.replace('{', '(')
-        new_formula = new_formula.replace('}', ')')
-
-        par_open = re.findall('\(', new_formula)
-        par_close = re.findall('\)', new_formula)
-
-        if new_formula[0] == '(' and new_formula[-1] == ')' and len(par_close) == 1 and len(par_open) == 1:
-            new_formula = new_formula[1:-1]
-
-        if len(par_open) == 1 and len(par_close) == 0:
-            if new_formula.find('(') == 0:
-                new_formula = new_formula.replace('(', '')
-            else:
-                new_formula = new_formula + ')'
-
-        if len(par_close) == 1 and len(par_open) == 0:
-            if new_formula[-1] == ')':
-                new_formula = new_formula.rstrip(')')
-            else:
-                new_formula = '(' + new_formula
-
-        if len(par_close) - len(par_open) == 1 and new_formula[-1] == ')':
-            new_formula = new_formula.rstrip(')')
-
-        return new_formula
-
-    def get_structure_by_formula(self, formula):
-
-        init_formula = formula
-        formula = formula.replace(' ', '')
-        formula = formula.replace('−', '-')
-
-        formula = self.__check_parentheses(formula)
-
-        elements_variables = collections.defaultdict(str)
-        stoichiometry_variables = collections.defaultdict(str)
-
-        # check for any weird syntax
-        r = "\(([^\(\)]+)\)\s*([-*\.\da-z\+/]*)"
-        for m in re.finditer(r, formula):
-            if not m.group(1).isupper() and m.group(2) == '':
-                formula = formula.replace('(' + m.group(1) + ')', m.group(1), 1)
-            if ',' in m.group(1):
-                elements_variables['M'] = re.split(',', m.group(1))
-                formula = formula.replace('(' + m.group(1) + ')' + m.group(2), 'M' + m.group(2), 1)
-
-        composition = self.__parse_formula(formula)
-
-        # looking for variables in elements and stoichiometry
-        for el, amt in composition.items():
-            if el not in self.__list_of_elements_1 + self.__list_of_elements_2 + list(elements_variables.keys()):
-                elements_variables[el] = []
-            for var in re.findall('[a-z' + ''.join(self.__greek_letters) + ']', amt):
-                stoichiometry_variables[var] = []
-
-        if 'R' in elements_variables and 'E' in elements_variables:
-            elements_variables['RE'] = []
-            del elements_variables['E']
-            del elements_variables['R']
-
-            composition['RE'] = composition['E']
-            del composition['R']
-            del composition['E']
-
-        if 'A' in elements_variables and 'E' in elements_variables:
-            elements_variables['AE'] = []
-            del elements_variables['E']
-            del elements_variables['A']
-
-            composition['AE'] = composition['E']
-            del composition['R']
-            del composition['A']
-
-        # print("Check sum:")
-        # to_calc = ''.join([composition[el] + '+' for el in composition])
-        # to_calc = "(" + to_calc.rstrip('+- ') + ")"
-        # print(self.__simplify(to_calc))
-
-        formula_structure = dict(
-            formula_=init_formula,
-            formula=formula,
-            composition=composition,
-            fraction_vars=stoichiometry_variables,
-            elements_vars=elements_variables,
-        )
-
-        return formula_structure
-
-    def __empty_structure(self):
-        return dict(
-            composition={},
-            mixture={},
-            fraction_vars={},
-            elements_vars={},
-            formula='',
-            chemical_name='',
-            phase='',
-            hydrate = '',
-            valency=''
-        )
-
-    def __is_correct_composition(self, formula, chem_compos):
-        if chem_compos == {}:
-            return False
-        if any(el not in formula + 'M' + 'Ln' + 'RE' + 'AE' or amt == '' for el, amt in chem_compos.items()):
-            return False
-
-        return True
-
-    def get_mixture(self, material_name):
-
-        mixture = {}
-        material_name = self.__check_parentheses(material_name)
-
-        for m in re.finditer('\(1-[x]{1}\)(.*)-\({0,1}[x]{1}\){0,1}(.*)', material_name.replace(' ', '')):
-            mixture[m.group(1)] = {}
-            mixture[m.group(2)] = {}
-            mixture[m.group(1)]['fraction'] = '1-x'
-            mixture[m.group(1)]['composition'] = self.get_structure_by_formula(m.group(1))['composition']
-            mixture[m.group(2)]['fraction'] = 'x'
-            mixture[m.group(2)]['composition'] = self.get_structure_by_formula(m.group(2))['composition']
-
-            for i in [1, 2]:
-                if m.group(i)[0] == '(' and m.group(i)[-1] == ')':
-                    line = m.group(i)[1:-1]
-                    parts = [s for s in re.split('[-+]{1}([\d\.]*[A-Z][^-+]*)', line) if s != '' and s != line]
-                    for s in parts:
-                        name = re.findall('([\d\.]*)([\(A-Z].*)', s.strip(' -+'))[0]
-                        mixture[name[1]] = {}
-                        fraction = name[0]
-                        if fraction == '': fraction = '1'
-                        mixture[name[1]]['fraction'] = '(' + fraction + ')*' + mixture[m.group(i)]['fraction']
-                        mixture[name[1]]['composition'] = self.get_structure_by_formula(name[1])['composition']
-                    del mixture[m.group(i)]
-
-        if mixture == {}:
-            parts = [s for s in re.split('[-+]{1}([\d\.]*[A-Z][^-+]*)', material_name.replace(' ', '')) if
-                     s != '' and s != material_name.replace(' ', '')]
-            for s in parts:
-                name = re.findall('([\d\.]*)([\(A-Z].*)', s.strip(' -+'))[0]
-                mixture[name[1]] = {}
-                fraction = name[0]
-                if fraction == '': fraction = '1'
-                mixture[name[1]]['fraction'] = fraction
-                mixture[name[1]]['composition'] = self.get_structure_by_formula(name[1])['composition']
-
-        for item in mixture:
-            mixture[item]['fraction'] = self.__simplify(mixture[item]['fraction'])
-
-        return mixture
-
-    def get_chemical_structure(self, material_name):
-        """
-        The main function to obtain the closest chemical structure associated with a given material name
-        :param material_name: string of material name
-        :return: dictionary composition and stoichiometric variables
-        """
-
-        chemical_structure = self.__empty_structure().copy()
-
-        # making sure the compound if not just ion
-        if material_name[-1] == '+' or material_name in self.__list_of_elements_1+self.__list_of_elements_2:
-            return self.__empty_structure()
-
-        # is there any phase specified
-        phase = ''
-        if material_name[0].islower():
-            for m in re.finditer('([' + ''.join(self.__greek_letters) + ']*)-{0,1}(.*)', material_name):
-                if m.group(2) != '':
-                    phase = m.group(1)
-                    material_name = m.group(2)
-                #print(m.group(1))
-                #print(m.group(2))
-
-        if self.__verbose:
-            print('After phase extraction: '+material_name)
-
-        #material_name = re.sub('[' + chr(183) + '](.*)', '', material_name)
-
-        # unifying hydrates names
-        if 'hydrate' in material_name:
-            for m in re.finditer('(.*) ([a-z]*)hydrate', material_name):
-                if m.group(1) != '':
-                    material_name = m.group(1)
-                    chemical_structure['hydrate'] = self.__prefixes2num[m.group(2)]
-
-        dots = [8901, 8729, 65381, 120, 42, 215, 8226]
-        if 'H2O' in material_name:
-            for c in dots:
-                material_name = material_name.replace(chr(c), chr(183))
-            for m in re.finditer('(.*)·([1-9]){0,1}H2O', material_name):
-                if m.group(1) != '':
-                    material_name = m.group(1)
-                    chemical_structure['hydrate'] = m.group(2)
-
-        if self.__verbose:
-            print('After hydrates extraction: '+material_name)
-
-        # checking valency
-        valency = [v.strip('( )') for v in re.findall('(\s*\([IV,]+\))', material_name)]
-        material_name = re.sub('(\s*\([IV,]+\))', '', material_name)
-        chemical_structure['valency'] = valency
-        chemical_structure['chemical_name'] = material_name
-
-        if self.__verbose:
-            print('After valency extraction: '+material_name)
-
-        #print('Symbol substitution: ' + material_name)
-
-        # splitting mixture into compounds
-        chemical_structure['mixture'] = self.get_mixture(material_name)
-
-        if chemical_structure['mixture'] != {}:
-            chemical_structure['formula'] = ''.join(chemical_structure['mixture'].keys())
-        else:
-            chemical_structure['formula'] = material_name
-
-        # trying to extract chemical structure for entire mixture or initial materials name
-        if self.__verbose:
-            print('Extracting structure for: '+chemical_structure['formula'])
+        formula_e = split[-1].strip('[]')
+        if re.match('(\s*\([IV,]+\))', formula_e):
+            formula_e = ''
         try:
-            t_struct = self.get_structure_by_formula(chemical_structure['formula'])
+            structure_e = self.get_structure_by_formula(formula_e)
+            composition_e = structure_e['composition']
         except:
-            t_struct = self.__empty_structure().copy()
+            composition_e = {}
+            formula_e = ''
+            structure_e = self.__empty_structure().copy()
 
-        #if t_struct['composition'] != {}:
-        chemical_structure['formula'] = t_struct['formula']
-        chemical_structure['composition'] = t_struct['composition']
-        chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-        chemical_structure['elements_vars'] = t_struct['elements_vars']
+        formula_b = split[0].strip('[]')
+        if re.match('(\s*\([IV,]+\))', formula_b):
+            formula_b = ''
+        try:
+            structure_b = self.get_structure_by_formula(formula_b)
+            composition_b = structure_b['composition']
+        except:
+            composition_b = {}
+            formula_b = ''
+            structure_b = self.__empty_structure().copy()
 
-        if self.__verbose:
-            print('Obtained structure:')
-            print(chemical_structure['composition'])
+        if composition_e != {} and formula_e not in self.__list_of_elements_1 + self.__list_of_elements_2:
+            split = split[:-1]
+            structure = structure_e
+            formula = formula_e
+        elif composition_b != {} and formula_b not in self.__list_of_elements_1 + self.__list_of_elements_2:
+            split = split[1:]
+            structure = structure_b
+            formula = formula_b
+        else:
+            formula = ''
+            structure = self.__empty_structure().copy()
 
-        # TODO: merge fraction variables
+        name_terms = [p for p in split if
+                      p.lower().strip('., -;:').rstrip('s') in self.__chemicals or 'hydrate' in p]
 
-        # if material name is not proper formula look for it in dictionary
-        # if not self.__is_correct_composition(chemical_structure['formula'], chemical_structure['composition']):
-        #     if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
-        #         formula = self.__chemical_names[material_name.lower()]
-        #         formula = re.sub('[' + chr(183) + '](.*)', '', formula)
-        #         chemical_structure['elements_vars'] = collections.defaultdict(str)
-        #         chemical_structure['fraction_vars'] = collections.defaultdict(str)
-        #         try:
-        #             t_struct = self.get_structure_by_formula(formula)
-        #         except:
-        #             t_struct = self.__empty_structure()
-        #
-        #         #if t_struct['composition'] != {}:
-        #         chemical_structure['composition'] = t_struct['composition']
-        #         chemical_structure['formula'] = t_struct['formula']
-        #         chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-        #         chemical_structure['elements_vars'] = t_struct['elements_vars']
+        if len(name_terms) > 0:
+            name = ''.join([t + ' ' for t in split]).strip(' ')
+        else:
+            name = ''
+            formula = ''
+            structure = self.__empty_structure().copy()
 
-        # if material is not proper formula
-        # first, trying to reconstruct formula and composition by name
+        return name, formula, structure
 
-        if chemical_structure['composition'] == {}:
-            chem_terms = material_name.split(' ')
-            if  len(chem_terms) == 1 and chem_terms[0].lower() in self.__cations.keys()|self.__anions.keys():
-                return self.__empty_structure()
+    def reconstruct_formula(self, material_name, valency=''):
 
-            formula = self.reconstruct_by_name(chem_terms, valency)
-            if formula != '':
-                t_struct = self.get_structure_by_formula(formula)
-                chemical_structure['formula'] = t_struct['formula']
-                chemical_structure['composition'] = t_struct['composition']
-                chemical_structure['fraction_vars'] = t_struct['fraction_vars']
-                chemical_structure['elements_vars'] = t_struct['elements_vars']
+        output_formula = ''
 
-            if self.__verbose:
-                print('Obtained structure after formula reconstruction for: ' + formula)
-                print(chemical_structure['composition'])
+        terms_list = []
+        valency_list = []
+        hydrate = ''
+        cation_prefix_num = 0
+        cation_data = {"c_name": "", "valency": [], "e_name": "", "n_atoms": 0}
 
-        # second, trying PubChem
-        if chemical_structure['composition'] == {} and self.__pubchem:
-            chemical_structure['composition'] = collections.defaultdict(str)
-            chemical_structure['elements_vars'] = collections.defaultdict(str)
-            chemical_structure['fraction_vars'] = collections.defaultdict(str)
-            chemical_structure['formula'] = ''
+        for t in material_name.split(' '):
+            if t.strip('()') in self.__rome2num:
+                valency_list.append(self.__rome2num[t.strip('()')])
+                continue
+            if 'hydrate' in t.lower():
+                hydrate = t
+                continue
 
-            pcp_compounds = pcp.get_compounds(material_name, 'name')
-            self.__pubchem_file = open(os.path.join(self.__filename, 'pubchem_log'), 'a')
-            self.__pubchem_file.write(str(material_name)+' - '+str(pcp_compounds)+'\n')
-            self.__pubchem_file.close()
+            terms_list.append(t)
 
-            if len(pcp_compounds) > 0:
-                try:
-                    formula = str(pcp_compounds[0].molecular_formula)
-                    t_struct = self.get_structure_by_formula(formula)
-                    # if len(t_struct['composition']) > 1:
-                    #     print('Found in Pubchem:')
-                    #     print(material_name)
-                    #     print(pcp_compounds[0].molecular_formula)
-                        #print (t_struct)
-                except:
-                    t_struct = self.__empty_structure().copy()
+        t = ''.join([t + ' ' for t in terms_list]).lower().strip(' ')
+        if t in self.__anions:
+            return self.__anions[t]['e_name']
+        if t in self.__cations:
+            return self.__cations[t]['e_name']
 
-                chemical_structure['composition'] = t_struct['composition']
-                chemical_structure['formula'] = t_struct['formula']
+        if len(terms_list) < 2:
+            return output_formula
 
-                if self.__verbose:
-                    print('Obtained structure after PubChem check for: ' + formula)
-                    print(chemical_structure['composition'])
+        if len(valency_list) > 1:
+            print ('WARNING! Found many valencies per chemical name ' + material_name)
+            print (valency_list)
 
-        chemical_structure['phase'] = phase
+        anion = terms_list.pop().lower().rstrip('s')
 
-        # finally, check if there are variables in mixture
-        for part in chemical_structure['mixture'].values():
-            for var in re.findall('[a-z' + ''.join(self.__greek_letters) + ']', part['fraction']):
-                chemical_structure['fraction_vars'][var] = []
+        if valency == '':
+            valency_num = max(valency_list + [0])
+        else:
+            valency_num = self.__rome2num[valency.strip('()')]
 
-        return chemical_structure
+        next_term = terms_list.pop()
+        if 'hydrogen' in next_term.lower() and len(terms_list) != 0:
+            anion = next_term + ' ' + anion
+        else:
+            terms_list += [next_term]
 
-    # TODO method merging materials with same composition
+        _, anion_prefix_num, anion = self.__get_prefix(anion)
 
-    ###################################################################################################################
-    ### Methods to substitute variables
-    ###################################################################################################################
+        if anion in self.__anions:
+            anion_data = self.__anions[anion]
+        else:
+            return output_formula
 
-    def __get_values(self, string, mode, count=None, default_value=0.1, incr=None):
-        values = []
+        if len(terms_list) >= 2:
+            return output_formula
 
-        """
-        given range
-        """
-        if mode == 'range' and len(string) != 0:
-            string = string[0]
-            if any(c in string for c in ['-', '–']):
-                interval = re.split('[-–]', string)
+        if len(terms_list) == 1:
+            _, cation_prefix_num, cation = self.__get_prefix(terms_list[0])
+            if cation.lower() in self.__cations:
+                cation = cation.lower()
+                cation_data = self.__cations[cation]
+            elif cation in self.__element2name:
+                cation_data = self.__cations[self.__element2name[cation]]
             else:
-                interval = [string[0].strip(' '), string[1].strip(' ')]
+                return output_formula
 
-            if len(interval) > 0:
-                values = [round(float(interval[0]), 4), round(float(interval[1]), 4)]
-                # start = float(interval[0])
-                # end = float(interval[1])
-                # if incr != None:
-                #     values = [round(start + i * incr, 4) for i in range(round((end - start) / incr))]
-                #     values.append(interval[1])
-                #
-                # if count != None:
-                #     incr = (end - start) / count
-                #     values = [round(start + i * incr, 4) for i in range(count)]
-                #     values.append(interval[1])
-                #
-                # if incr == None and count == None:
-                #     values = [default_value]
+        if len(cation_data['valency']) > 1 and valency_num != 0:
+            if valency_num not in cation_data['valency']:
+                print ('WARNING! Not common valency value for ' + material_name)
+                print(cation_data['valency'])
+                print(valency_num)
+            cation_data['valency'] = [valency_num]
 
-        """
-        given list
-        """
-        if mode == 'values' and len(string) != 0:
-            values = [round(float(sympy.simplify(c)), 4) for c in re.findall('[0-9\./-]+', string[0].strip(' '))]
+        output_formula = self.__build_formula(anion=anion_data,
+                                              cation=cation_data,
+                                              cation_prefix_num=cation_prefix_num,
+                                              anion_prefix_num=anion_prefix_num)
 
-        return values
+        if hydrate != '':
+            _, hydrate_prefix_num, hydrate = self.__get_prefix(hydrate)
+            output_formula = output_formula + '·' + str(hydrate_prefix_num) + 'H2O'
 
-    def get_stoichiometric_values(self, var, sentence):
-        values = []
-        mode = ''
-        # equal to exact values
-        if len(values) == 0:
-            values = self.__get_values(re.findall(var + '\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]', sentence), mode='values')
-            mode = 'values'
-        # equal to range
-        if len(values) == 0:
-            values = self.__get_values(re.findall(var + '\s*=\s*([0-9-–\.\s]+)[\s\)\]\,m\%]', sentence), mode='range',
-                                       count=5)
-            mode = 'range'
-        # within range
-        if len(values) == 0:
-            values = self.__get_values(
-                re.findall('([0-9\.\s]*)\s*[<≤⩽]{0,1}\s*' + var + '\s*[<≤⩽>]{1}\s*([0-9.\s]+)[\s\)\]\.\,]', sentence),
-                mode='range', count=5)
-            mode = 'range'
+        return output_formula
 
-        # from ... to ...
-        if len(values) == 0:
-            values = self.__get_values(
-                re.findall(var + '[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)', sentence), mode='range', count=5)
-            mode = 'range'
-        #
-        # if values == []:
-        #     values = [0.0]
+    def __build_formula(self, cation, anion, cation_prefix_num=0, anion_prefix_num=0):
 
-        return values, mode
+        cation_stoich = 0
+        anion_stoich = 0
 
-    def get_elements_values(self, var, sentence):
-        values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z,\s]+)', sentence)
-        if len(values) > 0:
-            values = [c for c in re.split('[,\s]', values[0]) if
-                      c in self.__list_of_elements_1 + self.__list_of_elements_2]
+        if anion_prefix_num + cation_prefix_num == 0 or anion_prefix_num * cation_prefix_num != 0:
+            v_cation = abs(cation['valency'][0])
+            v_anion = abs(anion['valency'][0])
+            cm = self.__lcm(v_cation, v_anion)
+            cation_stoich = cm // v_cation
+            anion_stoich = cm // v_anion
 
-        return values
+        if anion_prefix_num != 0:
+            anion_stoich = anion_prefix_num
+            cation_stoich = anion_prefix_num * abs(anion['valency'][0]) // abs(cation['valency'][0])
 
-    ###################################################################################################################
-    ### Methods to resolve abbreviations
-    ###################################################################################################################
+        if cation_prefix_num != 0:
+            cation_stoich = cation_prefix_num
+            anion_stoich = cation_prefix_num * abs(cation['valency'][0]) // abs(anion['valency'][0])
 
-    def __is_abbreviation(self, word):
-        if all(c.isupper() for c in re.sub('[0-9x\-\(\)\.]', '', word)) and len(re.findall('[A-NP-Z]', word)) > 1:
-            return True
+        anion_name_el = anion['e_name']
+        if anion_stoich > 1 and anion['n_atoms'] > 1:
+            anion_name_el = '(' + anion_name_el + ')'
 
-        return False
+        cation_name_el = cation['e_name']
+        if cation_stoich > 1 and cation['n_atoms'] > 1:
+            cation_name_el = '(' + cation_name_el + ')'
 
-    def build_abbreviations_dict(self, materials_list, paragraphs):
-        """
+        return "{0}{1}{2}{3}".format(cation_name_el, self.__cast_stoichiometry(cation_stoich), anion_name_el,
+                                     self.__cast_stoichiometry(anion_stoich))
 
-        :param materials_list: list of found materials entities
-        :param paragraphs: list of paragraphs where look for abbreviations
-        :return: dictionary abbreviation - corresponding entity
-        """
+    def __get_prefix(self, material_name):
 
-        abbreviations_dict = {t: '' for t in materials_list if self.__is_abbreviation(t.replace(' ', ''))}
-        not_abbreviations = list(set(materials_list) - set(abbreviations_dict.keys()))
+        pref = ''
+        pref_num = 0
+        material_name_upd = material_name
 
-        # run through all materials list to resolve abbreviations among its entities
-        for abbr in abbreviations_dict.keys():
+        for p in self.__prefixes2num.keys():
+            if material_name.lower().find(p) == 0 and p != '':
+                pref = p
+                pref_num = self.__prefixes2num[p]
+                material_name_upd = material_name_upd[len(p):].strip('-')
 
-            for material_name in not_abbreviations:
-                if sorted(re.findall('[A-NP-Z]', abbr)) == sorted(re.findall('[A-NP-Z]', material_name)):
-                    abbreviations_dict[abbr] = material_name
+                if material_name_upd == 'xide':
+                    material_name_upd = 'oxide'
 
-        # for all other abbreviations going through the paper text
-        for abbr, name in abbreviations_dict.items():
-
-            if name == '':
-
-                sents = ' '.join(
-                    [s.text for p in paragraphs for s in Paragraph(p).sentences if abbr in s.text]).split(abbr)
-                i = 0
-                while abbreviations_dict[abbr] == '' and i < len(sents):
-                    sent = sents[i]
-                    for tok in sent.split(' '):
-                        if sorted(re.findall('[A-NP-Z]', tok)) == sorted(re.findall('[A-NP-Z]', abbr)):
-                            abbreviations_dict[abbr] = tok
-                    i = i + 1
-
-        for abbr in abbreviations_dict.keys():
-            parts = re.split('-', abbr)
-            if all(p in abbreviations_dict for p in parts) and abbreviations_dict[abbr] == '' and len(parts) > 1:
-                name = ''.join('('+abbreviations_dict[p]+')'+'-' for p in parts).rstrip('-')
-                abbreviations_dict[abbr] = name
-
-
-        empty_list = [abbr for abbr, name in abbreviations_dict.items() if name == '']
-        for abbr in empty_list:
-            del abbreviations_dict[abbr]
-
-        return abbreviations_dict
-
-    # def substitute_abbreviations(self, materials_list, abbreviations_dict):
-    #
-    #     updated_list = []
-    #     for name in materials_list:
-    #         if name in abbreviations_dict:
-    #             updated_list.append(abbreviations_dict[name])
-    #         else:
-    #             updated_list.append(name)
-    #
-    #     return list(set(m for m in updated_list if m != ''))
+        return pref, pref_num, material_name_upd
 
     ###################################################################################################################
-    ### Methods to separate doped part
+    # Splitting mixtures
     ###################################################################################################################
+
+    def split_material(self, material_name):
+
+        split = self.__split_name(material_name)
+        l = 0
+        while len(split) != l:
+            l = len(split)
+            split = [p for s in split for p in self.__split_name(s[0], s[1])]
+
+        output = []
+        for m, f in split:
+            try:
+                f = smp.simplify(f)
+                if f.is_Number:
+                    f = round(float(f), 3)
+                f = str(f)
+            except:
+                f = '1'
+
+            output.append((m, f))
+
+        return output
+
+    def __split_name(self, material_name_, init_fraction='1'):
+
+        re_str = "(?<=[0-9\)])[-·∙\∗](?=[\(0-9])|(?<=[A-Z])[-·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-·∙\∗](?=[A-Z])|(?<=[" \
+                 "0-9\)])[-·∙\∗](?=[A-Z]) "
+        material_name = material_name_.replace(' ', '')
+
+        if '(1-x)' == material_name[0:5]:
+            material_name = material_name.replace('(x)', 'x')
+            parts = re.findall('\(1-x\)(.*)[-+·∙\∗]x(.*)', material_name)
+            parts = parts[0] if parts != [] else (material_name[5:], '')
+            return [(parts[0].lstrip(' ·*'), '1-x'), (parts[1].lstrip(' ·*'), 'x')]
+
+        parts = re.split(re_str, material_name)
+
+        if len(parts) > 1:
+            parts_upd = [p for part in parts for p in
+                         re.split('(?<=[A-Z\)])[-·∙\∗](?=[xyz])|(?<=O[0-9\)]+)[-·∙\∗](?=[xyz])', part)]
+        else:
+            parts_upd = parts
+
+        merged_parts = [parts_upd[0]]
+        for m in parts_upd[1:]:
+            if re.findall('[A-Z]', m) == ['O']:
+                to_merge = merged_parts.pop() + '-' + m
+                merged_parts.append(to_merge)
+            else:
+                merged_parts.append(m)
+
+        composition = []
+        for m in merged_parts:
+            fraction = ''
+            i = 0
+            while i < len(m) and not m[i].isupper():
+                fraction = fraction + m[i]
+                i += 1
+            fraction = fraction.strip('()')
+            if fraction == '':
+                fraction = '1'
+            else:
+                m = m[i:]
+
+            fraction = '(' + fraction + ')*(' + init_fraction + ')'
+
+            if m != '':
+                composition.append((m, fraction))
+
+        return composition
 
     def get_dopants(self, material_name):
         new_material_name = material_name
@@ -656,163 +663,344 @@ class MaterialParser:
         if dopant != '':
             dopants.append(dopant)
 
-        if any(w in new_material_name for w in ['mol', 'wt']):
-            parts = re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[mol]{3}\.{0,1}\%{0,1}', new_material_name) + \
-                    re.split('[\-+]{0,1}[0-9\.]*[xyz]{0,1}\s*[wt]{2}\.{0,1}\%{0,1}', new_material_name)
-            parts = sorted(list(set(parts) - set([new_material_name])), key=lambda x: len(x), reverse=True)
+        if '%' in new_material_name:
+            new_material_name = new_material_name.replace('.%', '%')
+            parts = re.split('[\-+:·]\s*[0-9\.]*\s*[vmolwtx\s]*\%', new_material_name)
 
         if len(parts) > 1:
             new_material_name = parts[0].strip(' -+')
-            dopants.extend(d.strip() for d in parts[1:] if d != '')
+            dopants.extend(d.strip(' ') for d in parts[1:] if d != '')
 
-        # checking for dopants in formula
-        parts = sorted(new_material_name.split(':'), key=lambda x: len(x), reverse=True)
-        if len(parts) > 1:
-            new_material_name = parts[0]
-            dopants.append(parts[1])
+        for part in new_material_name.split(':'):
+            if all(e.strip('x,+0987654321. ') in self.__list_of_elements_1 + self.__list_of_elements_2
+                   for e in part.split(' ') if e != ''):
+                dopants.append(part.strip(' '))
+            else:
+                new_material_name = part.strip(' ')
 
         return dopants, new_material_name
 
     ###################################################################################################################
-    ### Methods to call dictionary of inorganic compounds
+    # Resolving abbreviations
     ###################################################################################################################
 
-    # def get_compounds_dictionary(self):
-    #     names_dict = {}
-    #
-    #     for line in open(os.path.join(self.__filename, 'rsc/inorganic_compounds_dictionary')):
-    #         name, formula = line.strip().split(' – ')
-    #         name = name[0].lower() + name[1:]
-    #         names_dict[name] = formula
-    #
-    #     for line in open(os.path.join(self.__filename, 'rsc/pub_chem_dictionary')):
-    #         name, formula = line.strip().split(' – ')
-    #         name = name[0].lower() + name[1:]
-    #         names_dict[name] = formula
-    #
-    #     formulas_dict = {formula: [] for formula in names_dict.values()}
-    #     for name, formula in names_dict.items():
-    #         formulas_dict[formula].append(name)
-    #
-    #     return names_dict, formulas_dict
+    def __is_abbreviation(self, word):
+        if all(c.isupper() for c in re.sub('[0-9x\-\(\)\.]', '', word)) and len(re.findall('[A-NP-Z]', word)) > 1:
+            return True
 
-    # def build_names_dictionary(self):
-    #
-    #     names_dict, formulas_dict = self.get_compounds_dictionary()
-    #     chemical_names = {}
-    #     for name in names_dict.keys():
-    #         chemical_names[name] = names_dict[name]
-    #         chemical_names[re.sub('(\s*\([IV,]+\))', '', name)] = names_dict[name]
-    #
-    #     return chemical_names
+        return False
 
-    def reconstruct_by_name(self, terms_list, name_valency_):
+    def build_abbreviations_dict(self, materials_list, paragraph):
+        """
 
-        chem_name = ''.join(c+' ' for c in terms_list).strip(' ')
+        :param paragraph:
+        :param materials_list: list of found materials entities
+        :return: dictionary abbreviation - corresponding entity
+        """
 
-        output_formula = ''
+        abbreviations_dict = {t: '' for t in materials_list if self.__is_abbreviation(t.replace(' ', '')) and t != ''}
+        not_abbreviations = list(set(materials_list) - set(abbreviations_dict.keys()))
 
-        if len(terms_list) < 2:
-            return output_formula
+        # first find abreviations in current materials list
+        for abbr in abbreviations_dict.keys():
 
-        anion = terms_list.pop().lower()
-        next_term = terms_list.pop().lower()
-        guess_valency = 0
-        name_valency = [self.__rome2num[v.upper()] for v in name_valency_]
-        if len(name_valency) > 1:
-            print ('WARNING! Found many valencies per chemical name '+ chem_name)
-            print (name_valency)
+            for material_name in not_abbreviations:
+                if sorted(re.findall('[A-NP-Z]', abbr)) == sorted(re.findall('[A-NP-Z]', material_name)):
+                    abbreviations_dict[abbr] = material_name
 
-        if 'hydrogen' in next_term:
-            anion = next_term + ' ' + anion
-        else:
-            terms_list = terms_list + [next_term]
-            for p in self.__prefixes2num.keys():
-                if anion.find(p) == 0 and p != '':
-                    guess_valency = self.__prefixes2num[p]
-                    anion = re.sub('^'+p, '', anion).strip('-')
-                    if anion == 'xide':
-                        anion = 'o'+anion
+        # for all other abbreviations going through the paper text
+        for abbr, name in abbreviations_dict.items():
+            sents = ' '.join([s + ' ' for s in paragraph if abbr in s]).strip(' ').split(abbr)
+            i = 0
+            while abbreviations_dict[abbr] == '' and i < len(sents):
+                sent = sents[i]
+                for tok in sent.split(' '):
+                    if sorted(re.findall('[A-NP-Z]', tok)) == sorted(re.findall('[A-NP-Z]', abbr)):
+                        abbreviations_dict[abbr] = tok
+                i += 1
 
-        if anion in self.__anions:
-           anion_data = self.__anions[anion]
-        else:
-            return output_formula
+        for abbr in abbreviations_dict.keys():
+            parts = re.split('-', abbr)
+            if all(p in abbreviations_dict for p in parts) and abbreviations_dict[abbr] == '' and len(parts) > 1:
+                name = ''.join('(' + abbreviations_dict[p] + ')' + '-' for p in parts).rstrip('-')
+                abbreviations_dict[abbr] = name
 
-        if len(terms_list) != 1:
-            return output_formula
+        empty_list = [abbr for abbr, name in abbreviations_dict.items() if name == '']
+        for abbr in empty_list:
+            del abbreviations_dict[abbr]
 
-        if terms_list[0] in self.__cations:
-            cation_data = self.__cations[terms_list[0]]
-        else:
-            return output_formula
+        return abbreviations_dict
 
-        true_valency = -1
-        formulas = []
-        for i, v_cation in enumerate(cation_data['valency']):
-            v_anion = abs(anion_data['valency'][0])
+    ###################################################################################################################
+    # Methods to substitute variables
+    ###################################################################################################################
 
-            if v_cation in name_valency:
-                true_valency = i
+    def __get_values(self, string, mode):
+        values = []
+        max_value = None
+        min_value = None
 
-            cm = self.__lcm(v_cation, v_anion)
-            v_cation = cm // v_cation
-            v_anion = cm // v_anion
+        if len(string) == 0:
+            return dict(values=[], max_value=None, min_value=None)
 
-            if v_anion == guess_valency and guess_valency != 0:
-                if true_valency not in [-1, i]:
-                    print ('WARNING! Valencies mismatch for chemical name ' + chem_name)
-                    print (name_valency, guess_valency)
+        # given range
+        if mode == 'range':
+            min_value, max_value = string[0]
+            max_value = max_value.rstrip('., ')
+            min_value = min_value.rstrip('., ')
+            max_value = re.sub('[a-z]*', '', max_value)
+            min_value = re.sub('[a-z]*', '', min_value)
+            try:
+                max_value = round(float(smp.simplify(max_value)), 4)
+                min_value = round(float(smp.simplify(min_value)), 4) if min_value != '' else None
+            except Exception as ex:
+                max_value = None
+                min_value = None
+                template = "An exception of type {0} occurred when use sympy. Arguments:\n{1!r}."
+                message = template.format(type(ex).__name__, ex.args)
+                print(message)
+            values = []
 
-                true_valency = i
+            return dict(values=values, max_value=max_value, min_value=min_value)
 
-            el_anion = anion_data['e_name']
-            if v_anion > 1 and anion_data['n_atoms'] > 1:
-                el_anion = '(' + el_anion + ')'
+        # given list
+        if mode == 'values':
+            # values = re.split('[,\s]', string[0])
+            values = re.split('[,\s]', re.sub('[a-z]+', '', string[0]))
+            try:
+                values = [round(float(smp.simplify(c.rstrip('., '))), 4) for c in values if
+                          c.rstrip('., ') not in ['', 'and']]
+                max_value = max(values) if values != [] else None
+                min_value = min(values) if len(values) > 1 else None
+            except Exception as ex:
+                values = []
+                max_value = None
+                min_value = None
+                template = "An exception of type {0} occurred when use sympy. Arguments:\n{1!r}"
+                message = template.format(type(ex).__name__, ex.args)
+                print(message)
 
-            formulas.append(cation_data['e_name'] + self.__cast_stoichiometry(v_cation)
-                            + el_anion + self.__cast_stoichiometry(v_anion))
+        return dict(values=values, max_value=max_value, min_value=min_value)
 
-        true_valency = true_valency * int(len(cation_data['valency']) > 1)
+    def get_stoichiometric_values(self, var, sentence):
+        values = dict(values=[], max_value=None, min_value=None)
 
-        if true_valency == -1:
-            #print ('WARNING! Ambiguous valency for chemical name '+ chem_name)
-            #print ('Stoichiometry of compound will be undefined.')
+        regs = [(var + '\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]', 'values'),
+                (var + '\s*=\s*([0-9\.]+)\s*[-–]\s*([0-9\.\s]+)[\s\)\]\,m\%]', 'range'),
+                ('([0-9\.\s]*)\s*[<≤⩽]{0,1}\s*' + var + '\s*[<≤⩽>]{1}\s*([0-9\.\s]+)[\s\)\]\.\,]', 'range'),
+                (var + '[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)', 'range'),
+                ]
 
-            output_formula = cation_data['e_name'] + self.__cast_stoichiometry(abs(anion_data['valency'][0])) \
-                             + el_anion + 'x'
+        for r, m in regs:
+            #print ('-->', r)
+            if values['values'] == [] and values['max_value'] is None:
+                r_res = re.findall(r, sentence.replace(' - ', '-'))
+                #print ('-->', r_res)
+                values = self.__get_values(r_res, m)
+                #print ('-->', values)
+            #print ('----')
 
-        else:
-            output_formula = formulas[true_valency]
+        return values
 
-        return output_formula
+    def get_elements_values(self, var, sentence):
+        values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z,\s]+)', sentence)
+        if len(values) > 0:
+            values = [c for c in re.split('[,\s]', values[0]) if
+                      c in self.__list_of_elements_1 + self.__list_of_elements_2]
 
-    def __valencies_combinations(self, v_list):
-        output = []
-        output_num = 1
-        for l in v_list:
-            output_num = output_num * len(l)
-        output_size = len(v_list)
-        for i, l in enumerate(v_list):
-            period = output_num // len(l)
-            output.append([el for i in range(period) for el in l])
+        return values
 
-        output = np.reshape(output, (output_num, output_size))
-        return output
+    ###################################################################################################################
+    # Splitting list of materials
+    ###################################################################################################################
+
+    def is_materials_list(self, material_string):
+        if any(a + 's' in material_string.lower() for a in self.__anions.keys()) and \
+                any(w in material_string for w in ['and ', ',', ' of ']):
+            return True
+
+        return False
+
+    def reconstruct_list_of_materials(self, material_string):
+
+        parts = [p for p in re.split('[\s\,]', material_string) if p != '']
+
+        anion = [(i, p[:-1]) for i, p in enumerate(parts) if p[:-1].lower() in self.__anions.keys()]
+        cation = [(i, p) for i, p in enumerate(parts) if p.lower() in self.__cations.keys()
+                  or p in self.__list_of_elements_1 + self.__list_of_elements_2]
+        valencies = [(i - 1, p.strip('()')) for i, p in enumerate(parts) if p.strip('()') in self.__rome2num and i != 0]
+
+        result = []
+        if len(anion) == 1:
+            for c_i, c in cation:
+
+                if c in self.__element2name:
+                    name = [self.__element2name[c]]
+                else:
+                    name = [c.lower()]
+                valency = ''.join([v for v_i, v in valencies if v_i == c_i])
+                if valency != '':
+                    name.append('(' + valency + ')')
+                name.append(anion[0][1])
+                # formula = mp.reconstruct_formula(name.copy(), valency)
+                hydr_i = material_string.find('hydrate')
+                if hydr_i > -1:
+                    pref = []
+                    while material_string[hydr_i - 1] != ' ' and hydr_i > 0:
+                        pref.append(material_string[hydr_i - 1])
+                        hydr_i -= 1
+
+                    pref = ''.join([p for p in reversed(pref)])
+
+                    if pref not in self.__neg_prefixes:
+                        # formula = formula+'·'+str(prefixes2num[pref])+'H2O'
+                        name.append(pref + 'hydrate')
+                result.append((''.join([n + ' ' for n in name]).strip(' '), valency))
+
+        return result
+
+    ###################################################################################################################
+    # Misc
+    ###################################################################################################################
+
+    def cleanup_name(self, material_name):
+
+        # print (material_name)
+
+        material_name = material_name.replace('−', '-')
+
+        if any(a in material_name for a in ['→', '⟶']):
+            return ''
+
+        if 'hbox' in material_name.lower():
+            material_name = re.sub('(\\\\[a-z\(\)]+)', '', material_name)
+            for t in ['{', '}', '_', ' ']:
+                material_name = material_name.replace(t, '')
+            material_name = material_name.rstrip('\\')
+
+        material_name = re.sub('\({0,1}[0-9\.]*\s*⩽{0,1}\s*[x,y]{0,1}\s*[⩽=]\s*[0-9\.-]*\){0,1}', '', material_name)
+
+        for c in ['\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
+                  '\(A.G', '\(Fuchen', '\(Furuuchi', '\(AR\)']:
+            split = re.split(c, material_name)
+            if len(split) > 1:
+                if len(split[1]) == '' or all(not s.isalpha() for s in split[1]):
+                    material_name = re.split(c, material_name)[0]
+
+        replace_dict = {'oxyde': 'oxide',
+                        'luminum': 'luminium',
+                        'magneshium': 'magnesium',
+                        'stanate': 'stannate',
+                        'sulph': 'sulf',
+                        'buter': 'butyr',
+                        'butir': 'butyr',
+                        'butly': 'butyl',
+                        'ethly': 'ethyl',
+                        'ehtyl': 'ethyl',
+                        'Abstract ': '',
+                        'phio': 'thio',
+                        'uim': 'ium',
+                        'butryal': 'butyral',
+                        'ooper': 'opper',
+                        'acac': 'CH3COCHCOCH3',
+                        'glass': '',
+                        'glasses': '',
+                        'europeam': 'europium',
+                        'siliminite': 'sillimanite',
+                        'acethylene': 'acetylene',
+                        'iso-pro': 'isopro',
+                        'anhydrous': ''
+                        }
+
+        for typo, correct in replace_dict.items():
+            material_name = material_name.replace(typo, correct)
+
+        if material_name[-2:] == '/C':
+            material_name = material_name[:-2]
+
+        material_name = re.sub('(poly[\s-])(?=[a-z])', 'poly', material_name)
+
+        if material_name[-2:] == '/C':
+            material_name = material_name[:-2]
+
+        if len(material_name.split(' ')) > 1:
+            for v in re.findall('[a-z](\([IV,]+\))', material_name):
+                material_name = material_name.replace(v, ' ' + v)
+
+        if material_name != '':
+            material_name = self.__check_parentheses(material_name)
+
+        material_name = material_name.lstrip(') -')
+        material_name = material_name.rstrip('( ,.:;-±/δ')
+
+        return material_name
+
+    def __check_parentheses(self, formula):
+
+        new_formula = formula
+
+        new_formula = new_formula.replace('[', '(')
+        new_formula = new_formula.replace(']', ')')
+        new_formula = new_formula.replace('{', '(')
+        new_formula = new_formula.replace('}', ')')
+
+        par_open = re.findall('\(', new_formula)
+        par_close = re.findall('\)', new_formula)
+
+        if new_formula[0] == '(' and new_formula[-1] == ')' and len(par_close) == 1 and len(par_open) == 1:
+            new_formula = new_formula[1:-1]
+
+        if len(par_open) == 1 and len(par_close) == 0:
+            if new_formula.find('(') == 0:
+                new_formula = new_formula.replace('(', '')
+            else:
+                new_formula += ')'
+
+        if len(par_close) == 1 and len(par_open) == 0:
+            if new_formula[-1] == ')':
+                new_formula = new_formula.rstrip(')')
+            else:
+                new_formula = '(' + new_formula
+        #
+        # if len(par_close) - len(par_open) == 1 and new_formula[-1] == ')':
+        #     new_formula = new_formula.rstrip(')')
+
+        return new_formula
+
+    def __simplify(self, value):
+
+        """
+        simplifying stoichiometric expression
+        :param value: string
+        :return: string
+        """
+
+        for l in self.__greek_letters:
+            _clash[l] = smp.Symbol(l)
+
+        new_value = value
+        for i, m in enumerate(re.finditer('(?<=[0-9])([a-z' + ''.join(self.__greek_letters) + '])', new_value)):
+            new_value = new_value[0:m.start(1) + i] + '*' + new_value[m.start(1) + i:]
+        new_value = smp.simplify(smp.sympify(new_value, _clash))
+        if new_value.is_Number:
+            new_value = round(float(new_value), 3)
+
+        return str(new_value)
 
     def __lcm(self, x, y):
         """This function takes two
         integers and returns the L.C.M."""
 
         # choose the greater number
+        lcm = None
         if x > y:
             greater = x
         else:
             greater = y
 
         found = False
-        while (not found):
-            if ((greater % x == 0) and (greater % y == 0)):
+        while not found:
+            if (greater % x == 0) and (greater % y == 0):
                 lcm = greater
                 found = True
             greater += 1
@@ -825,148 +1013,11 @@ class MaterialParser:
 
         return str(value)
 
-    ###################################################################################################################
-    ### Misc
-    ###################################################################################################################
-
-    def clean_up_material_name(self, material_name, remove_offstoichiometry=False):
-
-        """
-        this is a fix of incorrect tokenization of chemical names
-        do not rely much on it
-        tested on specific sample of papers from 20K solid-state paragraphs
-        use at your own risk
-        :param
-        material_name: string - initial material string
-        remove_offstoichiometry: boolean - if True greek symbols next to O at the end of formula will be removed
-        :return: string
-        """
-
-        updated_name = ''
-        material_name = material_name.strip('- ')
-        remove_list = ['SOFCs', 'LT-SOFCs', 'IT-SOFCs', '(IT-SOFCs']
-
-        # this is mostly for precursors
-        for c in ['\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
-                  '\(A.G', '\(Fuchen', '\(Furuuchi', '(AR)']:
-            material_name = re.split(c, material_name)[0]
-        material_name = material_name.rstrip('-,.')
-
-        # getting rid of trash words
-        material_name = material_name.replace('ceramics', '')
-        material_name = material_name.replace('ceramic', '')
-        trash_words = ['bulk', 'coated', 'rare', 'earth', 'undoped', 'layered', 'anhydrous', '(s)', 'stabilized']
-        for w in trash_words:
-            material_name = material_name.replace(w, '')
-        material_name = material_name.strip(' ')
-
-        # removing single parenthesis
-        if material_name[0] == '(' and ')' not in material_name:
-            material_name = material_name[1:]
-
-        if material_name[-1] == ')' and '(' not in material_name:
-            material_name = material_name[:-1]
-
-        # symbols from phase... need to move it to phase section
-        for c in ['″', '′', 'and']:
-            material_name = material_name.replace(c, '')
-
-        # leftovers from references
-        for c in re.findall('\[[0-9]+\]', material_name):
-            material_name = material_name.replace(c, '')
-
-        # can be used to remove unresolved stoichiometry symbol at the end of the formula
-        if remove_offstoichiometry and material_name != '':
-            if material_name[-1] == 'δ' and len(re.findall('δ', material_name)) == 1:
-                material_name = material_name[0:-1]
-                material_name = material_name.rstrip('- ±')
-
-        # standartize aluminium name
-        material_name = material_name.replace('aluminum', 'aluminium')
-        material_name = material_name.replace('Aluminum', 'Aluminium')
-
-        material_name = material_name.replace('dehydrate', 'dihydrate')
-        material_name = material_name.replace('nanohydrate', 'nonahydrate')
-
-        if material_name in remove_list or material_name == '':
-            return ''
-
-        # make single from plurals
-        if material_name != '':
-            if material_name[-2:] not in ['As', 'Cs', 'Os', 'Es', 'Hs', 'Ds']:
-                material_name = material_name.rstrip('s')
-
-        # checking if the name in form of "chemical name [formula]"
-        if material_name[0].islower() and material_name[0] != 'x':
-            parts = [s for s in re.split('([a-z\-\s]+)\s*\[(.*)\]', material_name) if s != '']
-            if len(parts) == 2:
-                return parts.pop()
-
-        return material_name
-
-    def split_material_name(self, material_name, pubchem_lookup=False):
-
-        """
-        this is a fix of incorrect tokenization of chemical names
-        do not rely much on it
-        tested on specific sample of papers from 20K solid-state paragraphs
-        use at your own risk
-        :param
-        material_name: string - initial material string
-        pubchem_lookup: boolean - if True chemical name will be searched in pubchem DB
-        :return: string
-        """
-
-        updated_name = ''
-        # trying to split correctly name, irrelevant words and formula
-        material_name = material_name.strip('- ')
-        parts_1 = [w for w in re.split('\s', material_name) if len(w) > 2]
-        parts_2 = [w for w in re.findall('[a-z]+', material_name) if len(w) > 2]
-
-        t_struct = {}
-        for material in parts_1:
-            try:
-                t_struct = self.__mp.get_structure_by_formula(material)
-            except:
-                t_struct['composition'] = {}
-
-            if t_struct['composition'] != {}:
-                updated_name = material
-        if updated_name != '':
-            return updated_name
-
-        if len(parts_1) > 1:
-            if len(parts_1) == len(parts_2):
-                if material_name.lower() in self.__chemical_names or material_name in self.__chemical_names:
-                    updated_name = self.__chemical_names[material_name.lower()]
-                # pubchem can be used to look for chemical names
-                # elif pubchem_lookup:
-                #     comp = pcp.get_compounds(material_name.lower(), 'name')
-                #     if len(comp) > 0:
-                #         updated_name = comp[0].molecular_formula
-
-            if len(parts_1) - len(parts_2) == 1:
-                try:
-                    t_struct = self.__mp.get_structure_by_formula(parts_1[-1])
-                    if t_struct['composition'] != {}:
-                        updated_name = parts_1[-1]
-                except:
-                    updated_name = ''
-
-            if len(updated_name) == 0:
-                updated_name = material_name
-
-        else:
-            updated_name = material_name
-
-        # in case there are parenthensis around
-        if len(re.findall('[\[\]]', updated_name)) == 2 and updated_name[0] == '[' and updated_name[-1] == ']':
-            updated_name = updated_name.replace('[', '')
-            updated_name = updated_name.replace(']', '')
-
-        return updated_name
-
-
-
-
-
+    def __empty_structure(self):
+        return dict(
+            composition={},
+            fraction_vars={},
+            elements_vars={},
+            hydrate='',
+            phase=''
+        )
