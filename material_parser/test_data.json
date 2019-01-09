@@ -1,0 +1,1359 @@
+[
+  {
+    "material": "manganese (II) nitrate Mn(NO3)2×4H2O",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Mn(NO3)2×4H2O",
+        "composition": {
+          "Mn(NO3)2": {
+            "composition": {
+              "Mn": "1.0",
+              "O": "6.0",
+              "N": "2.0"
+            },
+            "fraction": "1"
+          }
+        },
+        "hydrate": 4.0,
+        "is_abbreviation_like": false,
+        "material_name": "manganese (II) nitrate",
+        "fraction_vars": {},
+        "material_string": "manganese (II) nitrate Mn(NO3)2×4H2O"
+      }
+    ]
+  },
+  {
+    "material": "Lanthanum strontium manganite (La0.8Sr0.2)0.97MnO3",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "(La0.8Sr0.2)0.97MnO3",
+        "composition": {
+          "(La0.8Sr0.2)0.97MnO3": {
+            "composition": {
+              "Mn": "1.0",
+              "O": "3.0",
+              "La": "0.776",
+              "Sr": "0.194"
+            },
+            "fraction": "1"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "Lanthanum strontium manganite",
+        "fraction_vars": {},
+        "material_string": "Lanthanum strontium manganite (La0.8Sr0.2)0.97MnO3"
+      }
+    ]
+  },
+  {
+    "material": "lutetium oxide Lu2O3(99.9",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Lu2O3",
+        "composition": {
+          "Lu2O3": {
+            "composition": {
+              "Lu": "2.0",
+              "O": "3.0"
+            },
+            "fraction": "1"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "lutetium oxide",
+        "fraction_vars": {},
+        "material_string": "lutetium oxide Lu2O3(99.9"
+      }
+    ]
+  },
+  {
+    "material": "molybdenum oxide Ag1/8Pr5/8MoO4",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Ag1/8Pr5/8MoO4",
+        "composition": {
+          "Ag1/8Pr5/8MoO4": {
+            "composition": {
+              "Pr": "0.625",
+              "Mo": "1.0",
+              "Ag": "0.125",
+              "O": "4.0"
+            },
+            "fraction": "1"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "molybdenum oxide",
+        "fraction_vars": {},
+        "material_string": "molybdenum oxide Ag1/8Pr5/8MoO4"
+      }
+    ]
+  },
+  {
+    "material": "Er chlorides",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "ErCl3",
+        "composition": {
+          "ErCl3": {
+            "composition": {
+              "Cl": "3.0",
+              "Er": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "erbium chloride",
+        "fraction_vars": {},
+        "material_string": "erbium chloride"
+      }
+    ]
+  },
+  {
+    "material": "ferric perchlorate",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Fe(ClO4)3",
+        "composition": {
+          "Fe(ClO4)3": {
+            "composition": {
+              "Cl": "3.0",
+              "O": "12.0",
+              "Fe": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "ferric perchlorate",
+        "fraction_vars": {},
+        "material_string": "ferric perchlorate"
+      }
+    ]
+  },
+  {
+    "material": "triammonium citrate",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "(NH4)3C3H5O(COO)3",
+        "composition": {
+          "(NH4)3C3H5O(COO)3": {
+            "composition": {
+              "C": "6.0",
+              "O": "7.0",
+              "N": "3.0",
+              "H": "17.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "triammonium citrate",
+        "fraction_vars": {},
+        "material_string": "triammonium citrate"
+      }
+    ]
+  },
+  {
+    "material": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "((NH4)6Mo7O24⋅4H2O)",
+        "composition": {
+          "((NH4)6Mo7O24": {
+            "composition": {
+              "N": "6.0",
+              "H": "24.0"
+            },
+            "fraction": "1"
+          }
+        },
+        "hydrate": 4.0,
+        "is_abbreviation_like": false,
+        "material_name": "ammonium molybdate",
+        "fraction_vars": {},
+        "material_string": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]"
+      }
+    ]
+  },
+  {
+    "material": "Copper Sulfate Pentahydrate",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "Cu2(SO4)3·5H2O",
+        "composition": {
+          "Cu2(SO4)3": {
+            "composition": {
+              "O": "12.0",
+              "S": "3.0",
+              "Cu": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": 5.0,
+        "is_abbreviation_like": false,
+        "material_name": "Copper Sulfate Pentahydrate",
+        "fraction_vars": {},
+        "material_string": "Copper Sulfate Pentahydrate"
+      }
+    ]
+  },
+  {
+    "material": "antimony pentoxide",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Sb2O5",
+        "composition": {
+          "Sb2O5": {
+            "composition": {
+              "O": "5.0",
+              "Sb": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "antimony pentoxide",
+        "fraction_vars": {},
+        "material_string": "antimony pentoxide"
+      }
+    ]
+  },
+  {
+    "material": "zinc (II) acetate dihydrate",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "Zn(CH3COO)2·2H2O",
+        "composition": {
+          "Zn(CH3COO)2": {
+            "composition": {
+              "Zn": "1.0",
+              "C": "4.0",
+              "O": "4.0",
+              "H": "6.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": 2.0,
+        "is_abbreviation_like": false,
+        "material_name": "zinc (II) acetate dihydrate",
+        "fraction_vars": {},
+        "material_string": "zinc (II) acetate dihydrate"
+      }
+    ]
+  },
+  {
+    "material": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+        "composition": {
+          "PbZr0.52Ti0.48O3": {
+            "composition": {
+              "Zr": "0.52",
+              "O": "3.0",
+              "Pb": "1.0",
+              "Ti": "0.48"
+            },
+            "fraction": "-x + 1"
+          },
+          "BaTiO3": {
+            "composition": {
+              "Ba": "1.0",
+              "O": "3.0",
+              "Ti": "1.0"
+            },
+            "fraction": "x"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+        "fraction_vars": {},
+        "material_string": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3"
+      }
+    ]
+  },
+  {
+    "material": "Li5+xLa3Ta2-xGexO12",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Li5+xLa3Ta2-xGexO12",
+        "composition": {
+          "Li5+xLa3Ta2-xGexO12": {
+            "composition": {
+              "Ta": "-x + 2",
+              "Li": "x + 5",
+              "Ge": "x",
+              "O": "12.0",
+              "La": "3.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "Li5+xLa3Ta2-xGexO12",
+        "fraction_vars": {
+          "x": {}
+        },
+        "material_string": "Li5+xLa3Ta2-xGexO12"
+      }
+    ]
+  },
+  {
+    "material": "Magnesium, nickel and niobium (V) oxides",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "MgO",
+        "composition": {
+          "MgO": {
+            "composition": {
+              "Mg": "1.0",
+              "O": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "magnesium oxide",
+        "fraction_vars": {},
+        "material_string": "magnesium oxide"
+      },
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Ni2O3",
+        "composition": {
+          "Ni2O3": {
+            "composition": {
+              "O": "3.0",
+              "Ni": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "nickel oxide",
+        "fraction_vars": {},
+        "material_string": "nickel oxide"
+      },
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Nb2O5",
+        "composition": {
+          "Nb2O5": {
+            "composition": {
+              "O": "5.0",
+              "Nb": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "niobium (V) oxide",
+        "fraction_vars": {},
+        "material_string": "niobium (V) oxide"
+      }
+    ]
+  },
+  {
+    "material": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
+        "composition": {
+          "Al2O3": {
+            "composition": {
+              "O": "3.0",
+              "Al": "2.0"
+            },
+            "fraction": "x"
+          },
+          "CaO": {
+            "composition": {
+              "O": "1.0",
+              "Ca": "1.0"
+            },
+            "fraction": "10.0"
+          },
+          "Na2O": {
+            "composition": {
+              "Na": "2.0",
+              "O": "1.0"
+            },
+            "fraction": "16.0"
+          },
+          "SiO2": {
+            "composition": {
+              "O": "2.0",
+              "Si": "1.0"
+            },
+            "fraction": "-x + 74"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
+        "fraction_vars": {},
+        "material_string": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2"
+      }
+    ]
+  },
+  {
+    "material": "(40-x)BaO·xFe2O3·(60-x)P2O5",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "(40-x)BaO·xFe2O3·(60-x)P2O5",
+        "composition": {
+          "P2O5": {
+            "composition": {
+              "P": "2.0",
+              "O": "5.0"
+            },
+            "fraction": "-x + 60"
+          },
+          "BaO": {
+            "composition": {
+              "Ba": "1.0",
+              "O": "1.0"
+            },
+            "fraction": "-x + 40"
+          },
+          "Fe2O3": {
+            "composition": {
+              "O": "3.0",
+              "Fe": "2.0"
+            },
+            "fraction": "x"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "(40-x)BaO·xFe2O3·(60-x)P2O5",
+        "fraction_vars": {},
+        "material_string": "(40-x)BaO·xFe2O3·(60-x)P2O5"
+      }
+    ]
+  },
+  {
+    "material": "LiSr1-xPO4:Eux",
+    "parser_output": [
+      {
+        "dopants": [
+          "Eux"
+        ],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "LiSr1-xPO4",
+        "composition": {
+          "LiSr1-xPO4": {
+            "composition": {
+              "P": "1.0",
+              "O": "4.0",
+              "Li": "1.0",
+              "Sr": "-x + 1"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "LiSr1-xPO4",
+        "fraction_vars": {
+          "x": {}
+        },
+        "material_string": "LiSr1-xPO4:Eux"
+      }
+    ]
+  },
+  {
+    "material": "NaSrBO3:Tb3+",
+    "parser_output": [
+      {
+        "dopants": [
+          "Tb3+"
+        ],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "NaSrBO3",
+        "composition": {
+          "NaSrBO3": {
+            "composition": {
+              "Na": "1.0",
+              "O": "3.0",
+              "Sr": "1.0",
+              "B": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "NaSrBO3",
+        "fraction_vars": {},
+        "material_string": "NaSrBO3:Tb3+"
+      }
+    ]
+  },
+  {
+    "material": "K2O·3Al2O3·6SiO2·2H2O",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "K2O·3Al2O3·6SiO2·2H2O",
+        "composition": {
+          "Al2O3": {
+            "composition": {
+              "O": "3.0",
+              "Al": "2.0"
+            },
+            "fraction": "3.0"
+          },
+          "K2O": {
+            "composition": {
+              "K": "2.0",
+              "O": "1.0"
+            },
+            "fraction": "1.0"
+          },
+          "SiO2": {
+            "composition": {
+              "O": "2.0",
+              "Si": "1.0"
+            },
+            "fraction": "6.0"
+          }
+        },
+        "hydrate": 2.0,
+        "is_abbreviation_like": false,
+        "material_name": "K2O·3Al2O3·6SiO2·2H2O",
+        "fraction_vars": {},
+        "material_string": "K2O·3Al2O3·6SiO2·2H2O"
+      }
+    ]
+  },
+  {
+    "material": "SrAl2O4:Eu0.01",
+    "parser_output": [
+      {
+        "dopants": [
+          "Eu0.01"
+        ],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "SrAl2O4",
+        "composition": {
+          "SrAl2O4": {
+            "composition": {
+              "O": "4.0",
+              "Sr": "1.0",
+              "Al": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "SrAl2O4",
+        "fraction_vars": {},
+        "material_string": "SrAl2O4:Eu0.01"
+      }
+    ]
+  },
+  {
+    "material": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+ Ho0.013+",
+    "parser_output": [
+      {
+        "dopants": [
+          "Eu0.012+, Dy0.013+ Ho0.013+"
+        ],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Sr1.97MgSi2O7",
+        "composition": {
+          "Sr1.97MgSi2O7": {
+            "composition": {
+              "Mg": "1.0",
+              "O": "7.0",
+              "Si": "2.0",
+              "Sr": "1.97"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "Sr1.97MgSi2O7",
+        "fraction_vars": {},
+        "material_string": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+ Ho0.013+"
+      }
+    ]
+  },
+  {
+    "material": "Ca2BO3Cl:Sm3+, Eu3+",
+    "parser_output": [
+      {
+        "dopants": [
+          "Sm3+, Eu3+"
+        ],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Ca2BO3Cl",
+        "composition": {
+          "Ca2BO3Cl": {
+            "composition": {
+              "Cl": "1.0",
+              "O": "3.0",
+              "Ca": "2.0",
+              "B": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "Ca2BO3Cl",
+        "fraction_vars": {},
+        "material_string": "Ca2BO3Cl:Sm3+, Eu3+"
+      }
+    ]
+  },
+  {
+    "material": "nickel (II) and manganese (II) acetates",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Ni(CH3COO)2",
+        "composition": {
+          "Ni(CH3COO)2": {
+            "composition": {
+              "C": "4.0",
+              "O": "4.0",
+              "H": "6.0",
+              "Ni": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "nickel (II) acetate",
+        "fraction_vars": {},
+        "material_string": "nickel (II) acetate"
+      },
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": false,
+        "material_formula": "Mn(CH3COO)2",
+        "composition": {
+          "Mn(CH3COO)2": {
+            "composition": {
+              "C": "4.0",
+              "O": "4.0",
+              "H": "6.0",
+              "Mn": "1.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "manganese (II) acetate",
+        "fraction_vars": {},
+        "material_string": "manganese (II) acetate"
+      }
+    ]
+  },
+  {
+    "material": "yttrium (III) nitrate hexahydrate",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "Y(NO3)3·6H2O",
+        "composition": {
+          "Y(NO3)3": {
+            "composition": {
+              "Y": "1.0",
+              "O": "9.0",
+              "N": "3.0"
+            },
+            "fraction": "1.0"
+          }
+        },
+        "hydrate": 6.0,
+        "is_abbreviation_like": false,
+        "material_name": "yttrium (III) nitrate hexahydrate",
+        "fraction_vars": {},
+        "material_string": "yttrium (III) nitrate hexahydrate"
+      }
+    ]
+  },
+  {
+    "material": "(90-x)WC-xTiC-10Co",
+    "parser_output": [
+      {
+        "dopants": [],
+        "elements_vars": {},
+        "phase": "",
+        "is_mixture": true,
+        "material_formula": "(90-x)WC-xTiC-10Co",
+        "composition": {
+          "TiC": {
+            "composition": {
+              "C": "1.0",
+              "Ti": "1.0"
+            },
+            "fraction": "x"
+          },
+          "WC": {
+            "composition": {
+              "W": "1.0",
+              "C": "1.0"
+            },
+            "fraction": "-x + 90"
+          },
+          "Co": {
+            "composition": {
+              "Co": "1.0"
+            },
+            "fraction": "10.0"
+          }
+        },
+        "hydrate": null,
+        "is_abbreviation_like": false,
+        "material_name": "(90-x)WC-xTiC-10Co",
+        "fraction_vars": {},
+        "material_string": "(90-x)WC-xTiC-10Co"
+      }
+    ]
+  },
+  {
+    "material": "Ce and La acetylacetonates",
+    "parser_output": [
+      {
+        "material_formula": "Ce(CH3COCHCOCH3)4",
+        "dopants": [],
+        "hydrate": null,
+        "material_string": "cerium acetylacetonate",
+        "material_name": "cerium acetylacetonate",
+        "is_abbreviation_like": false,
+        "elements_vars": {},
+        "composition": {
+          "Ce(CH3COCHCOCH3)4": {
+            "fraction": "1.0",
+            "composition": {
+              "H": "28.0",
+              "Ce": "1.0",
+              "O": "8.0",
+              "C": "20.0"
+            }
+          }
+        },
+        "phase": "",
+        "is_mixture": false,
+        "fraction_vars": {}
+      },
+      {
+        "material_formula": "La(CH3COCHCOCH3)3",
+        "dopants": [],
+        "hydrate": null,
+        "material_string": "lanthanum acetylacetonate",
+        "material_name": "lanthanum acetylacetonate",
+        "is_abbreviation_like": false,
+        "elements_vars": {},
+        "composition": {
+          "La(CH3COCHCOCH3)3": {
+            "fraction": "1.0",
+            "composition": {
+              "H": "21.0",
+              "O": "6.0",
+              "C": "15.0",
+              "La": "1.0"
+            }
+          }
+        },
+        "phase": "",
+        "is_mixture": false,
+        "fraction_vars": {}
+      }
+    ]
+  },
+  {
+    "material": "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4",
+    "parser_output": [
+      {
+        "material_formula": "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4",
+        "dopants": [],
+        "hydrate": null,
+        "material_string": "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4",
+        "material_name": "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4",
+        "is_abbreviation_like": false,
+        "elements_vars": {},
+        "composition": {
+          "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4": {
+            "fraction": "1.0",
+            "composition": {
+              "Al": "x + 0.6",
+              "Mg": "0.3",
+              "Ni": "0.6",
+              "O": "4.0",
+              "Mn": "-x + 1.5"
+            }
+          }
+        },
+        "phase": "",
+        "is_mixture": false,
+        "fraction_vars": {
+          "x": {}
+        }
+      }
+    ]
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "(Ba0.5Sr0.5Co0.8Fe0.2 O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)",
+        "material_formula": "(Ba0.5Sr0.5Co0.8Fe0.2O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)",
+        "material_name": "",
+        "phase": "",
+        "is_mixture": true,
+        "elements_vars": {},
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "fraction_vars": {
+          "δ": {}
+        },
+        "composition": {
+          "BaCe0.5Zr0.3Y0.16Zn0.04O3-δ": {
+            "fraction": "1.0",
+            "composition": {
+              "O": "-δ + 3",
+              "Ba": "1.0",
+              "Zr": "0.3",
+              "Zn": "0.04",
+              "Y": "0.16",
+              "Ce": "0.5"
+            }
+          },
+          "Ba0.5Sr0.5Co0.8Fe0.2O3-δ": {
+            "fraction": "1.0",
+            "composition": {
+              "Ba": "0.5",
+              "Co": "0.8",
+              "Sr": "0.5",
+              "Fe": "0.2",
+              "O": "-δ + 3"
+            }
+          }
+        }
+      }
+    ],
+    "material": "(Ba0.5Sr0.5Co0.8Fe0.2 O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
+        "material_formula": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
+        "material_name": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
+        "phase": "",
+        "is_mixture": true,
+        "elements_vars": {},
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "composition": {
+          "BiMg0.5Ti0.5O3": {
+            "fraction": "x",
+            "composition": {
+              "Mg": "0.5",
+              "Bi": "1.0",
+              "Ti": "0.5",
+              "O": "3.0"
+            }
+          },
+          "K0.5Na0.5NbO3": {
+            "fraction": "-x + 1",
+            "composition": {
+              "Na": "0.5",
+              "K": "0.5",
+              "Nb": "1.0",
+              "O": "3.0"
+            }
+          }
+        }
+      }
+    ],
+    "material": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "Li1+xMn2-xO4-zFz",
+        "material_formula": "Li1+xMn2-xO4-zFz",
+        "material_name": "Li1+xMn2-xO4-zFz",
+        "phase": "",
+        "is_mixture": false,
+        "elements_vars": {},
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "fraction_vars": {
+          "x": {},
+          "z": {}
+        },
+        "composition": {
+          "Li1+xMn2-xO4-zFz": {
+            "fraction": "1.0",
+            "composition": {
+              "Li": "x + 1",
+              "F": "z",
+              "Mn": "-x + 2",
+              "O": "-z + 4"
+            }
+          }
+        }
+      }
+    ],
+    "material": "Li1+xMn2-xO4-zFz"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "Titanium Tetraisopropoxide",
+        "material_formula": "Ti(OCH(CH3)2)4",
+        "material_name": "Titanium Tetraisopropoxide",
+        "phase": "",
+        "is_mixture": false,
+        "elements_vars": {},
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "composition": {
+          "Ti(OCH(CH3)2)4": {
+            "fraction": "1.0",
+            "composition": {
+              "H": "28.0",
+              "Ti": "1.0",
+              "C": "12.0",
+              "O": "4.0"
+            }
+          }
+        }
+      }
+    ],
+    "material": "Titanium Tetraisopropoxide"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "(K0.16Na0.84)0.5Bi4.5Ti4O15+xwt.% CeO2",
+        "material_formula": "(K0.16Na0.84)0.5Bi4.5Ti4O15",
+        "material_name": "(K0.16Na0.84)0.5Bi4.5Ti4O15",
+        "phase": "",
+        "is_mixture": false,
+        "elements_vars": {},
+        "dopants": [
+          "CeO2"
+        ],
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "composition": {
+          "(K0.16Na0.84)0.5Bi4.5Ti4O15": {
+            "fraction": "1.0",
+            "composition": {
+              "Bi": "4.5",
+              "K": "0.08",
+              "Ti": "4.0",
+              "O": "15.0",
+              "Na": "0.42"
+            }
+          }
+        }
+      }
+    ],
+    "material": "(K0.16Na0.84)0.5Bi4.5Ti4O15+xwt.% CeO2"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2",
+        "material_formula": "(Na0.5K0.5)NbO3",
+        "material_name": "(Na0.5K0.5)NbO3",
+        "phase": "",
+        "is_mixture": false,
+        "elements_vars": {},
+        "dopants": [
+          "CuF2"
+        ],
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "composition": {
+          "Na0.5K0.5NbO3": {
+            "fraction": "1.0",
+            "composition": {
+              "Na": "0.5",
+              "K": "0.5",
+              "Nb": "1.0",
+              "O": "3.0"
+            }
+          }
+        }
+      }
+    ],
+    "material": "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2"
+  },
+  {
+    "parser_output": [
+      {
+        "hydrate": null,
+        "material_string": "Sc2(MoO4)3: x% Eu3+",
+        "material_formula": "Sc2(MoO4)3",
+        "material_name": "Sc2(MoO4)3",
+        "phase": "",
+        "is_mixture": false,
+        "elements_vars": {},
+        "dopants": [
+          "Eu3+"
+        ],
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "composition": {
+          "Sc2(MoO4)3": {
+            "fraction": "1.0",
+            "composition": {
+              "Sc": "2.0",
+              "Mo": "3.0",
+              "O": "12.0"
+            }
+          }
+        }
+      }
+    ],
+    "material": "Sc2(MoO4)3: x% Eu3+"
+  },
+  {
+    "parser_output": [
+      {
+        "material_formula": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3",
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "phase": "",
+        "fraction_vars": {},
+        "hydrate": null,
+        "composition": {
+          "K0.5Na0.5NbO3": {
+            "composition": {
+              "O": "3.0",
+              "K": "0.5",
+              "Na": "0.5",
+              "Nb": "1.0"
+            },
+            "fraction": "-0.948*x + 0.948"
+          },
+          "LiSbO3": {
+            "composition": {
+              "O": "3.0",
+              "Sb": "1.0",
+              "Li": "1.0"
+            },
+            "fraction": "-0.052*x + 0.052"
+          },
+          "Bi2O3": {
+            "composition": {
+              "O": "3.0",
+              "Bi": "2.0"
+            },
+            "fraction": "x"
+          }
+        },
+        "is_mixture": true,
+        "elements_vars": {},
+        "material_name": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3",
+        "material_string": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3"
+      }
+    ],
+    "material": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3"
+  },
+  {
+    "parser_output": [
+      {
+        "material_string": "praseodymium tungstate Cd0.25Pr0.50□0.25WO4",
+        "phase": "",
+        "hydrate": null,
+        "is_mixture": false,
+        "fraction_vars": {},
+        "material_formula": "Cd0.25Pr0.50□0.25WO4",
+        "elements_vars": {},
+        "is_abbreviation_like": false,
+        "composition": {
+          "Cd0.25Pr0.50□0.25WO4": {
+            "composition": {
+              "Pr": "0.5",
+              "Cd": "0.25",
+              "W": "1.0",
+              "□": "0.25",
+              "O": "4.0"
+            },
+            "fraction": "1"
+          }
+        },
+        "material_name": "praseodymium tungstate",
+        "dopants": []
+      }
+    ],
+    "material": "praseodymium tungstate Cd0.25Pr0.50□0.25WO4"
+  },
+  {
+    "material": "Ba2In2(1-x)Ti2xO5+x□1-x",
+    "parser_output": [
+      {
+        "material_string": "Ba2In2(1-x)Ti2xO5+x□1-x",
+        "hydrate": null,
+        "elements_vars": {},
+        "composition": {
+          "Ba2In2-2*xTi2xO5+x□1-x": {
+            "fraction": "1.0",
+            "composition": {
+              "□": "-x + 1",
+              "In": "-2*x + 2",
+              "O": "x + 5",
+              "Ti": "2*x",
+              "Ba": "2.0"
+            }
+          }
+        },
+        "phase": "",
+        "material_name": "Ba2In2(1-x)Ti2xO5+x□1-x",
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "material_formula": "Ba2In2(1-x)Ti2xO5+x□1-x",
+        "fraction_vars": {
+          "x": {}
+        },
+        "is_mixture": false
+      }
+    ]
+  },
+  {
+    "material": "Li2SrTa2(1-x)Nb2xO7",
+    "parser_output": [
+      {
+        "material_string": "Li2SrTa2(1-x)Nb2xO7",
+        "hydrate": null,
+        "elements_vars": {},
+        "composition": {
+          "Li2SrTa2-2*xNb2xO7": {
+            "fraction": "1.0",
+            "composition": {
+              "Sr": "1.0",
+              "Li": "2.0",
+              "O": "7.0",
+              "Nb": "2*x",
+              "Ta": "-2*x + 2"
+            }
+          }
+        },
+        "phase": "",
+        "material_name": "Li2SrTa2(1-x)Nb2xO7",
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "material_formula": "Li2SrTa2(1-x)Nb2xO7",
+        "fraction_vars": {
+          "x": {}
+        },
+        "is_mixture": false
+      }
+    ]
+  },
+  {
+    "material": "Li(1+x)Mg3AlSi3(1+x)O10+6.5xF2",
+    "parser_output": [
+      {
+        "material_string": "Li(1+x)Mg3AlSi3(1+x)O10+6.5xF2",
+        "hydrate": null,
+        "elements_vars": {},
+        "composition": {
+          "Li1+xMg3AlSi3*x+3O10+6.5xF2": {
+            "fraction": "1.0",
+            "composition": {
+              "Li": "x + 1",
+              "O": "6.5*x + 10",
+              "Mg": "3.0",
+              "F": "2.0",
+              "Si": "3*x + 3",
+              "Al": "1.0"
+            }
+          }
+        },
+        "phase": "",
+        "material_name": "Li(1+x)Mg3AlSi3(1+x)O10+6.5xF2",
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "material_formula": "Li(1+x)Mg3AlSi3(1+x)O10+6.5xF2",
+        "fraction_vars": {
+          "x": {}
+        },
+        "is_mixture": false
+      }
+    ]
+  },
+  {
+    "material": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+    "parser_output": [
+      {
+        "material_string": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "hydrate": null,
+        "elements_vars": {
+          "L": [],
+          "A": []
+        },
+        "composition": {
+          "MgxAL2xLi0.5-0.5*xFe2.5-2.5*xO4": {
+            "fraction": "1.0",
+            "composition": {
+              "Li": "-0.5*x + 0.5",
+              "A": "1.0",
+              "Mg": "x",
+              "L": "2*x",
+              "Fe": "-2.5*x + 2.5",
+              "O": "4.0"
+            }
+          }
+        },
+        "phase": "",
+        "material_name": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "dopants": [],
+        "is_abbreviation_like": false,
+        "material_formula": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "fraction_vars": {
+          "x": {}
+        },
+        "is_mixture": false
+      }
+    ]
+  },
+  {
+    "material": "(Y, Gd)BO3:Eu",
+    "parser_output": [
+		{"composition": {"MBO3": {"composition": {"B": "1.0",
+				                                  "M": "1.0",
+				                                  "O": "3.0"},
+				                  "fraction": "1.0"}},
+		 "dopants": ["Eu"],
+		 "elements_vars": {"M": ["Y", "Gd"]},
+		 "fraction_vars": {},
+		 "hydrate": null,
+		 "is_abbreviation_like": false,
+		 "is_mixture": false,
+		 "material_formula": "(Y,Gd)BO3",
+		 "material_name": "",
+		 "material_string": "(Y, Gd)BO3:Eu",
+		 "phase": ""}
+    ]
+  }
+]
