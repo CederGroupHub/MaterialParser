@@ -66,8 +66,8 @@ class MaterialParser:
 
     def parse_material(self, material_string_):
         """
-        Method to parse material string into chemical structure and convert chemical name into chemical formula
-        :param material_string_: material name/formula
+        Main method to parse material string into chemical structure and convert chemical name into chemical formula
+        :param material_string_: < str> material name/formula
         :return: dict(material_string: <str> initial material string,
                      material_name: <str> chemical name of material found in the string
                      material_formula: <str> chemical formula of material
@@ -76,8 +76,8 @@ class MaterialParser:
                      hydrate: <float> if material is hydrate fraction of H2O
                      is_mixture: <bool> material is mixture/composite/alloy/solid solution
                      is_abbreviation: <bool> material is similar to abbreviation
-                     fraction_vars: <dict> elements fraction variables and their values
-                     elements_vars: <dict> elements variables and their values
+                     fraction_vars: <dict> elements fraction variables: <list> values
+                     elements_vars: <dict> elements variables: <list> values
                      composition: <dict> compound constitute of the material: its composition (element: fraction) and
                                                                             fraction of compound)
         """
@@ -204,6 +204,17 @@ class MaterialParser:
         return output_structure
 
     def get_structure_by_formula(self, formula):
+        '''
+        Parsing chemical formula in composition
+        :param formula: <str> chemical formula
+        :return: dict(formula: <str> formula string corresponding to obtained composition
+                     composition: <dict> element: fraction
+                     fraction_vars: <dict> elements fraction variables: <list> values
+                     elements_vars: <dict> elements variables: <list> values
+                     hydrate: <str> if material is hydrate fraction of H2O
+                     phase: <str> material phase appeared in formula
+                    )
+        '''
 
         formula = formula.replace(' ', '')
         formula = formula.replace('−', '-')
@@ -377,6 +388,13 @@ class MaterialParser:
     ###################################################################################################################
 
     def split_material_name(self, material_string):
+        '''
+        Splitting material string into chemical name + chemical formula
+        :param material_string: in form of "chemical name chemical formula"/"chemical name [chemical formula]"
+        :return: name: <str> chemical name found in material string
+                formula: <str> chemical formula found in material string
+                structure: <dict> output of get_structure_by_formula()
+        '''
         formula = ''
         structure = self.__empty_structure().copy()
 
@@ -432,6 +450,12 @@ class MaterialParser:
         return name, formula, structure
 
     def reconstruct_formula(self, material_name, valency=''):
+        """
+        reconstructing chemical formula for simple chemical names anion + cation
+        :param material_name: <str> chemical name
+        :param valency: <str> anion valency
+        :return: <str> chemical formula
+        """
 
         output_formula = ''
 
@@ -568,6 +592,11 @@ class MaterialParser:
     ###################################################################################################################
 
     def split_material(self, material_name):
+        """
+        splitting mixture/composite/solid solution/alloy into compounds with fractions
+        :param material_name: <str> material formula
+        :return: <list> of <tuples>: (compound, fraction)
+        """
 
         split = self.__split_name(material_name)
         l = 0
@@ -638,6 +667,12 @@ class MaterialParser:
         return composition
 
     def get_dopants(self, material_name):
+        """
+        resolving doped part in material string
+        :param material_name: <str> material string
+        :return: <list> of dopants,
+                <str> new material name
+        """
         new_material_name = material_name
         dopants = []
 
@@ -692,10 +727,10 @@ class MaterialParser:
 
     def build_abbreviations_dict(self, materials_list, paragraph):
         """
-
-        :param paragraph:
-        :param materials_list: list of found materials entities
-        :return: dictionary abbreviation - corresponding entity
+        constructing dictionary of abbreviations appeared in material list
+        :param paragraph: <list> of <str> list of sentences to look for abbreviations names
+        :param materials_list: <list> of <str> list of materials entities
+        :return: <dict> abbreviation: corresponding string
         """
 
         abbreviations_dict = {t: '' for t in materials_list if self.__is_abbreviation(t.replace(' ', '')) and t != ''}
@@ -783,6 +818,14 @@ class MaterialParser:
         return dict(values=values, max_value=max_value, min_value=min_value)
 
     def get_stoichiometric_values(self, var, sentence):
+        """
+        find numeric values of var in sentence
+        :param var: <str> variable name
+        :param sentence: <str> sentence to look for
+        :return: <dict>: max_value: upper limit
+                        min_value: lower limit
+                        values: <list> of <float> numeric values
+        """
         values = dict(values=[], max_value=None, min_value=None)
 
         regs = [(var + '\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]', 'values'),
@@ -803,6 +846,12 @@ class MaterialParser:
         return values
 
     def get_elements_values(self, var, sentence):
+        """
+        find elements values for var in the sentence
+        :param var: <str> variable name
+        :param sentence: <str> sentence to look for
+        :return: <list> of <str> found values
+        """
         values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z,\s]+)', sentence)
         if len(values) > 0:
             values = [c for c in re.split('[,\s]', values[0]) if
@@ -822,6 +871,11 @@ class MaterialParser:
         return False
 
     def reconstruct_list_of_materials(self, material_string):
+        """
+        split material string into list of compounds when it's given in form cation + several anions
+        :param material_string: <str>
+        :return: <list> of <str> chemical names
+        """
 
         parts = [p for p in re.split('[\s\,]', material_string) if p != '']
 
@@ -864,6 +918,11 @@ class MaterialParser:
     ###################################################################################################################
 
     def cleanup_name(self, material_name):
+        """
+        cleaning up material name - fix due to tokenization imperfectness
+        :param material_name: <str> material string
+        :return: <str> updated material string
+        """
 
         # print (material_name)
 

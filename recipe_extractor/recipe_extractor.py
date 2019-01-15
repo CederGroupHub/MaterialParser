@@ -33,6 +33,28 @@ class RecipeExtractor:
                                      'Fl', 'Lv']
 
     def get_composition(self, abstract_materials_, synthesis_materials, abstract=None, syn_paragraph=None):
+        """
+        main method to convert list of materials into composition
+        based on output of MER
+        :param abstract_materials_: <dict> targets: list of materials
+                                            precursors: list of materials
+                                            others: list of materials
+        :param synthesis_materials: <dict> targets: list of materials
+                                            precursors: list of materials
+                                            others: list of materials
+        :param abstract: <list> of <str> abstract sentences
+        :param syn_paragraph: <list> of <str> paragraph sentences
+        :return: output_structure: <dict> targets: list of material structures (output of mp.parse_material)
+                                          precursors: list of material structures
+                                          targets: list of material structures (output of mp.parse_material)
+                                          others: list of material structures
+                fails: <dict> targets: list of failed material strings
+                              precursors: list of failed material strings
+                              targets: list of failed material strings
+                              others: list of failed material strings
+                abbreviations: <dict> abbreviation: corresponding name
+
+        """
 
         if abstract is None:
             abstract = []
@@ -205,6 +227,11 @@ class RecipeExtractor:
     ###############################################################################################################
 
     def substitute_elements(self, material_structure):
+        """
+        substituting values for elements variables into formula
+        :param material_structure: <dict> output of mp.parse_material() with filled "element_vars"
+        :return: list of structures derived from input with substitution of all element_vars
+        """
 
         new_materials_array = []
         elements_array = self.__get_substitutions_array(material_structure['elements_vars'])
@@ -227,6 +254,11 @@ class RecipeExtractor:
         return new_materials_array
 
     def substitute_fraction(self, material_structure):
+        """
+        substituting values for elements fractions variables into formula
+        :param material_structure: <dict> output of mp.parse_material() with filled "fraction_vars"
+        :return: list of structures derived from input with substitution of all fraction_vars
+        """
 
         new_materials_array = []
         fraction_variables = {x: v['values'] for x, v in material_structure['fraction_vars'].items()}
