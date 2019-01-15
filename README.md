@@ -36,7 +36,7 @@ cd MaterialParser
 pip install -r requirements.txt -e .
 ```
 
-### Initilization:
+### Initialization:
 ```
 from material_parser import MaterialParser
 mp = MaterialParser(verbose=False, pubchem_lookup=False, fails_log=False)
@@ -59,8 +59,9 @@ rex = RecipeExtractor()
 
  * mp.parse_material(material_string)
      ```
-     main method to parse material string into chemical structure and convert chemical name into chemical formula
-    :param material_string_: <str> material name/formula
+     main method to parse material string into chemical structure and
+     convert chemical name into chemical formula
+    :param material_string: <str> material name/formula
     :return: dict(material_string: <str> initial material string,
                  material_name: <str> chemical name of material found in the string
                  material_formula: <str> chemical formula of material
@@ -71,7 +72,7 @@ rex = RecipeExtractor()
                  is_abbreviation: <bool> material is similar to abbreviation
                  fraction_vars: <dict> elements fraction variables and their values
                  elements_vars: <dict> elements variables and their values
-                 composition: <dict> compound constitute of the material: its composition (element: fraction) and
+                 composition: <dict> compound constitute of the material: composition (element: fraction) and
                                                                         fraction of compound)
      ```
 
@@ -93,25 +94,26 @@ rex = RecipeExtractor()
  * mp.split_material_name(material_string)
     ```
     splitting material string into chemical name + chemical formula
-    :param material_string: <str> in form of "chemical name chemical formula"/"chemical name [chemical formula]"
+    :param material_string: <str> in form of
+    "chemical name chemical formula"/"chemical name [chemical formula]"
     :return: name: <str> chemical name found in material string
             formula: <str> chemical formula found in material string
             structure: <dict> output of get_structure_by_formula()
     ```
 
+ * mp.reconstruct_formula(material_name, valency='')
     ```
-    mp.reconstruct_formula(material_name, valency='')
-        reconstructing chemical formula for simple chemical names anion + cation
-        :param material_name: <str> chemical name
-        :param valency: <str> anion valency
-        :return: <str> chemical formula
+    reconstructing chemical formula for simple chemical names anion + cation
+    :param material_name: <str> chemical name
+    :param valency: <str> anion valency
+    :return: <str> chemical formula
     ```
 
 #### Methods to simplify material string
 
  * mp.split_material(material_name)
     ```
-    splitting mixture/composite/solid solution/alloy into compounds with fractions
+    splitting mixture/composite/solid solution/alloy into compound+fraction
     :param material_name: <str> material formula
     :return: <list> of <tuples>: (compound, fraction)
     ```
@@ -125,7 +127,8 @@ rex = RecipeExtractor()
     ```
  * mp.reconstruct_list_of_materials(material_string)
     ```
-    split material string into list of compounds when it's given in form cation + several anions
+    split material string into list of compounds
+    when it's given in form cation + several anions
     for example: "oxides of manganese and lithium"
     :param material_string: <str>
     :return: <list> of <str> chemical names
@@ -143,7 +146,7 @@ rex = RecipeExtractor()
  * mp.build_abbreviations_dict(materials_list, sentences)
     ```
     constructing dictionary of abbreviations appeared in material list
-    :param paragraph: <list> of <str> list of sentences to look for abbreviations names
+    :param paragraph: <list> of sentences to look for abbreviations names
     :param materials_list: <list> of <str> list of materials entities
     :return: <dict> abbreviation: corresponding string
     ```
