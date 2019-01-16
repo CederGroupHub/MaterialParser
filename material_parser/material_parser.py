@@ -202,8 +202,12 @@ class MaterialParser:
         dopant = dopants[0].strip(' ') if len(dopants) == 1 else ''
         #print('-->', dopant)
         if dopant != '':
-            output_structure['material_formula'], output_structure['composition'] = \
-                self.__substitute_dopant(dopant, material_formula, output_structure['composition'])
+            formula, composition = self.__substitute_dopant(dopant, material_formula, output_structure['composition'])
+            if formula != material_formula:
+                output_structure['dopants'] = []
+            output_structure['material_formula'] = formula
+            output_structure['composition'] = composition
+
 
         # checking ions
         ions_set = set(self.__list_of_elements_2+self.__list_of_elements_1)-set(['H', 'N', 'O', 'Ar'])
