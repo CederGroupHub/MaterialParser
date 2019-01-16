@@ -1354,5 +1354,190 @@
 		 "material_string": "(Y, Gd)BO3:Eu",
 		 "phase": ""}
     ]
+  },
+  {
+    "material": "Ba3-xSiO5:Eux2+",
+    "parser_output": [
+      {
+        "material_string": "Ba3-xSiO5:Eux2+",
+        "material_name": "Ba3-xSiO5",
+        "material_formula": "EuxBa3-xSiO5",
+        "phase": "",
+        "hydrate": null,
+        "dopants": [],
+        "is_mixture": false,
+        "is_abbreviation_like": false,
+        "fraction_vars": {
+          "x": {}
+        },
+        "elements_vars": {},
+        "composition": {
+          "EuxBa3-xSiO5": {
+            "composition": {
+              "Ba": "-x + 3",
+              "Si": "1.0",
+              "O": "5.0",
+              "Eu": "x"
+            },
+            "fraction": "1.0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "material": "Ca0.90Sr2Al2O6:0.10Eu3+",
+    "parser_output": [
+      {
+        "material_string": "Ca0.90Sr2Al2O6:0.10Eu3+",
+        "material_name": "Ca0.90Sr2Al2O6",
+        "material_formula": "Eu0.10Ca0.90Sr2Al2O6",
+        "phase": "",
+        "hydrate": null,
+        "dopants": [],
+        "is_mixture": false,
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "elements_vars": {},
+        "composition": {
+          "Eu0.10Ca0.90Sr2Al2O6": {
+            "composition": {
+              "Ca": "0.9",
+              "Sr": "2.0",
+              "Al": "2.0",
+              "O": "6.0",
+              "Eu": "0.10"
+            },
+            "fraction": "1.0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "material": "Ca2-2xLi1+xSiO4F:xCe3+",
+    "parser_output": [
+      {
+        "material_string": "Ca2-2xLi1+xSiO4F:xCe3+",
+        "material_name": "Ca2-2xLi1+xSiO4F",
+        "material_formula": "CexCa2-2xLi1+xSiO4F",
+        "phase": "",
+        "hydrate": null,
+        "dopants": [],
+        "is_mixture": false,
+        "is_abbreviation_like": false,
+        "fraction_vars": {
+          "x": {}
+        },
+        "elements_vars": {},
+        "composition": {
+          "CexCa2-2xLi1+xSiO4F": {
+            "composition": {
+              "Ca": "-2*x + 2",
+              "Li": "x + 1",
+              "Si": "1.0",
+              "O": "4.0",
+              "F": "1.0",
+              "Ce": "x"
+            },
+            "fraction": "1.0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "material": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
+    "parser_output": [
+      {
+        "material_string": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
+        "material_name": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
+        "material_formula": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
+        "phase": "",
+        "hydrate": null,
+        "dopants": [],
+        "is_mixture": true,
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "elements_vars": {},
+        "composition": {
+          "GeS2": {
+            "composition": {
+              "Ge": "1.0",
+              "S": "2.0"
+            },
+            "fraction": "65.0"
+          },
+          "Ga2S3": {
+            "composition": {
+              "Ga": "2.0",
+              "S": "3.0"
+            },
+            "fraction": "22.0"
+          },
+          "La2S3": {
+            "composition": {
+              "La": "2.0",
+              "S": "3.0"
+            },
+            "fraction": "-x + 3"
+          },
+          "AgI": {
+            "composition": {
+              "Ag": "1.0",
+              "I": "1.0"
+            },
+            "fraction": "10.0"
+          },
+          "Tm2S3": {
+            "composition": {
+              "Tm": "2.0",
+              "S": "3.0"
+            },
+            "fraction": "x"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "material": "BaO-B2O3-BaF2",
+    "parser_output": [
+      {
+        "material_string": "BaO-B2O3-BaF2",
+        "material_name": "BaO-B2O3-BaF2",
+        "material_formula": "BaO-B2O3-BaF2",
+        "phase": "",
+        "hydrate": null,
+        "dopants": [],
+        "is_mixture": true,
+        "is_abbreviation_like": false,
+        "fraction_vars": {},
+        "elements_vars": {},
+        "composition": {
+          "BaO": {
+            "composition": {
+              "Ba": "1.0",
+              "O": "1.0"
+            },
+            "fraction": "1.0"
+          },
+          "B2O3": {
+            "composition": {
+              "B": "2.0",
+              "O": "3.0"
+            },
+            "fraction": "1.0"
+          },
+          "BaF2": {
+            "composition": {
+              "Ba": "1.0",
+              "F": "2.0"
+            },
+            "fraction": "1.0"
+          }
+        }
+      }
+    ]
   }
 ]

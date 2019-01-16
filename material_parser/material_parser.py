@@ -17,7 +17,7 @@ import json
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False):
-        print('MaterialParser version 3.6')
+        print('MaterialParser version 3.7')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -639,7 +639,7 @@ class MaterialParser:
     def __split_name(self, material_name_, init_fraction='1'):
 
         re_str = "(?<=[0-9\)])[-·∙\∗](?=[\(0-9])|(?<=[A-Z])[-·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-·∙\∗](?=[A-Z])|(?<=[" \
-                 "0-9\)])[-·∙\∗](?=[A-Z]) "
+                 "0-9\)])[-·∙\∗](?=[A-Z])"
         material_name = material_name_.replace(' ', '')
 
         if '(1-x)' == material_name[0:5]:
@@ -650,11 +650,20 @@ class MaterialParser:
 
         parts = re.split(re_str, material_name)
 
+        #print ('-->', parts)
+
         if len(parts) > 1:
             parts_upd = [p for part in parts for p in
                          re.split('(?<=[A-Z\)])[-·∙\∗](?=[xyz])|(?<=O[0-9\)]+)[-·∙\∗](?=[xyz])', part)]
         else:
             parts_upd = parts
+
+        #print ('-->', parts_upd)
+
+        if any(m.strip('0987654321') in self.__list_of_elements_1 + self.__list_of_elements_2 for m in parts_upd[:-1]):
+            parts_upd = [''.join([p+'-' for p in parts_upd]).rstrip('-')]
+
+        #print ('-->', parts_upd)
 
         merged_parts = [parts_upd[0]]
         for m in parts_upd[1:]:
@@ -663,6 +672,8 @@ class MaterialParser:
                 merged_parts.append(to_merge)
             else:
                 merged_parts.append(m)
+
+        #print ('-->', merged_parts)
 
         composition = []
         for m in merged_parts:
@@ -1110,10 +1121,17 @@ class MaterialParser:
         new_material_composition = {}
         new_material_formula = material_formula
 
-        r = '[x0-9\.]+$'
+        if dopant[-1] == '+':
+            dopant = dopant.rstrip('+0987654321')
+
+        #print ('-->', dopant)
+
+        r = '^[x0-9\.]+|[x0-9\.]+$'
 
         coeff = re.findall(r, dopant)
-        element = re.split(r, dopant)[0]
+        element = [s for s in re.split(r, dopant) if s != ''][0]
+
+        #print ('-->', coeff, element)
 
         if coeff == [] or element not in self.__list_of_elements_1+self.__list_of_elements_2:
             return new_material_formula, material_composition
