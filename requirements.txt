@@ -2,4 +2,3 @@ regex
 pubchempy
 sympy
 spacy
-chemdataextractor

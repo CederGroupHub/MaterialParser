@@ -17,7 +17,7 @@ import json
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False):
-        print('MaterialParser version 3.5')
+        print('MaterialParser version 3.6')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -192,14 +192,28 @@ class MaterialParser:
                     fraction=f
                 )
 
-        if output_structure['composition'] == {} and self.__fails_log:
-            with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_pubchem:
-                f_pubchem.write(material_name + '\n')
-
+        # converting hydrate fraction to float
         try:
             output_structure['hydrate'] = float(output_structure['hydrate'])
         except:
             output_structure['hydrate'] = None
+
+        # substituting dopant into composition if it makes fractions to sum-up to integer
+        dopant = dopants[0].strip(' ') if len(dopants) == 1 else ''
+        #print('-->', dopant)
+        if dopant != '':
+            output_structure['material_formula'], output_structure['composition'] = \
+                self.__substitute_dopant(dopant, material_formula, output_structure['composition'])
+
+        # checking ions
+        ions_set = set(self.__list_of_elements_2+self.__list_of_elements_1)-set(['H', 'N', 'O', 'Ar'])
+        if material_formula.rstrip('0987654321+') in ions_set:
+            output_structure['composition'] = {}
+
+
+        if output_structure['composition'] == {} and self.__fails_log:
+            with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_pubchem:
+                f_pubchem.write(material_name + '\n')
 
         return output_structure
 
@@ -1042,7 +1056,7 @@ class MaterialParser:
             new_value = new_value[0:m.start(1) + i] + '*' + new_value[m.start(1) + i:]
         new_value = smp.simplify(smp.sympify(new_value, _clash))
         if new_value.is_Number:
-            new_value = round(float(new_value), 3)
+            new_value = round(float(new_value), 4)
 
         return str(new_value)
 
@@ -1080,3 +1094,46 @@ class MaterialParser:
             hydrate='',
             phase=''
         )
+
+    def __is_int(self, num):
+        try:
+            return round(float(num), 4) == round(float(num), 0)
+        except:
+            return False
+
+    def __substitute_dopant(self, dopant, material_formula, material_composition):
+
+        new_material_composition = {}
+        new_material_formula = material_formula
+
+        r = '[x0-9\.]+$'
+
+        coeff = re.findall(r, dopant)
+        element = re.split(r, dopant)[0]
+
+        if coeff == [] or element not in self.__list_of_elements_1+self.__list_of_elements_2:
+            return new_material_formula, material_composition
+
+        for mat, compos in material_composition.items():
+            expr = ''.join(['(' + v + ')+' for e, v in compos['composition'].items()]).rstrip('+')
+
+            coeff = coeff[0] if not re.match('^[0]+[1-9]', coeff[0]) else '0.' + coeff[0][1:]
+            expr = expr + '+(' + coeff + ')'
+            #print ('-->', expr, self.__simplify(expr), self.__is_int(self.__simplify(expr)))
+
+            if self.__is_int(self.__simplify(expr)):
+                #print('-->', element, coeff)
+                new_name = element + coeff + mat
+                new_composition = compos['composition'].copy()
+                new_composition[element] = coeff
+
+                new_material_composition[new_name] = {}
+                new_material_composition[new_name]['composition'] = new_composition
+                new_material_composition[new_name]['fraction'] = compos['fraction']
+                new_material_formula = new_material_formula.replace(mat, new_name)
+            else:
+                new_material_composition[mat] = {}
+                new_material_composition[mat]['composition'] = compos['composition']
+                new_material_composition[mat]['fraction'] = compos['fraction']
+
+        return new_material_formula, new_material_composition

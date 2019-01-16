@@ -9,6 +9,7 @@ mp = MaterialParser(pubchem_lookup=False, verbose=False)
 test_set = json.loads(open('test_data.json').read())
 
 for item in test_set:
+
     material = item['material']
     correct = item['parser_output']
     print (material)

@@ -528,10 +528,11 @@
         "elements_vars": {},
         "phase": "",
         "is_mixture": false,
-        "material_formula": "LiSr1-xPO4",
+        "material_formula": "EuxLiSr1-xPO4",
         "composition": {
-          "LiSr1-xPO4": {
+          "EuxLiSr1-xPO4": {
             "composition": {
+              "Eu": "x",
               "P": "1.0",
               "O": "4.0",
               "Li": "1.0",
@@ -1350,7 +1351,7 @@
 		 "hydrate": null,
 		 "is_abbreviation_like": false,
 		 "is_mixture": false,
-		 "material_formula": "(Y,Gd)BO3",
+		 "material_formula": "(Y, Gd)BO3",
 		 "material_name": "",
 		 "material_string": "(Y, Gd)BO3:Eu",
 		 "phase": ""}
