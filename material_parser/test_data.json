@@ -522,9 +522,7 @@
     "material": "LiSr1-xPO4:Eux",
     "parser_output": [
       {
-        "dopants": [
-          "Eux"
-        ],
+        "dopants": [],
         "elements_vars": {},
         "phase": "",
         "is_mixture": false,
