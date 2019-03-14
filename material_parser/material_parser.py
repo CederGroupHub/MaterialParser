@@ -17,7 +17,7 @@ import json
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False):
-        print('MaterialParser version 3.7')
+        print('MaterialParser version 4.4')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -46,6 +46,10 @@ class MaterialParser:
         self.__neg_prefixes = ['an', 'de', 'non']
 
         self.__rome2num = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5, 'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10}
+
+        self.__diatomic_molecules = {'O2': {'O': '2.0'},
+                                     'N2': {'N': '2.0'},
+                                     'H2': {'H': '2.0'}}
 
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, 'rsc/pubchem_dict.json')).read())
 
@@ -88,6 +92,21 @@ class MaterialParser:
             print ('After cleaning up string:')
             print (material_string_, '-->', material_string)
 
+        if material_string in self.__list_of_elements_1+self.__list_of_elements_2:
+            return dict(
+                material_string=material_string_,
+                material_name='',
+                material_formula=material_string,
+                dopants=[],
+                phase='',
+                hydrate=None,
+                is_mixture=False,
+                is_abbreviation_like=False,
+                fraction_vars={},
+                elements_vars={},
+                composition={}
+            )
+
         dopants, material_string = self.get_dopants(material_string)
         if self.__verbose:
             print ('After dopants extraction:')
@@ -116,7 +135,7 @@ class MaterialParser:
                 composition={
                     material_structure['formula']: dict(
                         composition=material_structure['composition'],
-                        fraction='1'
+                        fraction='1.0'
                     )
                 }
             )
@@ -147,6 +166,25 @@ class MaterialParser:
             print (material_string, '-->', material_name, 'and', material_formula)
 
         material_formula = material_string if material_formula == '' else material_formula
+
+        if material_formula in self.__diatomic_molecules:
+            return dict(
+                material_string=material_string_,
+                material_name=material_string,
+                material_formula=material_formula,
+                dopants=[],
+                phase='',
+                hydrate=None,
+                is_mixture=False,
+                is_abbreviation_like=False,
+                fraction_vars={},
+                elements_vars={},
+                composition={material_formula: dict(
+                    composition = self.__diatomic_molecules[material_formula],
+                    fraction = '1.0'
+                )}
+            )
+
         # noinspection PyBroadException
         try:
             material_parts = self.split_material(material_formula)
@@ -210,14 +248,26 @@ class MaterialParser:
 
 
         # checking ions
-        ions_set = set(self.__list_of_elements_2+self.__list_of_elements_1)-set(['H', 'N', 'O', 'Ar'])
-        if material_formula.rstrip('0987654321+') in ions_set:
-            output_structure['composition'] = {}
+        # ions_set = set(self.__list_of_elements_2+self.__list_of_elements_1)-set(['H', 'N', 'O', 'Ar'])
+        # if material_formula.rstrip('0987654321+') in ions_set:
+        #     output_structure['composition'] = {}
+
+        # negative stoichiometry
+        try:
+            if any(float(s) < 0.0 for f, c in output_structure['composition'].items() for e, s in c['composition'].items()):
+                output_structure['composition'] = {}
+        except:
+            pass
 
 
         if output_structure['composition'] == {} and self.__fails_log:
             with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_pubchem:
                 f_pubchem.write(material_name + '\n')
+
+        # checking abbreviation
+        output_structure['is_abbreviation_like'] = self.__is_abbreviation_like(output_structure)
+            #len([el for el in output_structure['elements_vars'].keys() if len(el) == 1 and el.isupper()]) > 1
+
 
         return output_structure
 
@@ -247,14 +297,17 @@ class MaterialParser:
                     formula = m.group(2)
 
         # checking for hydrate
-        hyd_i = formula.find('H2O') - 1
-        hydrate_num = []
-        while hyd_i > 0 and formula[hyd_i] not in ['·', '•', '-', '×', '⋅']:
-            hydrate_num.append(formula[hyd_i])
-            hyd_i -= 1
-        hydrate = ''.join([c for c in reversed(hydrate_num)])
-        if hyd_i > 0:
-            formula = formula[:hyd_i]
+        hydrate = ''
+        if 'H2O' in formula and any(c in formula for c in ['·', '•', '-', '×', '⋅']):
+            formula = formula[1:-1] if formula[0] == '(' and formula[-1] == ')' else formula
+            hyd_i = formula.find('H2O') - 1
+            hydrate_num = []
+            while hyd_i > 0 and formula[hyd_i] not in ['·', '•', '-', '×', '⋅']:
+                hydrate_num.append(formula[hyd_i])
+                hyd_i -= 1
+            hydrate = ''.join([c for c in reversed(hydrate_num)])
+            if hyd_i > 0:
+                formula = formula[:hyd_i]
 
         elements_variables = collections.defaultdict(str)
         stoichiometry_variables = collections.defaultdict(str)
@@ -277,7 +330,12 @@ class MaterialParser:
             if not m.group(1).isupper() and m.group(2) == '':
                 formula = formula.replace('(' + m.group(1) + ')', m.group(1), 1)
 
+        #print ('->', formula)
         composition = self.__parse_formula(formula)
+        if re.findall('[a-z]{4,}', formula) != [] and composition != {}:
+            composition = collections.defaultdict(str)
+            #print ('->', formula)
+            #print (composition)
 
         # looking for variables in elements and stoichiometry
         for el, amt in composition.items():
@@ -288,21 +346,15 @@ class MaterialParser:
             for var in re.findall('[a-z' + ''.join(self.__greek_letters) + ']', amt):
                 stoichiometry_variables[var] = {}
 
-        if 'R' in elements_variables and 'E' in elements_variables:
-            elements_variables['RE'] = []
-            del elements_variables['E']
-            del elements_variables['R']
-            composition['RE'] = composition['E']
-            del composition['R']
-            del composition['E']
-
-        if 'A' in elements_variables and 'E' in elements_variables:
-            elements_variables['AE'] = []
-            del elements_variables['E']
-            del elements_variables['A']
-            composition['AE'] = composition['E']
-            del composition['R']
-            del composition['A']
+        rename_variables = [('R', 'E'), ('A', 'E'), ('T', 'M')]
+        for v1, v2 in rename_variables:
+            if v1 in elements_variables and v2 in elements_variables and v1+v2 in formula:
+                elements_variables[v1+v2] = []
+                del elements_variables[v2]
+                del elements_variables[v1]
+                composition[v1+v2] = composition[v2]
+                del composition[v1]
+                del composition[v2]
 
         if 'M' in elements_variables and 'e' in stoichiometry_variables:
             elements_variables['Me'] = []
@@ -422,6 +474,9 @@ class MaterialParser:
             return material_string, formula, structure
 
         formula_e = split[-1].strip('[]')
+        if formula_e == '':
+            return '', '', self.__empty_structure().copy()
+
         if re.match('(\s*\([IV,]+\))', formula_e):
             formula_e = ''
         try:
@@ -433,6 +488,9 @@ class MaterialParser:
             structure_e = self.__empty_structure().copy()
 
         formula_b = split[0].strip('[]')
+        if formula_e == '':
+            return '', '', self.__empty_structure().copy()
+
         if re.match('(\s*\([IV,]+\))', formula_b):
             formula_b = ''
         try:
@@ -638,15 +696,17 @@ class MaterialParser:
 
     def __split_name(self, material_name_, init_fraction='1'):
 
-        re_str = "(?<=[0-9\)])[-·∙\∗](?=[\(0-9])|(?<=[A-Z])[-·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-·∙\∗](?=[A-Z])|(?<=[" \
-                 "0-9\)])[-·∙\∗](?=[A-Z])"
+        re_str = "(?<=[0-9\)])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-⋅·∙\∗](?=[A-Z])|(?<=[" \
+                 "0-9\)])[-⋅·∙\∗](?=[A-Z])"
+        re_str = re_str+''.join(['|(?<='+e+')[-⋅·∙\∗](?=[\(0-9A-Z])' for e in self.__list_of_elements_1+self.__list_of_elements_2])
+
         material_name = material_name_.replace(' ', '')
 
         if '(1-x)' == material_name[0:5]:
             material_name = material_name.replace('(x)', 'x')
-            parts = re.findall('\(1-x\)(.*)[-+·∙\∗]x(.*)', material_name)
+            parts = re.findall('\(1-x\)(.*)[-+·∙\∗⋅]x(.*)', material_name)
             parts = parts[0] if parts != [] else (material_name[5:], '')
-            return [(parts[0].lstrip(' ·*'), '1-x'), (parts[1].lstrip(' ·*'), 'x')]
+            return [(parts[0].lstrip(' ·*⋅'), '1-x'), (parts[1].lstrip(' ·*'), 'x')]
 
         parts = re.split(re_str, material_name)
 
@@ -654,7 +714,7 @@ class MaterialParser:
 
         if len(parts) > 1:
             parts_upd = [p for part in parts for p in
-                         re.split('(?<=[A-Z\)])[-·∙\∗](?=[xyz])|(?<=O[0-9\)]+)[-·∙\∗](?=[xyz])', part)]
+                         re.split('(?<=[A-Z\)])[-·∙\∗⋅](?=[xyz])|(?<=O[0-9\)]+)[-·∙\∗⋅](?=[xyz])', part)]
         else:
             parts_upd = parts
 
@@ -908,10 +968,14 @@ class MaterialParser:
 
         parts = [p for p in re.split('[\s\,]', material_string) if p != '']
 
+       #print (self.__anions.keys())
+
         anion = [(i, p[:-1]) for i, p in enumerate(parts) if p[:-1].lower() in self.__anions.keys()]
         cation = [(i, p) for i, p in enumerate(parts) if p.lower() in self.__cations.keys()
                   or p in self.__list_of_elements_1 + self.__list_of_elements_2]
         valencies = [(i - 1, p.strip('()')) for i, p in enumerate(parts) if p.strip('()') in self.__rome2num and i != 0]
+
+       # print ('->', anion, cation)
 
         result = []
         if len(anion) == 1:
@@ -955,9 +1019,21 @@ class MaterialParser:
 
         # print (material_name)
 
-        material_name = material_name.replace('−', '-')
+        # correct dashes
+        dashes = [173, 8722, ord('\ue5f8')] + [i for i in range(8208, 8214)]
+        re_str = ''.join([chr(c) for c in dashes])
+        re_str = '[' + re_str + ']'
+        material_name = re.sub(re_str, chr(45), material_name)
 
-        if any(a in material_name for a in ['→', '⟶']):
+        material_name = material_name.replace(chr(160), '')
+
+        # correcting dots
+        dots = [42, 8226, 8270, 8729, 8901, 215, 65106, 65381, 12539]
+        re_str = ''.join([chr(c) for c in dots])
+        re_str = '[\\' + re_str + ']'
+        material_name = re.sub(re_str, chr(183), material_name)
+
+        if any(a in material_name for a in ['→', '⟶','↑','↓','↔','⇌','⇒','⇔', '⟹']):
             return ''
 
         if 'hbox' in material_name.lower():
@@ -966,14 +1042,18 @@ class MaterialParser:
                 material_name = material_name.replace(t, '')
             material_name = material_name.rstrip('\\')
 
-        material_name = re.sub('\({0,1}[0-9\.]*\s*⩽{0,1}\s*[x,y]{0,1}\s*[⩽=]\s*[0-9\.-]*\){0,1}', '', material_name)
+        material_name = re.sub('\({0,1}[0-9\.]*\s*[⩽≤<]{0,1}\s*[x,y]{0,1}\s*[⩽=≤<]\s*[0-9\.-]*\){0,1}', '', material_name)
 
-        for c in ['\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
-                  '\(A.G', '\(Fuchen', '\(Furuuchi', '\(AR\)']:
+        if material_name == '':
+            return ''
+
+        for c in ['\(⩾99', '\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
+                  '\(A.G', '\(Fuchen', '\(Furuuchi', '\(AR\)', '（x', '\(x']:
             split = re.split(c, material_name)
-            if len(split) > 1:
-                if len(split[1]) == '' or all(not s.isalpha() for s in split[1]):
-                    material_name = re.split(c, material_name)[0]
+            if len(split) > 1 and (len(split[-1]) == '' or all(not s.isalpha() for s in split[-1])):
+                #material_name = material_name.replace(split[-1], '')
+                material_name = ''.join([s for s in split[:-1]])
+
 
         replace_dict = {'oxyde': 'oxide',
                         'luminum': 'luminium',
@@ -991,13 +1071,15 @@ class MaterialParser:
                         'butryal': 'butyral',
                         'ooper': 'opper',
                         'acac': 'CH3COCHCOCH3',
-                        'glass': '',
                         'glasses': '',
+                        'glass': '',
+                        'ceramics': '',
                         'europeam': 'europium',
                         'siliminite': 'sillimanite',
                         'acethylene': 'acetylene',
                         'iso-pro': 'isopro',
-                        'anhydrous': ''
+                        'anhydrous': '',
+                        'lathanum': 'lanthanum'
                         }
 
         for typo, correct in replace_dict.items():
@@ -1018,8 +1100,22 @@ class MaterialParser:
         if material_name != '':
             material_name = self.__check_parentheses(material_name)
 
+        trash_symbs = ['#', '$', '!', '@', '©', '®', chr(8201), 'Ⓡ']
+        for c in trash_symbs:
+            material_name = material_name.replace(c, '')
+
         material_name = material_name.lstrip(') -')
         material_name = material_name.rstrip('( ,.:;-±/δ')
+
+        if len(material_name) == 1 and material_name not in self.__list_of_elements_1:
+            return ''
+
+        if len(material_name) == 2 and \
+                material_name not in self.__list_of_elements_2 and \
+                material_name.rstrip('234') not in self.__list_of_elements_1 and \
+                any(c not in self.__list_of_elements_1 for c in material_name):
+            return ''
+
 
         return material_name
 
@@ -1159,3 +1255,26 @@ class MaterialParser:
                 new_material_composition[mat]['fraction'] = compos['fraction']
 
         return new_material_formula, new_material_composition
+
+    def __is_abbreviation_like(self, structure):
+        if any(all(e.isupper() and s in ['1.0', '1'] for e, s in c.items()) for f, c in
+               structure['composition'].items()):
+            # if all(e.isupper() and s in ['1.0', '1'] for f, c in m_struct['composition'].items() for e, s in c.items()):
+            return True
+
+        elements_vars = [el for el in structure['elements_vars'].keys() if len(el) == 1 and el.isupper()]
+        if len(elements_vars) > 1:
+            return True
+
+        if all(c.isupper() for c in structure['material_formula']) and any(
+                c not in self.__list_of_elements_1 for c in structure['material_formula']):
+            return True
+
+        if re.findall('[A-Z]{3,}', structure['material_formula']) != [] and \
+                all(w not in structure['material_formula'] for w in ['CH', 'COO', 'OH']):
+            return True
+
+        if 'PV' == structure['material_formula'][0:2]:
+            return True
+
+        return False

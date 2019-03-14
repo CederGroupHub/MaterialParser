@@ -19,7 +19,9 @@
     {"c_name" : "chromate", "valency" : [-2], "e_name" : "CrO4", "n_atoms" : 5},
     {"c_name" : "dichromate", "valency" : [-2], "e_name" : "Cr2O7", "n_atoms" : 5},
     {"c_name" : "dihydrogen phosphate", "valency" : [-1], "e_name" : "H2PO4", "n_atoms" : 7},
+	{"c_name" : "dihydrogenphosphate", "valency" : [-1], "e_name" : "H2PO4", "n_atoms" : 7},
     {"c_name" : "hydrogen phosphate", "valency" : [-2], "e_name" : "HPO4", "n_atoms" : 7},
+	{"c_name" : "hydrogenphosphate", "valency" : [-2], "e_name" : "HPO4", "n_atoms" : 7},
     {"c_name" : "hydrogen carbonate", "valency" : [-1], "e_name" : "HCO3", "n_atoms" : 5},
     {"c_name" : "hydrogen sulfate", "valency" : [-1], "e_name" : "HSO4", "n_atoms" : 6},
     {"c_name" : "hydrogen sulfite", "valency" : [-1], "e_name" : "HSO3", "n_atoms" : 5},
@@ -91,7 +93,8 @@
     {"c_name" : "isopropoxide", "valency" : [-1], "e_name" : "OCH(CH3)2", "n_atoms" : 11},
     {"c_name" : "orthoferrite", "valency" : [-3], "e_name" : "FeO3", "n_atoms" : 4},
     {"c_name" : "ferrite", "valency" : [-2], "e_name" : "Fe2O4", "n_atoms" : 6},
-    {"c_name" : "cyanamide", "valency" : [-2], "e_name" : "CN2", "n_atoms" : 3}
+    {"c_name" : "cyanamide", "valency" : [-2], "e_name" : "CN2", "n_atoms" : 3},
+	{"c_name" : "selenate", "valency" : [-2], "e_name" : "SeO4", "n_atoms" : 5}
 ],
 "cations" : [
     {"c_name" : "hydrogen", "valency" : [1], "e_name" : "H", "n_atoms" : 1},

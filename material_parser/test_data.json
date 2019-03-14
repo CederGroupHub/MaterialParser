@@ -7,7 +7,7 @@
         "elements_vars": {},
         "phase": "",
         "is_mixture": false,
-        "material_formula": "Mn(NO3)2×4H2O",
+        "material_formula": "Mn(NO3)2·4H2O",
         "composition": {
           "Mn(NO3)2": {
             "composition": {
@@ -15,7 +15,7 @@
               "O": "6.0",
               "N": "2.0"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "hydrate": 4.0,
@@ -43,7 +43,7 @@
               "La": "0.776",
               "Sr": "0.194"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "hydrate": null,
@@ -69,7 +69,7 @@
               "Lu": "2.0",
               "O": "3.0"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "hydrate": null,
@@ -97,7 +97,7 @@
               "Ag": "0.125",
               "O": "4.0"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "hydrate": null,
@@ -190,28 +190,30 @@
     ]
   },
   {
-    "material": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]",
+    "material": "ammonium molybdate [(NH4)6Mo7O24·4H2O]",
     "parser_output": [
       {
         "dopants": [],
         "elements_vars": {},
         "phase": "",
         "is_mixture": false,
-        "material_formula": "((NH4)6Mo7O24⋅4H2O)",
+        "material_formula": "((NH4)6Mo7O24·4H2O)",
         "composition": {
-          "((NH4)6Mo7O24": {
+          "(NH4)6Mo7O24": {
             "composition": {
               "N": "6.0",
-              "H": "24.0"
+              "H": "24.0",
+              "O": "24.0",
+              "Mo": "7.0"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "hydrate": 4.0,
         "is_abbreviation_like": false,
         "material_name": "ammonium molybdate",
         "fraction_vars": {},
-        "material_string": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]"
+        "material_string": "ammonium molybdate [(NH4)6Mo7O24·4H2O]"
       }
     ]
   },
@@ -1198,7 +1200,7 @@
               "□": "0.25",
               "O": "4.0"
             },
-            "fraction": "1"
+            "fraction": "1.0"
           }
         },
         "material_name": "praseodymium tungstate",
@@ -1302,33 +1304,29 @@
     ]
   },
   {
-    "material": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+    "material": "MgxAl2xLi0.5(1-x)Fe2.5(1-x)O4",
     "parser_output": [
       {
-        "material_string": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "material_string": "MgxAl2xLi0.5(1-x)Fe2.5(1-x)O4",
         "hydrate": null,
-        "elements_vars": {
-          "L": [],
-          "A": []
-        },
+        "elements_vars": {},
         "composition": {
-          "MgxAL2xLi0.5-0.5*xFe2.5-2.5*xO4": {
+          "MgxAl2xLi0.5-0.5*xFe2.5-2.5*xO4": {
             "fraction": "1.0",
             "composition": {
               "Li": "-0.5*x + 0.5",
-              "A": "1.0",
+              "Al": "2*x",
               "Mg": "x",
-              "L": "2*x",
               "Fe": "-2.5*x + 2.5",
               "O": "4.0"
             }
           }
         },
         "phase": "",
-        "material_name": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "material_name": "MgxAl2xLi0.5(1-x)Fe2.5(1-x)O4",
         "dopants": [],
         "is_abbreviation_like": false,
-        "material_formula": "MgxAL2xLi0.5(1-x)Fe2.5(1-x)O4",
+        "material_formula": "MgxAl2xLi0.5(1-x)Fe2.5(1-x)O4",
         "fraction_vars": {
           "x": {}
         },
