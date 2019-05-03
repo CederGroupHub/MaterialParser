@@ -16,8 +16,8 @@ import json
 
 # noinspection PyBroadException
 class MaterialParser:
-    def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False):
-        print('MaterialParser version 4.4')
+    def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
+        print('MaterialParser version 4.8')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -52,6 +52,7 @@ class MaterialParser:
                                      'H2': {'H': '2.0'}}
 
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, 'rsc/pubchem_dict.json')).read())
+        self.__abbreviations = json.loads(open(os.path.join(self.__filename, 'rsc/abbreviations.json')).read())
 
         self.__fails_log = fails_log
         if fails_log:
@@ -61,6 +62,11 @@ class MaterialParser:
         self.__pubchem = pubchem_lookup
         if pubchem_lookup:
             print ('Pubchem lookup is on! Will search for unknown materials name in PubChem DB.')
+
+        self.__dictionary_update = dictionary_update
+        if dictionary_update:
+            self.__dictionary_file =  open(os.path.join(self.__filename, 'dictionary_update'), 'w')
+            self.__dictionary_file.close()
 
         self.__verbose = verbose
 
@@ -75,15 +81,18 @@ class MaterialParser:
         :return: dict(material_string: <str> initial material string,
                      material_name: <str> chemical name of material found in the string
                      material_formula: <str> chemical formula of material
-                     dopants: <list> list of dopped materials/elements appeared in material string
+                     additives: <list> list of dopped materials/elements appeared in material string
                      phase: <str> material phase appeared in material string
                      hydrate: <float> if material is hydrate fraction of H2O
                      is_mixture: <bool> material is mixture/composite/alloy/solid solution
                      is_abbreviation: <bool> material is similar to abbreviation
-                     fraction_vars: <dict> elements fraction variables: <list> values
-                     elements_vars: <dict> elements variables: <list> values
-                     composition: <dict> compound constitute of the material: its composition (element: fraction) and
-                                                                            fraction of compound)
+                     amount_vars: {amount variable: <list> values}
+                     elements_vars: {elements variable: <list> values}
+                     composition: <list> of dict(
+                                formula: <str> compound formula
+                                amount: <str> fraction of compound in mixture
+                                elements: {element: amount}
+                     )
         """
 
         material_string = self.cleanup_name(material_string_)
@@ -97,61 +106,68 @@ class MaterialParser:
                 material_string=material_string_,
                 material_name='',
                 material_formula=material_string,
-                dopants=[],
+                additives=[],
                 phase='',
-                hydrate=None,
-                is_mixture=False,
                 is_abbreviation_like=False,
-                fraction_vars={},
+                oxygen_deficiency = False,
+                amounts_vars={},
                 elements_vars={},
-                composition={}
+                composition=[dict(
+                    formula = material_string,
+                    amount = '1.0',
+                    elements = {material_string: '1.0'}
+                )]
             )
 
-        dopants, material_string = self.get_dopants(material_string)
+        additives, material_string = self.get_additives(material_string)
         if self.__verbose:
-            print ('After dopants extraction:')
-            print (material_string, 'with', dopants)
+            print ('After additives extraction:')
+            print (material_string, 'WITH', additives)
 
-        material_string = material_string.lstrip(') -').rstrip('( ,.:;-±/δ+')
+        material_string = material_string.lstrip(') -').rstrip('( ,.:;-±/+')
         material_name, material_formula, material_structure = self.split_material_name(material_string)
 
         if self.__verbose:
             print ('After material name parsing:')
-            print (material_string, '-->', material_name, 'and', material_formula)
+            print (material_string, '-->', material_name, 'AND', material_formula)
 
         # if material_string contains chemical formula
-        if material_structure['composition'] != {}:
+        if material_structure['elements'] != {}:
+
             output_structure = dict(
                 material_string=material_string_,
                 material_name=material_name,
                 material_formula=material_formula,
-                dopants=dopants,
+                additives=additives,
                 phase=material_structure['phase'],
-                hydrate=material_structure['hydrate'],
-                is_mixture=False,
                 is_abbreviation_like=False,
-                fraction_vars=material_structure['fraction_vars'],
+                oxygen_deficiency=material_structure['oxygen_deficiency'],
+                amounts_vars=material_structure['amounts_vars'],
                 elements_vars=material_structure['elements_vars'],
-                composition={
-                    material_structure['formula']: dict(
-                        composition=material_structure['composition'],
-                        fraction='1.0'
-                    )
-                }
+                composition = [dict(
+                    formula = material_structure['formula'],
+                    amount = '1.0',
+                    elements = material_structure['elements']
+                )]
             )
-            # noinspection PyBroadException
-            try:
-                output_structure['hydrate'] = float(output_structure['hydrate'])
-            except:
-                output_structure['hydrate'] = None
+            if material_structure['hydrate'] != '':
+                output_structure['composition'].append(dict(
+                    formula='H20',
+                    amount=material_structure['hydrate'],
+                    elements={'H': '1.0', 'O': '2.0'}
+                ))
 
             return output_structure
         else:
             material_formula = ''
 
         # if material_string is chemical name reconstructing its formula
-        if len(material_name) > 0:
+        if all(part[1:].islower() for part in re.sub('[IV\(\)]', '', material_name).split(' ') if part[1:] != ''):
             material_formula = self.reconstruct_formula(material_name)
+
+            if material_formula != '' and self.__dictionary_update:
+                with open(os.path.join(self.__filename, 'dictionary_update'), 'a') as f_dictionary:
+                    f_dictionary.write(material_name + ' - ' + material_formula + '\n')
 
             if material_formula == '':
                 for m in [material_name,
@@ -161,9 +177,11 @@ class MaterialParser:
                     if m in self.__pubchem_dictionary and material_formula == '':
                         material_formula = self.__pubchem_dictionary[m]
 
+
         if self.__verbose:
-            print ('After looking up in dictionary:')
-            print (material_string, '-->', material_name, 'and', material_formula)
+            print ('After formula reconstruction:')
+            print (material_string, '-->', material_name, 'AND', material_formula)
+
 
         material_formula = material_string if material_formula == '' else material_formula
 
@@ -172,24 +190,24 @@ class MaterialParser:
                 material_string=material_string_,
                 material_name=material_string,
                 material_formula=material_formula,
-                dopants=[],
+                additives=[],
                 phase='',
-                hydrate=None,
-                is_mixture=False,
                 is_abbreviation_like=False,
-                fraction_vars={},
+                oxygen_deficiency = False,
+                amounts_vars={},
                 elements_vars={},
-                composition={material_formula: dict(
-                    composition = self.__diatomic_molecules[material_formula],
-                    fraction = '1.0'
-                )}
+                composition=[dict(
+                    formula=material_formula,
+                    amount='1.0',
+                    elements=self.__diatomic_molecules[material_formula]
+                )]
             )
 
         # noinspection PyBroadException
         try:
             material_parts = self.split_material(material_formula)
         except:
-            material_parts = [material_formula]
+            material_parts = [(material_formula, '1.0')]
 
         if self.__verbose:
             print ('After splitting:')
@@ -200,69 +218,75 @@ class MaterialParser:
             material_name=material_name,
             material_formula=material_formula.replace(' ', ''),
             phase='',
-            hydrate='',
-            dopants=dopants,
-            is_mixture=len(material_parts) > 1,
+            additives=additives,
             is_abbreviation_like=False,
-            fraction_vars={},
+            oxygen_deficiency = False,
+            amounts_vars={},
             elements_vars={},
-            composition={}
+            composition=[]
         )
 
-        for m, f in material_parts:
+        hydrate = ''
+        oxygen_deficiency = False
+        for compound, amount in material_parts:
             try:
-                m = self.__check_parentheses(m)
-                structure = self.get_structure_by_formula(m)
+                compound = self.__check_parentheses(compound)
+                if compound in self.__abbreviations:
+                    compound = self.__abbreviations[compound]
+                structure = self.get_structure_by_formula(compound)
                 output_structure['phase'] = structure['phase']
-                output_structure['hydrate'] = structure['hydrate']
-                output_structure['fraction_vars'].update(structure['fraction_vars'])
+                output_structure['amounts_vars'].update(structure['amounts_vars'])
                 output_structure['elements_vars'].update(structure['elements_vars'])
-                if m == 'H2O':
-                    output_structure['hydrate'] = f
-                elif structure['composition'] != {}:
-                    output_structure['composition'][structure['formula']] = dict(
-                        composition=structure['composition'],
-                        fraction=f
-                    )
+                if compound == 'H2O':
+                    hydrate = amount
+                elif structure['elements'] != {}:
+                    output_structure['composition'].append(dict(
+                        formula = structure['formula'],
+                        amount = amount,
+                        elements = structure['elements']
+                    ))
+                if structure['hydrate'] != '':
+                    hydrate = structure['hydrate']
+
+                if structure['oxygen_deficiency']:
+                    oxygen_deficiency = True
             except:
-                output_structure['composition'][m] = dict(
-                    composition={},
-                    fraction=f
-                )
+                output_structure['composition'].append(dict(
+                    formula = compound,
+                    amount = amount,
+                    elements = {}
+                ))
 
-        # converting hydrate fraction to float
-        try:
-            output_structure['hydrate'] = float(output_structure['hydrate'])
-        except:
-            output_structure['hydrate'] = None
+        if hydrate != '':
+            output_structure['composition'].append(dict(
+                    formula = 'H2O',
+                    amount = hydrate,
+                    elements = {'H': '1.0', 'O': '2.0'}
+                ))
 
-        # substituting dopant into composition if it makes fractions to sum-up to integer
-        dopant = dopants[0].strip(' ') if len(dopants) == 1 else ''
-        #print('-->', dopant)
-        if dopant != '':
-            formula, composition = self.__substitute_dopant(dopant, material_formula, output_structure['composition'])
+        output_structure['oxygen_deficiency'] = oxygen_deficiency
+
+        # substituting additive into composition if it makes fractions to sum-up to integer
+        additive = additives[0].strip(' ') if len(additives) == 1 else ''
+        #print('-->', additive)
+        if additive != '':
+            formula, composition = self.__substitute_additive(additive, material_formula, output_structure['composition'])
             if formula != material_formula:
-                output_structure['dopants'] = []
+                output_structure['additives'] = []
             output_structure['material_formula'] = formula
             output_structure['composition'] = composition
 
-
-        # checking ions
-        # ions_set = set(self.__list_of_elements_2+self.__list_of_elements_1)-set(['H', 'N', 'O', 'Ar'])
-        # if material_formula.rstrip('0987654321+') in ions_set:
-        #     output_structure['composition'] = {}
-
         # negative stoichiometry
         try:
-            if any(float(s) < 0.0 for f, c in output_structure['composition'].items() for e, s in c['composition'].items()):
-                output_structure['composition'] = {}
+            if any(float(s) < 0.0 for compound in output_structure['composition'] for e, s in compound['composition'].items()):
+                output_structure['composition'] = []
         except:
             pass
 
 
-        if output_structure['composition'] == {} and self.__fails_log:
-            with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_pubchem:
-                f_pubchem.write(material_name + '\n')
+        if output_structure['composition'] == [] and self.__fails_log:
+            with open(os.path.join(self.__filename, 'fails_log'), 'a') as f_log:
+                f_log.write(material_name + '\n')
 
         # checking abbreviation
         output_structure['is_abbreviation_like'] = self.__is_abbreviation_like(output_structure)
@@ -272,7 +296,7 @@ class MaterialParser:
         return output_structure
 
     def get_structure_by_formula(self, formula):
-        '''
+        """
         Parsing chemical formula in composition
         :param formula: <str> chemical formula
         :return: dict(formula: <str> formula string corresponding to obtained composition
@@ -282,7 +306,7 @@ class MaterialParser:
                      hydrate: <str> if material is hydrate fraction of H2O
                      phase: <str> material phase appeared in formula
                     )
-        '''
+        """
 
         formula = formula.replace(' ', '')
         formula = formula.replace('−', '-')
@@ -296,6 +320,18 @@ class MaterialParser:
                     phase = m.group(1)
                     formula = m.group(2)
 
+        # oxygen deficiency
+        oxygen_deficiency = False
+        oxygen_deficiency_sym = ''
+        r = ''.join([s for s in self.__greek_letters])
+        r = 'O[0-9]*[-+±]{1}[a-z' + r + ']{1}[0-9]*$'
+        for m in re.finditer(r, formula.rstrip(')')):
+            end = formula[m.start():m.end()]
+            splt = re.split('[-+±]', end)
+            oxygen_deficiency_sym = splt[-1]
+            oxygen_deficiency = True
+            formula = formula[:m.start()]+formula[m.start():].replace(end, splt[0])
+
         # checking for hydrate
         hydrate = ''
         if 'H2O' in formula and any(c in formula for c in ['·', '•', '-', '×', '⋅']):
@@ -306,6 +342,8 @@ class MaterialParser:
                 hydrate_num.append(formula[hyd_i])
                 hyd_i -= 1
             hydrate = ''.join([c for c in reversed(hydrate_num)])
+            if hydrate == '':
+                hydrate = '1.0'
             if hyd_i > 0:
                 formula = formula[:hyd_i]
 
@@ -364,12 +402,16 @@ class MaterialParser:
             composition['Me'] = c if c != '' else '1.0'
             del composition['M']
 
-        formula_structure = {'composition': composition,
-                             'fraction_vars': stoichiometry_variables,
-                             'elements_vars': elements_variables,
-                             'hydrate': hydrate,
-                             'phase': phase,
-                             'formula': formula}
+        if oxygen_deficiency and oxygen_deficiency_sym in stoichiometry_variables:
+            oxygen_deficiency = False
+
+        formula_structure = dict(elements={e: s for e, s in composition.items()},
+                                 amounts_vars={x: v for x, v in stoichiometry_variables.items()},
+                                 elements_vars={e: v for e, v in elements_variables.items()},
+                                 hydrate=hydrate,
+                                 phase=phase,
+                                 formula=formula,
+                                 oxygen_deficiency=oxygen_deficiency)
 
         return formula_structure
 
@@ -458,13 +500,13 @@ class MaterialParser:
     ###################################################################################################################
 
     def split_material_name(self, material_string):
-        '''
+        """
         Splitting material string into chemical name + chemical formula
         :param material_string: in form of "chemical name chemical formula"/"chemical name [chemical formula]"
         :return: name: <str> chemical name found in material string
                 formula: <str> chemical formula found in material string
                 structure: <dict> output of get_structure_by_formula()
-        '''
+        """
         formula = ''
         structure = self.__empty_structure().copy()
 
@@ -481,7 +523,7 @@ class MaterialParser:
             formula_e = ''
         try:
             structure_e = self.get_structure_by_formula(formula_e)
-            composition_e = structure_e['composition']
+            composition_e = structure_e['elements']
         except:
             composition_e = {}
             formula_e = ''
@@ -495,7 +537,7 @@ class MaterialParser:
             formula_b = ''
         try:
             structure_b = self.get_structure_by_formula(formula_b)
-            composition_b = structure_b['composition']
+            composition_b = structure_b['elements']
         except:
             composition_b = {}
             formula_b = ''
@@ -541,15 +583,22 @@ class MaterialParser:
         cation_prefix_num = 0
         cation_data = {"c_name": "", "valency": [], "e_name": "", "n_atoms": 0}
 
+        #ions_valency = {}
+        #prev_ion = ''
         for t in material_name.split(' '):
             if t.strip('()') in self.__rome2num:
                 valency_list.append(self.__rome2num[t.strip('()')])
+                #ions_valency[prev_ion] = self.__rome2num[t.strip('()')]
                 continue
             if 'hydrate' in t.lower():
                 hydrate = t
                 continue
-
+            #prev_ion = t.lower().rstrip('s')
+            #ions_valency[prev_ion] = -1
             terms_list.append(t)
+
+        #print ('->', ions_valency)
+        #print ('->', terms_list)
 
         t = ''.join([t + ' ' for t in terms_list]).lower().strip(' ')
         if t in self.__anions:
@@ -560,9 +609,9 @@ class MaterialParser:
         if len(terms_list) < 2:
             return output_formula
 
-        if len(valency_list) > 1:
-            print ('WARNING! Found many valencies per chemical name ' + material_name)
-            print (valency_list)
+        # if len(valency_list) > 1:
+        #     print ('WARNING! Found many valencies per chemical name ' + material_name)
+        #     print (valency_list)
 
         anion = terms_list.pop().lower().rstrip('s')
 
@@ -571,13 +620,14 @@ class MaterialParser:
         else:
             valency_num = self.__rome2num[valency.strip('()')]
 
+        #anion_valency_num = ions_valency[anion]
         next_term = terms_list.pop()
         if 'hydrogen' in next_term.lower() and len(terms_list) != 0:
             anion = next_term + ' ' + anion
         else:
             terms_list += [next_term]
 
-        _, anion_prefix_num, anion = self.__get_prefix(anion)
+        _, anion_prefix_num, anion = ('', 0, anion) if anion.lower() in self.__anions else self.__get_prefix(anion)
 
         if anion in self.__anions:
             anion_data = self.__anions[anion]
@@ -588,7 +638,10 @@ class MaterialParser:
             return output_formula
 
         if len(terms_list) == 1:
-            _, cation_prefix_num, cation = self.__get_prefix(terms_list[0])
+            cation = terms_list[0]
+            #cation_valency_num = ions_valency[cation.lower().rstrip('s')]
+            _, cation_prefix_num, cation = ('', 0, cation) if cation.lower() in self.__cations \
+                else self.__get_prefix(cation)
             if cation.lower() in self.__cations:
                 cation = cation.lower()
                 cation_data = self.__cations[cation]
@@ -596,6 +649,9 @@ class MaterialParser:
                 cation_data = self.__cations[self.__element2name[cation]]
             else:
                 return output_formula
+
+        # print ('->', anion, anion_valency_num)
+        # print ('->', cation, cation_valency_num)
 
         if len(cation_data['valency']) > 1 and valency_num != 0:
             if valency_num not in cation_data['valency']:
@@ -755,15 +811,15 @@ class MaterialParser:
 
         return composition
 
-    def get_dopants(self, material_name):
+    def get_additives(self, material_name):
         """
         resolving doped part in material string
         :param material_name: <str> material string
-        :return: <list> of dopants,
+        :return: <list> of additives,
                 <str> new material name
         """
         new_material_name = material_name
-        dopants = []
+        additives = []
 
         # additions = ['doped', 'stabilized', 'activated','coated', 'modified']
 
@@ -774,18 +830,14 @@ class MaterialParser:
             parts = [w for w in re.split(r + ' with', new_material_name) if w != '']
             if len(parts) > 1:
                 new_material_name = parts[0].strip(' -+')
-                dopants.append(parts[1].strip())
+                additives.append(parts[1].strip())
 
         # checking for element-doped prefix
-        dopant = ''
         for r in ['coated', 'activated', 'modified', 'stabilized', 'doped']:
             parts = [w for w in re.split('(.*)[-\s]{1}' + r + ' (.*)', new_material_name) if w != '']
             if len(parts) > 1:
                 new_material_name = parts.pop()
-                dopants.extend(p for p in parts)
-
-        if dopant != '':
-            dopants.append(dopant)
+                additives.extend(p for p in parts)
 
         if '%' in new_material_name:
             new_material_name = new_material_name.replace('.%', '%')
@@ -793,16 +845,16 @@ class MaterialParser:
 
         if len(parts) > 1:
             new_material_name = parts[0].strip(' -+')
-            dopants.extend(d.strip(' ') for d in parts[1:] if d != '')
+            additives.extend(d.strip(' ') for d in parts[1:] if d != '')
 
         for part in new_material_name.split(':'):
             if all(e.strip('x,+0987654321. ') in self.__list_of_elements_1 + self.__list_of_elements_2
                    for e in part.split(' ') if e != ''):
-                dopants.append(part.strip(' '))
+                additives.append(part.strip(' '))
             else:
                 new_material_name = part.strip(' ')
 
-        return dopants, new_material_name
+        return additives, new_material_name
 
     ###################################################################################################################
     # Resolving abbreviations
@@ -1028,10 +1080,15 @@ class MaterialParser:
         material_name = material_name.replace(chr(160), '')
 
         # correcting dots
-        dots = [42, 8226, 8270, 8729, 8901, 215, 65106, 65381, 12539]
+        dots = [42, 8226, 8270, 8729, 8901, 215, 65106, 65381, 12539, 9072]
         re_str = ''.join([chr(c) for c in dots])
         re_str = '[\\' + re_str + ']'
         material_name = re.sub(re_str, chr(183), material_name)
+
+
+        # removing phase
+        for c in ['(s)', '(l)', '(g)', '(aq)']:
+            material_name = material_name.replace(c, '')
 
         if any(a in material_name for a in ['→', '⟶','↑','↓','↔','⇌','⇒','⇔', '⟹']):
             return ''
@@ -1044,7 +1101,7 @@ class MaterialParser:
 
         material_name = re.sub('\({0,1}[0-9\.]*\s*[⩽≤<]{0,1}\s*[x,y]{0,1}\s*[⩽=≤<]\s*[0-9\.-]*\){0,1}', '', material_name)
 
-        if material_name == '':
+        if material_name == '' or len([c for c in material_name if c.isalpha()]) < 1:
             return ''
 
         for c in ['\(⩾99', '\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
@@ -1105,7 +1162,7 @@ class MaterialParser:
             material_name = material_name.replace(c, '')
 
         material_name = material_name.lstrip(') -')
-        material_name = material_name.rstrip('( ,.:;-±/δ')
+        material_name = material_name.rstrip('( ,.:;-±/')
 
         if len(material_name) == 1 and material_name not in self.__list_of_elements_1:
             return ''
@@ -1198,13 +1255,13 @@ class MaterialParser:
         return str(value)
 
     def __empty_structure(self):
-        return dict(
-            composition={},
-            fraction_vars={},
-            elements_vars={},
-            hydrate='',
-            phase=''
-        )
+        return {'elements': {},
+                'amounts_vars': {},
+                'elements_vars': {},
+                'hydrate': '',
+                'phase': '',
+                'formula': '',
+                'oxygen_deficiency': False}
 
     def __is_int(self, num):
         try:
@@ -1212,28 +1269,28 @@ class MaterialParser:
         except:
             return False
 
-    def __substitute_dopant(self, dopant, material_formula, material_composition):
+    def __substitute_additive(self, additive, material_formula, material_composition):
 
-        new_material_composition = {}
+        new_material_composition = []
         new_material_formula = material_formula
 
-        if dopant[-1] == '+':
-            dopant = dopant.rstrip('+0987654321')
+        if additive[-1] == '+':
+            additive = additive.rstrip('+0987654321')
 
-        #print ('-->', dopant)
+        #print ('-->', additive)
 
         r = '^[x0-9\.]+|[x0-9\.]+$'
 
-        coeff = re.findall(r, dopant)
-        element = [s for s in re.split(r, dopant) if s != ''][0]
+        coeff = re.findall(r, additive)
+        element = [s for s in re.split(r, additive) if s != ''][0]
 
         #print ('-->', coeff, element)
 
         if coeff == [] or element not in self.__list_of_elements_1+self.__list_of_elements_2:
             return new_material_formula, material_composition
 
-        for mat, compos in material_composition.items():
-            expr = ''.join(['(' + v + ')+' for e, v in compos['composition'].items()]).rstrip('+')
+        for compound in material_composition:
+            expr = ''.join(['(' + v + ')+' for e, v in compound['elements'].items()]).rstrip('+')
 
             coeff = coeff[0] if not re.match('^[0]+[1-9]', coeff[0]) else '0.' + coeff[0][1:]
             expr = expr + '+(' + coeff + ')'
@@ -1241,24 +1298,28 @@ class MaterialParser:
 
             if self.__is_int(self.__simplify(expr)):
                 #print('-->', element, coeff)
-                new_name = element + coeff + mat
-                new_composition = compos['composition'].copy()
+                new_name = element + coeff + compound['formula']
+                new_composition = compound['elements'].copy()
                 new_composition[element] = coeff
 
-                new_material_composition[new_name] = {}
-                new_material_composition[new_name]['composition'] = new_composition
-                new_material_composition[new_name]['fraction'] = compos['fraction']
-                new_material_formula = new_material_formula.replace(mat, new_name)
+                new_material_composition.append(dict(
+                    formula=new_name,
+                    amount=compound['amount'],
+                    elements=new_composition
+                ))
+                new_material_formula = new_material_formula.replace(compound['formula'], new_name)
             else:
-                new_material_composition[mat] = {}
-                new_material_composition[mat]['composition'] = compos['composition']
-                new_material_composition[mat]['fraction'] = compos['fraction']
+                new_material_composition.append(dict(
+                    formula = compound['formula'],
+                    amount = compound['amount'],
+                    elements = compound['elements']
+                ))
 
         return new_material_formula, new_material_composition
 
     def __is_abbreviation_like(self, structure):
-        if any(all(e.isupper() and s in ['1.0', '1'] for e, s in c.items()) for f, c in
-               structure['composition'].items()):
+        if any(all(e.isupper() and s in ['1.0', '1'] for e, s in compound['elements'].items()) for compound in
+               structure['composition']):
             # if all(e.isupper() and s in ['1.0', '1'] for f, c in m_struct['composition'].items() for e, s in c.items()):
             return True
 

@@ -23,6 +23,7 @@ for item in test_set:
     if structure != correct:
         print (material)
         pprint(structure)
+        pprint(correct)
 
 print ('Done!')
 
