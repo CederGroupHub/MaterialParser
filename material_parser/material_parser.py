@@ -17,7 +17,7 @@ import json
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 4.8')
+        print('MaterialParser version 4.9')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -154,7 +154,7 @@ class MaterialParser:
                 output_structure['composition'].append(dict(
                     formula='H20',
                     amount=material_structure['hydrate'],
-                    elements={'H': '1.0', 'O': '2.0'}
+                    elements={'H': '2.0', 'O': '1.0'}
                 ))
 
             return output_structure
@@ -261,7 +261,7 @@ class MaterialParser:
             output_structure['composition'].append(dict(
                     formula = 'H2O',
                     amount = hydrate,
-                    elements = {'H': '1.0', 'O': '2.0'}
+                    elements = {'H': '2.0', 'O': '1.0'}
                 ))
 
         output_structure['oxygen_deficiency'] = oxygen_deficiency
@@ -332,6 +332,7 @@ class MaterialParser:
             oxygen_deficiency = True
             formula = formula[:m.start()]+formula[m.start():].replace(end, splt[0])
 
+
         # checking for hydrate
         hydrate = ''
         if 'H2O' in formula and any(c in formula for c in ['·', '•', '-', '×', '⋅']):
@@ -347,6 +348,7 @@ class MaterialParser:
             if hyd_i > 0:
                 formula = formula[:hyd_i]
 
+
         elements_variables = collections.defaultdict(str)
         stoichiometry_variables = collections.defaultdict(str)
 
@@ -359,6 +361,7 @@ class MaterialParser:
             expr = expr.replace(' ', '')
             formula = formula.replace(m[0] + m[1], expr, 1)
 
+
         # check for any weird syntax
         r = "\(([^\(\)]+)\)\s*([-*\.\da-z\+/]*)"
         for m in re.finditer(r, formula):
@@ -368,8 +371,10 @@ class MaterialParser:
             if not m.group(1).isupper() and m.group(2) == '':
                 formula = formula.replace('(' + m.group(1) + ')', m.group(1), 1)
 
+
         #print ('->', formula)
         composition = self.__parse_formula(formula)
+
         if re.findall('[a-z]{4,}', formula) != [] and composition != {}:
             composition = collections.defaultdict(str)
             #print ('->', formula)
@@ -993,12 +998,11 @@ class MaterialParser:
         :param sentence: <str> sentence to look for
         :return: <list> of <str> found values
         """
-        values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z,\s]+)', sentence)
-        if len(values) > 0:
-            values = [c for c in re.split('[,\s]', values[0]) if
-                      c in self.__list_of_elements_1 + self.__list_of_elements_2]
+        values = re.findall(var + '\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)', sentence)
+        values = [c.rstrip('0987654321+') for v in values for c in re.split('[,\s]', v)
+                  if c.rstrip('0987654321+') in self.__list_of_elements_1 + self.__list_of_elements_2]
 
-        return values
+        return list(set(values))
 
     ###################################################################################################################
     # Splitting list of materials
@@ -1339,3 +1343,10 @@ class MaterialParser:
             return True
 
         return False
+
+    def get_element(self, name):
+        if name in self.__anions:
+            return self.__anions[name]['e_name']
+        if name in self.__cations:
+            return self.__cations[name]['e_name']
+        return ''
