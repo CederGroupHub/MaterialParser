@@ -93,7 +93,6 @@
     {"c_name" : "acetylacetonate", "valency" : [-1], "e_name" : "CH3COCHCOCH3", "n_atoms" : 14},
     {"c_name" : "isopropoxide", "valency" : [-1], "e_name" : "OCH(CH3)2", "n_atoms" : 11},
     {"c_name" : "orthoferrite", "valency" : [-3], "e_name" : "FeO3", "n_atoms" : 4},
-    {"c_name" : "ferrite", "valency" : [-2], "e_name" : "Fe2O4", "n_atoms" : 6},
     {"c_name" : "cyanamide", "valency" : [-2], "e_name" : "CN2", "n_atoms" : 3},
 	{"c_name" : "selenate", "valency" : [-2], "e_name" : "SeO4", "n_atoms" : 5}
 ],
