@@ -1069,7 +1069,16 @@
 	  "carbonic",
 	  "oxysulfide",
 	  "orthovanadate",
-	  "stannou"
+	  "stannou",
+	  "chlorosilicate",
+	  "manganite",
+	  "polyphosphate",
+	  "fluorogermanate",
+	  "oxy-silicophosphates",
+	  "manganocolumbite",
+	  "polyborate",
+	  "metaboratex"
+
 ],
 "elements": {
 	 "Ag": "silver",

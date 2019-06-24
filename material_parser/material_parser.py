@@ -12,6 +12,7 @@ from sympy.abc import _clash
 import pubchempy as pcp
 import os
 import json
+from pprint import pprint
 
 
 # noinspection PyBroadException
@@ -37,7 +38,9 @@ class MaterialParser:
                          for ion in self.__ions['anions']}
         self.__cations = {ion['c_name']: {'valency': ion['valency'], 'e_name': ion['e_name'], 'n_atoms': ion['n_atoms']}
                           for ion in self.__ions['cations']}
-        self.__chemicals = self.__ions['chemicals']
+        self.__chemicals = self.__ions['chemicals'] + \
+                           [ion['c_name'] for ion in self.__ions['cations']] + \
+                           [ion['c_name'] for ion in self.__ions['anions']]
         self.__element2name = self.__ions['elements']
 
         self.__prefixes2num = {'': 1, 'mono': 1, 'di': 2, 'tri': 3, 'tetra': 4, 'pent': 5, 'penta': 5, 'hexa': 6,
@@ -521,6 +524,7 @@ class MaterialParser:
             return material_string, formula, structure
 
         formula_e = split[-1].strip('[]')
+        #print ('->', formula_e)
         if formula_e == '':
             return '', '', self.__empty_structure().copy()
 
@@ -533,8 +537,10 @@ class MaterialParser:
             composition_e = {}
             formula_e = ''
             structure_e = self.__empty_structure().copy()
+        #pprint(structure_e)
 
         formula_b = split[0].strip('[]')
+        #print ('->', formula_b)
         if formula_e == '':
             return '', '', self.__empty_structure().copy()
 
@@ -547,6 +553,7 @@ class MaterialParser:
             composition_b = {}
             formula_b = ''
             structure_b = self.__empty_structure().copy()
+        #pprint(structure_e)
 
         if composition_e != {} and formula_e not in self.__list_of_elements_1 + self.__list_of_elements_2:
             split = split[:-1]
@@ -560,8 +567,13 @@ class MaterialParser:
             formula = ''
             structure = self.__empty_structure().copy()
 
+        #print("Final structure:")
+        #pprint(structure)
+
         name_terms = [p for p in split if
                       p.lower().strip('., -;:').rstrip('s') in self.__chemicals or 'hydrate' in p]
+        # TODO: need better approach to sort out chemical names from trash
+
 
         if len(name_terms) > 0:
             name = ''.join([t + ' ' for t in split]).strip(' ')
@@ -1088,6 +1100,8 @@ class MaterialParser:
         re_str = ''.join([chr(c) for c in dots])
         re_str = '[\\' + re_str + ']'
         material_name = re.sub(re_str, chr(183), material_name)
+
+        material_name = re.sub('\s*([-+±]){1}\s*(['+''.join([c for c in self.__greek_letters])+']{1})', '\\1δ', material_name)
 
 
         # removing phase
