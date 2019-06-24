@@ -281,10 +281,14 @@ class MaterialParser:
 
         # negative stoichiometry
         try:
-            if any(float(s) < 0.0 for compound in output_structure['composition'] for e, s in compound['composition'].items()):
+            if any(float(s) < 0.0 for compound in output_structure['composition'] for e, s in compound['elements'].items()):
                 output_structure['composition'] = []
         except:
             pass
+
+        for compound in output_structure['composition']:
+            if len(re.findall('[b-mo-w]+', compound['amount'])) > 0:
+                compound['amount'] = "1.0"
 
 
         if output_structure['composition'] == [] and self.__fails_log:
