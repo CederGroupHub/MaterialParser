@@ -12,7 +12,7 @@ for item in test_set:
 
     material = item['material']
     correct = item['parser_output']
-    print (material)
+    print ("->", material)
 
     list_of_materials = mp.reconstruct_list_of_materials(material)
     list_of_materials = list_of_materials if list_of_materials != [] else [(material, '')]
@@ -22,7 +22,9 @@ for item in test_set:
 
     if structure != correct:
         print (material)
+        print ('Found:')
         pprint(structure)
+        print ('Correct:')
         pprint(correct)
 
 print ('Done!')

@@ -9,7 +9,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -44,7 +44,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -72,7 +72,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -98,7 +98,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -126,7 +126,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -152,7 +152,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -179,7 +179,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -207,7 +207,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -243,7 +243,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -278,7 +278,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -304,7 +304,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -340,7 +340,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -377,7 +377,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -408,7 +408,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -431,7 +431,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -459,7 +459,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -480,7 +480,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -501,7 +501,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -527,7 +527,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -577,7 +577,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -619,7 +619,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -650,7 +650,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -683,7 +683,7 @@
           "Tb3+"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -711,7 +711,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -763,7 +763,7 @@
           "Eu0.01"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -792,7 +792,7 @@
           "Eu0.012+, Dy0.013+ Ho0.013+"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -822,7 +822,7 @@
           "Sm3+, Eu3+"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -850,7 +850,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -873,7 +873,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -901,7 +901,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -936,7 +936,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -974,7 +974,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {},
           "z": {}
@@ -1005,7 +1005,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1050,7 +1050,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1080,7 +1080,7 @@
           "CeO2"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1111,7 +1111,7 @@
           "LaNi3.55Co0.75Mn0.4Al0.3"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1141,7 +1141,7 @@
           "Eu3+"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1170,7 +1170,7 @@
           "CuF2"
         ],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1198,7 +1198,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1227,7 +1227,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1258,7 +1258,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1289,7 +1289,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1321,7 +1321,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1350,7 +1350,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1380,7 +1380,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1412,7 +1412,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1470,7 +1470,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1512,7 +1512,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {
           "x": {}
         },
@@ -1551,7 +1551,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1586,7 +1586,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1611,7 +1611,7 @@
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1636,7 +1636,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": true,
+        "oxygen_deficiency": "-",
         "amounts_vars": {
           "x": {}
         },
@@ -1667,7 +1667,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": true,
+        "oxygen_deficiency": "-",
         "amounts_vars": {
           "x": {}
         },
@@ -1699,7 +1699,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": true,
+        "oxygen_deficiency": "-",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1726,7 +1726,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": true,
+        "oxygen_deficiency": "+",
         "amounts_vars": {},
         "elements_vars": {
           "M": [
@@ -1760,7 +1760,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": true,
+        "oxygen_deficiency": "-",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1801,7 +1801,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1829,7 +1829,7 @@
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
-        "oxygen_deficiency": false,
+        "oxygen_deficiency": "",
         "amounts_vars": {},
         "elements_vars": {},
         "composition": [
@@ -1846,5 +1846,34 @@
         ]
       }
     ]
-  }
+  },
+  {
+  "material": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3±δ",
+  "parser_output": [
+    {
+      "material_string": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3±δ",
+      "material_name": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3±δ",
+      "material_formula": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3±δ",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "±",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3",
+          "amount": "1.0",
+          "elements": {
+            "La": "0.18",
+            "Sr": "0.72",
+            "Ti": "0.9",
+            "Fe": "0.1",
+            "O": "3.0"
+          }
+        }
+      ]
+    }
+  ]
+}
 ]

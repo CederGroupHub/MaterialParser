@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 4.9')
+        print('MaterialParser version 5.2')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -112,7 +112,7 @@ class MaterialParser:
                 additives=[],
                 phase='',
                 is_abbreviation_like=False,
-                oxygen_deficiency = False,
+                oxygen_deficiency = '',
                 amounts_vars={},
                 elements_vars={},
                 composition=[dict(
@@ -196,7 +196,7 @@ class MaterialParser:
                 additives=[],
                 phase='',
                 is_abbreviation_like=False,
-                oxygen_deficiency = False,
+                oxygen_deficiency = '',
                 amounts_vars={},
                 elements_vars={},
                 composition=[dict(
@@ -223,14 +223,14 @@ class MaterialParser:
             phase='',
             additives=additives,
             is_abbreviation_like=False,
-            oxygen_deficiency = False,
+            oxygen_deficiency = '',
             amounts_vars={},
             elements_vars={},
             composition=[]
         )
 
         hydrate = ''
-        oxygen_deficiency = False
+        oxygen_deficiency = ''
         for compound, amount in material_parts:
             try:
                 compound = self.__check_parentheses(compound)
@@ -251,8 +251,8 @@ class MaterialParser:
                 if structure['hydrate'] != '':
                     hydrate = structure['hydrate']
 
-                if structure['oxygen_deficiency']:
-                    oxygen_deficiency = True
+                if structure['oxygen_deficiency'] != '':
+                    oxygen_deficiency = structure['oxygen_deficiency']
             except:
                 output_structure['composition'].append(dict(
                     formula = compound,
@@ -328,15 +328,15 @@ class MaterialParser:
                     formula = m.group(2)
 
         # oxygen deficiency
-        oxygen_deficiency = False
+        oxygen_deficiency = ''
         oxygen_deficiency_sym = ''
         r = ''.join([s for s in self.__greek_letters])
-        r = 'O[0-9]*[-+±]{1}[a-z' + r + ']{1}[0-9]*$'
+        r = 'O[0-9]*([-+±∓]{1})[a-z' + r + ']{1}[0-9]*$'
         for m in re.finditer(r, formula.rstrip(')')):
             end = formula[m.start():m.end()]
             splt = re.split('[-+±]', end)
             oxygen_deficiency_sym = splt[-1]
-            oxygen_deficiency = True
+            oxygen_deficiency = m.group(1)
             formula = formula[:m.start()]+formula[m.start():].replace(end, splt[0])
 
 
@@ -381,9 +381,12 @@ class MaterialParser:
 
         #print ('->', formula)
         composition = self.__parse_formula(formula)
+        #print ('Final composition:')
+        #pprint(composition)
 
         if re.findall('[a-z]{4,}', formula) != [] and composition != {}:
-            composition = collections.defaultdict(str)
+            #composition = collections.defaultdict(str)
+            composition = collections.OrderedDict()
             #print ('->', formula)
             #print (composition)
 
@@ -414,10 +417,10 @@ class MaterialParser:
             composition['Me'] = c if c != '' else '1.0'
             del composition['M']
 
-        if oxygen_deficiency and oxygen_deficiency_sym in stoichiometry_variables:
-            oxygen_deficiency = False
+        if oxygen_deficiency != '' and oxygen_deficiency_sym in stoichiometry_variables:
+            oxygen_deficiency = ''
 
-        formula_structure = dict(elements={e: s for e, s in composition.items()},
+        formula_structure = dict(elements=composition, #{e: s for e, s in composition.items()},
                                  amounts_vars={x: v for x, v in stoichiometry_variables.items()},
                                  elements_vars={e: v for e, v in elements_variables.items()},
                                  hydrate=hydrate,
@@ -429,7 +432,8 @@ class MaterialParser:
 
     def __parse_formula(self, init_formula):
 
-        formula_dict = collections.defaultdict(str)
+        #formula_dict = collections.defaultdict(str)
+        formula_dict = collections.OrderedDict()
 
         formula_dict = self.__parse_parentheses(init_formula, "1", formula_dict)
 
@@ -448,6 +452,8 @@ class MaterialParser:
         return formula_dict
 
     def __parse_parentheses(self, init_formula, init_factor, curr_dict):
+        #print ('Input:', init_formula, init_factor)
+        #print ('Current dictionary:', curr_dict)
         r = "\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
 
         for m in re.finditer(r, init_formula):
@@ -462,17 +468,29 @@ class MaterialParser:
             init_formula = init_formula.replace(m.group(0), '')
 
         unit_sym_dict = self.__get_sym_dict(init_formula, init_factor)
+        #print ('To update:', unit_sym_dict)
         for el, amt in unit_sym_dict.items():
-            if len(curr_dict[el]) == 0:
-                curr_dict[el] = amt
+            if el in curr_dict:
+                if len(curr_dict[el]) == 0:
+                    curr_dict[el] = amt
+                else:
+                    curr_dict[el] = '(' + str(curr_dict[el]) + ')' + '+' + '(' + str(amt) + ')'
             else:
-                curr_dict[el] = '(' + str(curr_dict[el]) + ')' + '+' + '(' + str(amt) + ')'
+                curr_dict[el] = amt
 
         return curr_dict
 
     def __get_sym_dict(self, f, factor):
-        sym_dict = collections.defaultdict(str)
-        r = "([A-Z□]{1}[a-z]{0,1})\s*([-*\.\da-z" + ''.join(self.__greek_letters) + "\+/]*)"
+        #print ('-->', f, factor)
+        sym_dict = collections.OrderedDict()
+        r = "([A-Z□]{1}[a-z]{0,1})\s*([-\*\.\da-z" + ''.join(self.__greek_letters) + "\+\/]*)"
+
+        def get_code_value(code, iterator):
+            code_mapping = {'01': (iterator.group(1), iterator.group(2)),
+                            '11': (iterator.group(1), iterator.group(2)),
+                            '10': (iterator.group(1)[0], iterator.group(1)[1:] + iterator.group(2)),
+                            '00': (iterator.group(1)[0], iterator.group(1)[1:] + iterator.group(2))}
+            return code_mapping[code]
 
         el = ""
         amt = ""
@@ -482,21 +500,30 @@ class MaterialParser:
             """
             el_bin = "{0}{1}".format(str(int(m.group(1)[0] in self.__list_of_elements_1 + ['M', '□'])), str(
                 int(m.group(1) in self.__list_of_elements_1 + self.__list_of_elements_2 + ['Ln', 'M', '□'])))
-            if el_bin in ['01', '11']:
-                el = m.group(1)
-                amt = m.group(2)
-            if el_bin in ['10', '00']:
-                el = m.group(1)[0]
-                amt = m.group(1)[1:] + m.group(2)
+            el, amt = get_code_value(el_bin, m)
+            # if el_bin in ['01', '11']:
+            #     el = m.group(1)
+            #     amt = m.group(2)
+            # if el_bin in ['10', '00']:
+            #     el = m.group(1)[0]
+            #     amt = m.group(1)[1:] + m.group(2)
 
-            if len(sym_dict[el]) == 0:
-                sym_dict[el] = "0"
+            #print ('-->', el, amt)
+
+            # if len(sym_dict[el]) == 0:
+            #     sym_dict[el] = "0"
+            #print ('-->', el, amt)
             if amt.strip() == "":
                 amt = "1"
-            sym_dict[el] = '(' + sym_dict[el] + ')' + '+' + '(' + amt + ')' + '*' + '(' + str(factor) + ')'
+            if el in sym_dict:
+                # if len(sym_dict[el]) == 0:
+                #      sym_dict[el] = "0"
+                sym_dict[el] = '(' + sym_dict[el] + ')' + '+' + '(' + amt + ')' + '*' + '(' + str(factor) + ')'
+            else:
+                sym_dict[el] = '(' + amt + ')' + '*' + '(' + str(factor) + ')'
             f = f.replace(m.group(), "", 1)
         if f.strip():
-            return collections.defaultdict(str)
+            return collections.OrderedDict()
             # print("{} is an invalid formula!".format(f))
 
         """
@@ -504,6 +531,8 @@ class MaterialParser:
         """
         for el, amt in sym_dict.items():
             sym_dict[el] = self.__simplify(amt)
+
+        #print ('Get sym_dict output:', sym_dict)
 
         return sym_dict
 
@@ -1105,6 +1134,12 @@ class MaterialParser:
         re_str = '[\\' + re_str + ']'
         material_name = re.sub(re_str, chr(183), material_name)
 
+        #correcting slashes
+        slashes = [8725]
+        re_str = ''.join([chr(c) for c in slashes])
+        re_str = '[\\' + re_str + ']'
+        material_name = re.sub(re_str, chr(47), material_name)
+
         material_name = re.sub('\s*([-+±]){1}\s*(['+''.join([c for c in self.__greek_letters])+']{1})', '\\1δ', material_name)
 
 
@@ -1158,7 +1193,10 @@ class MaterialParser:
                         'acethylene': 'acetylene',
                         'iso-pro': 'isopro',
                         'anhydrous': '',
-                        'lathanum': 'lanthanum'
+                        'lathanum': 'lanthanum',
+                        'bulk': '',
+                        'Bulk': '',
+                        '()': ''
                         }
 
         for typo, correct in replace_dict.items():
@@ -1184,7 +1222,7 @@ class MaterialParser:
             material_name = material_name.replace(c, '')
 
         material_name = material_name.lstrip(') -')
-        material_name = material_name.rstrip('( ,.:;-±/')
+        material_name = material_name.rstrip('( ,.:;-±/∓')
 
         if len(material_name) == 1 and material_name not in self.__list_of_elements_1:
             return ''
@@ -1277,13 +1315,13 @@ class MaterialParser:
         return str(value)
 
     def __empty_structure(self):
-        return {'elements': {},
+        return {'elements': collections.OrderedDict(),
                 'amounts_vars': {},
                 'elements_vars': {},
                 'hydrate': '',
                 'phase': '',
                 'formula': '',
-                'oxygen_deficiency': False}
+                'oxygen_deficiency': ''}
 
     def __is_int(self, num):
         try:
@@ -1322,7 +1360,9 @@ class MaterialParser:
                 #print('-->', element, coeff)
                 new_name = element + coeff + compound['formula']
                 new_composition = compound['elements'].copy()
-                new_composition[element] = coeff
+                #new_composition[element] = coeff
+                new_composition.update({element: coeff})
+                new_composition.move_to_end(element, last=False)
 
                 new_material_composition.append(dict(
                     formula=new_name,
