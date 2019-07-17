@@ -550,6 +550,7 @@ class MaterialParser:
         """
         formula = ''
         structure = self.__empty_structure().copy()
+        material_string = material_string.replace('[', ' [')
 
         split = re.split('\s', material_string)
 
@@ -1240,8 +1241,8 @@ class MaterialParser:
 
         new_formula = formula
 
-        new_formula = new_formula.replace('[', '(')
-        new_formula = new_formula.replace(']', ')')
+        #new_formula = new_formula.replace('[', '(')
+        #new_formula = new_formula.replace(']', ')')
         new_formula = new_formula.replace('{', '(')
         new_formula = new_formula.replace('}', ')')
 
