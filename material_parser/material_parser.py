@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.2')
+        print('MaterialParser version 5.3')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -270,9 +270,10 @@ class MaterialParser:
         output_structure['oxygen_deficiency'] = oxygen_deficiency
 
         # substituting additive into composition if it makes fractions to sum-up to integer
+        output_structure['additives'] = [elem.strip(' ') for additive in output_structure['additives'] for elem in re.split('[\s,]', additive) if elem != '']
         additive = additives[0].strip(' ') if len(additives) == 1 else ''
         #print('-->', additive)
-        if additive != '':
+        if additive != '' and all(c['elements'] != {} for c in output_structure['composition']):
             formula, composition = self.__substitute_additive(additive, material_formula, output_structure['composition'])
             if formula != material_formula:
                 output_structure['additives'] = []
@@ -317,7 +318,14 @@ class MaterialParser:
 
         formula = formula.replace(' ', '')
         formula = formula.replace('−', '-')
+        formula = formula.replace('[', '(')
+        formula = formula.replace(']', ')')
+        formula = formula.replace('{', '(')
+        formula = formula.replace('}', ')')
+
         formula = formula.strip(' ')
+
+        #print ('->', formula)
 
         # is there any phase specified
         phase = ''
@@ -456,10 +464,14 @@ class MaterialParser:
         #print ('Current dictionary:', curr_dict)
         r = "\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
 
+        #print ('-->', init_formula, init_factor)
+
         for m in re.finditer(r, init_formula):
             factor = "1"
             if m.group(2) != "":
                 factor = m.group(2)
+
+            #print ('-->', m.group(1), factor, curr_dict)
 
             factor = self.__simplify('(' + str(init_factor) + ')*(' + str(factor) + ')')
 
@@ -627,6 +639,8 @@ class MaterialParser:
         """
 
         output_formula = ''
+        material_name = re.sub('(\([IV]*\))', ' \\1 ', material_name)
+        material_name = re.sub('\s{2,}', ' ', material_name)
 
         terms_list = []
         valency_list = []
@@ -646,10 +660,17 @@ class MaterialParser:
                 continue
             #prev_ion = t.lower().rstrip('s')
             #ions_valency[prev_ion] = -1
-            terms_list.append(t)
+            terms_list.append(t.strip(' -'))
 
-        #print ('->', ions_valency)
-        #print ('->', terms_list)
+        # print ('->', terms_list)
+        # print ('->', valency_list)
+        # print ('->', hydrate)
+
+        terms_list_upd = []
+        for t in terms_list:
+            terms_list_upd.extend(_ for _ in t.split('-'))
+        terms_list = terms_list_upd
+        # print ('->', terms_list_upd)
 
         t = ''.join([t + ' ' for t in terms_list]).lower().strip(' ')
         if t in self.__anions:
@@ -682,6 +703,8 @@ class MaterialParser:
 
         if anion in self.__anions:
             anion_data = self.__anions[anion]
+        elif anion in ['metal']:
+            return self.__cations[terms_list[0]]['e_name']
         else:
             return output_formula
 
@@ -701,8 +724,10 @@ class MaterialParser:
             else:
                 return output_formula
 
-        # print ('->', anion, anion_valency_num)
-        # print ('->', cation, cation_valency_num)
+        # print ('->', anion, anion_prefix_num)
+        # pprint(anion_data)
+        # print ('->', cation, cation_prefix_num)
+        # pprint(cation_data)
 
         if len(cation_data['valency']) > 1 and valency_num != 0:
             if valency_num not in cation_data['valency']:
@@ -718,7 +743,8 @@ class MaterialParser:
 
         if hydrate != '':
             _, hydrate_prefix_num, hydrate = self.__get_prefix(hydrate)
-            output_formula = output_formula + '·' + str(hydrate_prefix_num) + 'H2O'
+            hydrate_prefix = '' if hydrate_prefix_num in [0, 1] else str(hydrate_prefix_num)
+            output_formula = output_formula + '·' + hydrate_prefix + 'H2O'
 
         return output_formula
 
@@ -898,12 +924,23 @@ class MaterialParser:
             new_material_name = parts[0].strip(' -+')
             additives.extend(d.strip(' ') for d in parts[1:] if d != '')
 
-        for part in new_material_name.split(':'):
-            if all(e.strip('x,+0987654321. ') in self.__list_of_elements_1 + self.__list_of_elements_2
-                   for e in part.split(' ') if e != ''):
-                additives.append(part.strip(' '))
+        for part_ in new_material_name.split(':'):
+            part_ = part_.strip(' ')
+
+            part = part_
+            if any(e in part for e in self.__list_of_elements_2):
+                for e in self.__list_of_elements_2:
+                    part = part.replace(e, '&&')
+
+            #print (part_, part)
+            #print ('->', re.split('[\s,]', part))
+            #print ('->', part[0].strip('yx,+0987654321. '))
+
+            if all(e.strip('zyx,+0987654321. ') in self.__list_of_elements_1 + ['R'] + ['&&']
+                   for e in re.split('[\s,/]', part) if e != ''):
+                additives.append(part_.strip(' '))
             else:
-                new_material_name = part.strip(' ')
+                new_material_name = part_.strip(' ')
 
         return additives, new_material_name
 
@@ -1055,7 +1092,7 @@ class MaterialParser:
     ###################################################################################################################
 
     def is_materials_list(self, material_string):
-        if any(a + 's' in material_string.lower() for a in self.__anions.keys()) and \
+        if (any(a + 's' in material_string.lower() for a in self.__anions.keys()) or 'metal' in material_string) and \
                 any(w in material_string for w in ['and ', ',', ' of ']):
             return True
 
@@ -1072,7 +1109,7 @@ class MaterialParser:
 
        #print (self.__anions.keys())
 
-        anion = [(i, p[:-1]) for i, p in enumerate(parts) if p[:-1].lower() in self.__anions.keys()]
+        anion = [(i, p[:-1]) for i, p in enumerate(parts) if p[:-1].lower() in self.__anions.keys() or p[:-1].lower() == 'metal']
         cation = [(i, p) for i, p in enumerate(parts) if p.lower() in self.__cations.keys()
                   or p in self.__list_of_elements_1 + self.__list_of_elements_2]
         valencies = [(i - 1, p.strip('()')) for i, p in enumerate(parts) if p.strip('()') in self.__rome2num and i != 0]
@@ -1163,7 +1200,7 @@ class MaterialParser:
             return ''
 
         for c in ['\(⩾99', '\(99', '\(98', '\(90', '\(95', '\(96', '\(Alfa', '\(Aldrich', '\(A.R.', '\(Aladdin', '\(Sigma',
-                  '\(A.G', '\(Fuchen', '\(Furuuchi', '\(AR\)', '（x', '\(x']:
+                  '\(A.G', '\(Fuchen', '\(Furuuchi', '\(AR\)', '（x', '\(x', '\(Acr', '\(Koj', '\(Sho', '\(＞99']:
             split = re.split(c, material_name)
             if len(split) > 1 and (len(split[-1]) == '' or all(not s.isalpha() for s in split[-1])):
                 #material_name = material_name.replace(split[-1], '')
@@ -1197,7 +1234,10 @@ class MaterialParser:
                         'lathanum': 'lanthanum',
                         'bulk': '',
                         'Bulk': '',
-                        '()': ''
+                        '()': '',
+                        'uium': 'ium',
+                        'Anhydrous': '',
+                        'sodiam': 'sodium'
                         }
 
         for typo, correct in replace_dict.items():

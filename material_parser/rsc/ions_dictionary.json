@@ -94,7 +94,13 @@
     {"c_name" : "isopropoxide", "valency" : [-1], "e_name" : "OCH(CH3)2", "n_atoms" : 11},
     {"c_name" : "orthoferrite", "valency" : [-3], "e_name" : "FeO3", "n_atoms" : 4},
     {"c_name" : "cyanamide", "valency" : [-2], "e_name" : "CN2", "n_atoms" : 3},
-	{"c_name" : "selenate", "valency" : [-2], "e_name" : "SeO4", "n_atoms" : 5}
+	{"c_name" : "selenate", "valency" : [-2], "e_name" : "SeO4", "n_atoms" : 5},
+	{"c_name" : "thiocyanate", "valency" : [-1], "e_name" : "SCN", "n_atoms" : 3},
+	{"c_name" : "ferricyanide", "valency" : [-3], "e_name" : "Fe(CN)6", "n_atoms" : 13},
+	{"c_name" : "hexacyanoferrate", "valency" : [-3], "e_name" : "Fe(CN)6", "n_atoms" : 13},
+	{"c_name" : "tosylate", "valency" : [-1], "e_name" : "CH3C6H4SO3", "n_atoms" : 18},
+	{"c_name" : "metaborate", "valency" : [-1], "e_name" : "BO2", "n_atoms" : 3},
+	{"c_name" : "stearate", "valency" : [-1], "e_name" : "C17H35COO", "n_atoms" : 55}
 ],
 "cations" : [
     {"c_name" : "hydrogen", "valency" : [1], "e_name" : "H", "n_atoms" : 1},
