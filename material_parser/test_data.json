@@ -203,7 +203,7 @@
       {
         "material_string": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]",
         "material_name": "ammonium molybdate",
-        "material_formula": "((NH4)6Mo7O24·4H2O)",
+        "material_formula": "(NH4)6Mo7O24·4H2O",
         "additives": [],
         "phase": "",
         "is_abbreviation_like": false,
@@ -789,7 +789,7 @@
         "material_formula": "Sr1.97MgSi2O7",
         "phase": "",
         "additives": [
-          "Eu0.012+, Dy0.013+ Ho0.013+"
+          "Eu0.012+", "Dy0.013+", "Ho0.013+"
         ],
         "is_abbreviation_like": false,
         "oxygen_deficiency": "",
@@ -819,7 +819,7 @@
         "material_formula": "Ca2BO3Cl",
         "phase": "",
         "additives": [
-          "Sm3+, Eu3+"
+          "Sm3+", "Eu3+"
         ],
         "is_abbreviation_like": false,
         "oxygen_deficiency": "",
@@ -1870,6 +1870,113 @@
             "Ti": "0.9",
             "Fe": "0.1",
             "O": "3.0"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Al-nitrate hydrate",
+  "parser_output": [
+    {
+      "material_string": "Al-nitrate hydrate",
+      "material_name": "Al-nitrate hydrate",
+      "material_formula": "Al(NO3)3·H2O",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Al(NO3)3",
+          "amount": "1.0",
+          "elements": {
+            "N": "3.0",
+            "O": "9.0",
+            "Al": "1.0"
+          }
+        },
+        {
+          "formula": "H2O",
+          "amount": "1.0",
+          "elements": {
+            "H": "2.0",
+            "O": "1.0"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+    "material": "magnesium and lanthanum metals",
+    "parser_output": [
+      {
+        "material_string": "magnesium metal",
+        "material_name": "magnesium metal",
+        "material_formula": "Mg",
+        "phase": "",
+        "additives": [],
+        "is_abbreviation_like": false,
+        "oxygen_deficiency": "",
+        "amounts_vars": {},
+        "elements_vars": {},
+        "composition": [
+          {
+            "formula": "Mg",
+            "amount": "1.0",
+            "elements": {
+              "Mg": "1.0"
+            }
+          }
+        ]
+      },
+      {
+        "material_string": "lanthanum metal",
+        "material_name": "lanthanum metal",
+        "material_formula": "La",
+        "phase": "",
+        "additives": [],
+        "is_abbreviation_like": false,
+        "oxygen_deficiency": "",
+        "amounts_vars": {},
+        "elements_vars": {},
+        "composition": [
+          {
+            "formula": "La",
+            "amount": "1.0",
+            "elements": {
+              "La": "1.0"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+  "material": "Ba5Si8O21:0.02Eu2+,xDy3+",
+  "parser_output": [
+    {
+      "material_string": "Ba5Si8O21:0.02Eu2+,xDy3+",
+      "material_name": "Ba5Si8O21",
+      "material_formula": "Ba5Si8O21",
+      "phase": "",
+      "additives": ["0.02Eu2+", "xDy3+"],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Ba5Si8O21",
+          "amount": "1.0",
+          "elements": {
+            "Ba": "5.0",
+            "Si": "8.0",
+            "O": "21.0"
           }
         }
       ]
