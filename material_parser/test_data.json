@@ -1982,5 +1982,60 @@
       ]
     }
   ]
+},
+  {
+  "material": "[Na3Zr2Si2PO12]",
+  "parser_output": [
+    {
+      "material_string": "[Na3Zr2Si2PO12]",
+      "material_name": "Na3Zr2Si2PO12",
+      "material_formula": "Na3Zr2Si2PO12",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Na3Zr2Si2PO12",
+          "amount": "1.0",
+          "elements": {
+            "Na": "3.0",
+            "Zr": "2.0",
+            "Si": "2.0",
+            "P": "1.0",
+            "O": "12.0"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "manganese di-oxide",
+  "parser_output": [
+    {
+      "material_string": "manganese di-oxide",
+      "material_name": "manganese di-oxide",
+      "material_formula": "MnO2",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "MnO2",
+          "amount": "1.0",
+          "elements": {
+            "Mn": "1.0",
+            "O": "2.0"
+          }
+        }
+      ]
+    }
+  ]
 }
 ]
