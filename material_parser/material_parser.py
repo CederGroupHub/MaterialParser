@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.3')
+        print('MaterialParser version 5.4')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -299,7 +299,6 @@ class MaterialParser:
         # checking abbreviation
         output_structure['is_abbreviation_like'] = self.__is_abbreviation_like(output_structure)
             #len([el for el in output_structure['elements_vars'].keys() if len(el) == 1 and el.isupper()]) > 1
-
 
         return output_structure
 
@@ -624,9 +623,9 @@ class MaterialParser:
         if len(name_terms) > 0:
             name = ''.join([t + ' ' for t in split]).strip(' ')
         else:
-            name = ''
-            formula = ''
-            structure = self.__empty_structure().copy()
+            name = formula
+            #formula = ''
+            #structure = self.__empty_structure().copy()
 
         return name, formula, structure
 
@@ -668,9 +667,12 @@ class MaterialParser:
 
         terms_list_upd = []
         for t in terms_list:
-            terms_list_upd.extend(_ for _ in t.split('-'))
+            if all(p not in self.__prefixes2num for p in t.split('-')):
+                terms_list_upd.extend(_ for _ in t.split('-'))
+            else:
+                terms_list_upd.append(''.join([p for p in t.split('-')]))
         terms_list = terms_list_upd
-        # print ('->', terms_list_upd)
+        #print ('->', terms_list)
 
         t = ''.join([t + ' ' for t in terms_list]).lower().strip(' ')
         if t in self.__anions:
@@ -699,10 +701,14 @@ class MaterialParser:
         else:
             terms_list += [next_term]
 
+        #print ('->', terms_list)
+        #print ('->', anion)
+        #print ('->', anion, self.__get_prefix(anion))
         _, anion_prefix_num, anion = ('', 0, anion) if anion.lower() in self.__anions else self.__get_prefix(anion)
+        #print ('->', anion, anion_prefix_num)
 
         if anion in self.__anions:
-            anion_data = self.__anions[anion]
+            anion_data = self.__anions[anion].copy()
         elif anion in ['metal']:
             return self.__cations[terms_list[0]]['e_name']
         else:
@@ -718,12 +724,13 @@ class MaterialParser:
                 else self.__get_prefix(cation)
             if cation.lower() in self.__cations:
                 cation = cation.lower()
-                cation_data = self.__cations[cation]
+                cation_data = self.__cations[cation].copy()
             elif cation in self.__element2name:
-                cation_data = self.__cations[self.__element2name[cation]]
+                cation_data = self.__cations[self.__element2name[cation]].copy()
             else:
                 return output_formula
 
+        # print ('Formula reconstruction data:')
         # print ('->', anion, anion_prefix_num)
         # pprint(anion_data)
         # print ('->', cation, cation_prefix_num)
@@ -753,6 +760,12 @@ class MaterialParser:
         cation_stoich = 0
         anion_stoich = 0
 
+        # print ('Building formula:')
+        # pprint (cation)
+        # print (cation_prefix_num)
+        # pprint (anion)
+        # print (anion_prefix_num)
+
         if anion_prefix_num + cation_prefix_num == 0 or anion_prefix_num * cation_prefix_num != 0:
             v_cation = abs(cation['valency'][0])
             v_anion = abs(anion['valency'][0])
@@ -762,7 +775,11 @@ class MaterialParser:
 
         if anion_prefix_num != 0:
             anion_stoich = anion_prefix_num
-            cation_stoich = anion_prefix_num * abs(anion['valency'][0]) // abs(cation['valency'][0])
+            i = 0
+            cation_stoich = 0
+            while cation_stoich == 0 and i < len(cation['valency']):
+                cation_stoich = anion_prefix_num * abs(anion['valency'][0]) // abs(cation['valency'][i])
+                i = i+1
 
         if cation_prefix_num != 0:
             cation_stoich = cation_prefix_num
