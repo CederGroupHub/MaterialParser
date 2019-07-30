@@ -2037,5 +2037,33 @@
       ]
     }
   ]
+},
+  {
+  "material": "[Sn0.5Zn0.5]GaO3(ZnO)",
+  "parser_output": [
+    {
+      "material_string": "[Sn0.5Zn0.5]GaO3(ZnO)",
+      "material_name": "",
+      "material_formula": "[Sn0.5Zn0.5]GaO3(ZnO)",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Sn0.5Zn0.5GaO3ZnO",
+          "amount": "1.0",
+          "elements": {
+            "Sn": "0.5",
+            "Zn": "1.5",
+            "Ga": "1.0",
+            "O": "4.0"
+          }
+        }
+      ]
+    }
+  ]
 }
 ]

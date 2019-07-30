@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.4')
+        print('MaterialParser version 5.5')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -845,12 +845,15 @@ class MaterialParser:
         return output
 
     def __split_name(self, material_name_, init_fraction='1'):
+        #print ('Split name:', material_name_)
 
         re_str = "(?<=[0-9\)])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-⋅·∙\∗](?=[A-Z])|(?<=[" \
                  "0-9\)])[-⋅·∙\∗](?=[A-Z])"
         re_str = re_str+''.join(['|(?<='+e+')[-⋅·∙\∗](?=[\(0-9A-Z])' for e in self.__list_of_elements_1+self.__list_of_elements_2])
 
         material_name = material_name_.replace(' ', '')
+        material_name = material_name.replace('[', '(')
+        material_name = material_name.replace(']', ')')
 
         if '(1-x)' == material_name[0:5]:
             material_name = material_name.replace('(x)', 'x')
@@ -903,6 +906,7 @@ class MaterialParser:
             if m != '':
                 composition.append((m, fraction))
 
+        #print ('-->', composition)
         return composition
 
     def get_additives(self, material_name):
@@ -1290,7 +1294,6 @@ class MaterialParser:
                 material_name.rstrip('234') not in self.__list_of_elements_1 and \
                 any(c not in self.__list_of_elements_1 for c in material_name):
             return ''
-
 
         return material_name
 
