@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.5')
+        print('MaterialParser version 5.6')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -140,7 +140,7 @@ class MaterialParser:
             output_structure = dict(
                 material_string=material_string_,
                 material_name=material_name,
-                material_formula=material_formula,
+                material_formula="",
                 additives=additives,
                 phase=material_structure['phase'],
                 is_abbreviation_like=False,
@@ -155,11 +155,12 @@ class MaterialParser:
             )
             if material_structure['hydrate'] != '':
                 output_structure['composition'].append(dict(
-                    formula='H20',
+                    formula='H2O',
                     amount=material_structure['hydrate'],
                     elements={'H': '2.0', 'O': '1.0'}
                 ))
 
+            output_structure['material_formula'] = self.__combine_formula(output_structure['composition'])
             return output_structure
         else:
             material_formula = ''
@@ -299,6 +300,8 @@ class MaterialParser:
         # checking abbreviation
         output_structure['is_abbreviation_like'] = self.__is_abbreviation_like(output_structure)
             #len([el for el in output_structure['elements_vars'].keys() if len(el) == 1 and el.isupper()]) > 1
+
+        output_structure['material_formula'] = self.__combine_formula(output_structure['composition'])
 
         return output_structure
 
@@ -624,8 +627,8 @@ class MaterialParser:
             name = ''.join([t + ' ' for t in split]).strip(' ')
         else:
             name = formula
-            #formula = ''
-            #structure = self.__empty_structure().copy()
+            formula = ''
+            structure = self.__empty_structure().copy()
 
         return name, formula, structure
 
@@ -840,6 +843,7 @@ class MaterialParser:
             except:
                 f = '1'
 
+            f = self.__simplify(f)
             output.append((m, f))
 
         return output
@@ -1283,6 +1287,11 @@ class MaterialParser:
         for c in trash_symbs:
             material_name = material_name.replace(c, '')
 
+        material_name = material_name.replace('[', '(')
+        material_name = material_name.replace(']', ')')
+        material_name = material_name.replace('{', '(')
+        material_name = material_name.replace('}', '(')
+
         material_name = material_name.lstrip(') -')
         material_name = material_name.rstrip('( ,.:;-±/∓')
 
@@ -1347,7 +1356,7 @@ class MaterialParser:
         if new_value.is_Number:
             new_value = round(float(new_value), 4)
 
-        return str(new_value)
+        return str(new_value).replace(' ', '')
 
     def __lcm(self, x, y):
         """This function takes two
@@ -1369,9 +1378,19 @@ class MaterialParser:
 
         return lcm
 
+    # def __cast_stoichiometry(self, value):
+    #     if value == 1:
+    #         return ''
+    #
+    #     return str(value)
+
     def __cast_stoichiometry(self, value):
-        if value == 1:
+
+        value = float(value)
+        if value == 1.0:
             return ''
+        if value * 1000 % 1000 == 0.0:
+            return str(int(value))
 
         return str(value)
 
@@ -1469,3 +1488,29 @@ class MaterialParser:
         if name in self.__cations:
             return self.__cations[name]['e_name']
         return ''
+
+    def __combine_formula(self, material_composition):
+        formula = ''
+        if len(material_composition) == 1:
+            return material_composition[0]['formula'].replace('*', '')
+
+        coeff = ''
+        for c in material_composition:
+            #if c['amount'] in ['1.0', '1']:
+            #    coeff = ''
+            if coeff != '':
+                coeff = self.__simplify(coeff)
+            if all(ch.isdigit() or ch == '.' for ch in c['amount']):
+                coeff = self.__cast_stoichiometry(c['amount'])
+            else:
+                coeff = '(' + c['amount'] + ')'
+
+            sign = '-'
+            if 'H2O' in c['formula']:
+                sign = '·'
+
+            formula = formula + sign + coeff + c['formula']
+
+        formula = formula.replace('*', '')
+
+        return formula.lstrip('-')
