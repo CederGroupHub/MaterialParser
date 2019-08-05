@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "3.0"
+__version__ = "5.6.1"
 
 import regex as re
 import collections
@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.6')
+        print('MaterialParser version 5.6.1')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',
@@ -1303,6 +1303,8 @@ class MaterialParser:
                 material_name.rstrip('234') not in self.__list_of_elements_1 and \
                 any(c not in self.__list_of_elements_1 for c in material_name):
             return ''
+
+        material_name = re.sub('\s([0-9\.]*H2O)$', chr(183)+'\\1', material_name)
 
         return material_name
 
