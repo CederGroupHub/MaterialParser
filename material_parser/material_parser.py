@@ -1077,7 +1077,7 @@ class MaterialParser:
 
     def cleanup_name(self, material_name):
         """
-        cleaning up material name - fix due to tokenization imperfectness
+        cleaning up material name - fix due to tokenization imperfectness - TO BE REMOVED FROM FINAL VERSION
         :param material_name: <str> material string
         :return: <str> updated material string
         """
@@ -1208,6 +1208,11 @@ class MaterialParser:
         return material_name
 
     def __check_parentheses(self, formula):
+        """
+         TO BE REMOVED FROM FINAL VERSION
+        :param formula:
+        :return:
+        """
 
         new_formula = formula
 
