@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "5.6.1"
+__version__ = "6.0.0"
 
 import regex as re
 import collections
@@ -18,7 +18,7 @@ from pprint import pprint
 # noinspection PyBroadException
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print('MaterialParser version 5.6.1')
+        print('MaterialParser (forked) version 6.0.0')
 
         self.__list_of_elements_1 = ['H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U']
         self.__list_of_elements_2 = ['He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'Cl', 'Ar', 'Ca', 'Sc', 'Ti', 'Cr',

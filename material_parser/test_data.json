@@ -336,7 +336,7 @@
       {
         "material_string": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
         "material_name": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
-        "material_formula": "(-x+1)PbZr0.52Ti0.48O3-(x)BaTiO3",
+        "material_formula": "(1-x)PbZr0.52Ti0.48O3-(x)BaTiO3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -346,7 +346,7 @@
         "composition": [
           {
             "formula": "PbZr0.52Ti0.48O3",
-            "amount": "-x+1",
+            "amount": "1-x",
             "elements": {
               "Pb": "1.0",
               "Zr": "0.52",
@@ -389,7 +389,7 @@
             "elements": {
               "Li": "x+5",
               "La": "3.0",
-              "Ta": "-x+2",
+              "Ta": "2-x",
               "Ge": "x",
               "O": "12.0"
             }
@@ -523,7 +523,7 @@
       {
         "material_string": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
         "material_name": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
-        "material_formula": "16Na2O-10CaO-(x)Al2O3-(-x+74)SiO2",
+        "material_formula": "16Na2O-10CaO-(x)Al2O3-(74-x)SiO2",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -557,7 +557,7 @@
           },
           {
             "formula": "SiO2",
-            "amount": "-x+74",
+            "amount": "74-x",
             "elements": {
               "Si": "1.0",
               "O": "2.0"
@@ -573,7 +573,7 @@
       {
         "material_string": "(40-x)BaO·xFe2O3·(60-x)P2O5",
         "material_name": "(40-x)BaO·xFe2O3·(60-x)P2O5",
-        "material_formula": "(-x+40)BaO-(x)Fe2O3-(-x+60)P2O5",
+        "material_formula": "(40-x)BaO-(x)Fe2O3-(60-x)P2O5",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -583,7 +583,7 @@
         "composition": [
           {
             "formula": "BaO",
-            "amount": "-x+40",
+            "amount": "40-x",
             "elements": {
               "Ba": "1.0",
               "O": "1.0"
@@ -599,7 +599,7 @@
           },
           {
             "formula": "P2O5",
-            "amount": "-x+60",
+            "amount": "60-x",
             "elements": {
               "P": "2.0",
               "O": "5.0"
@@ -631,7 +631,7 @@
             "elements": {
               "Ni": "0.6",
               "Mg": "0.3",
-              "Mn": "-x+1.5",
+              "Mn": "1.5-x",
               "Al": "x+0.6",
               "O": "4.0"
             }
@@ -661,7 +661,7 @@
             "amount": "1.0",
             "elements": {
               "Li": "1.0",
-              "Sr": "-x+1",
+              "Sr": "1-x",
               "P": "1.0",
               "O": "4.0",
               "Eu": "x"
@@ -932,7 +932,7 @@
       {
         "material_string": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
         "material_name": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
-        "material_formula": "(-x+1)K0.5Na0.5NbO3-(x)BiMg0.5Ti0.5O3",
+        "material_formula": "(1-x)K0.5Na0.5NbO3-(x)BiMg0.5Ti0.5O3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -942,7 +942,7 @@
         "composition": [
           {
             "formula": "K0.5Na0.5NbO3",
-            "amount": "-x+1",
+            "amount": "1-x",
             "elements": {
               "K": "0.5",
               "Na": "0.5",
@@ -986,8 +986,8 @@
             "amount": "1.0",
             "elements": {
               "Li": "x+1",
-              "Mn": "-x+2",
-              "O": "-z+4",
+              "Mn": "2-x",
+              "O": "4-z",
               "F": "z"
             }
           }
@@ -1001,7 +1001,7 @@
       {
         "material_string": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3",
         "material_name": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3",
-        "material_formula": "(-0.948x+0.948)K0.5Na0.5NbO3-(-0.052x+0.052)LiSbO3-(x)Bi2O3",
+        "material_formula": "(0.948-0.948x)K0.5Na0.5NbO3-(0.052-0.052x)LiSbO3-(x)Bi2O3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1011,7 +1011,7 @@
         "composition": [
           {
             "formula": "K0.5Na0.5NbO3",
-            "amount": "-0.948*x+0.948",
+            "amount": "0.948-0.948*x",
             "elements": {
               "K": "0.5",
               "Na": "0.5",
@@ -1021,7 +1021,7 @@
           },
           {
             "formula": "LiSbO3",
-            "amount": "-0.052*x+0.052",
+            "amount": "0.052-0.052*x",
             "elements": {
               "Li": "1.0",
               "Sb": "1.0",
@@ -1238,10 +1238,10 @@
             "amount": "1.0",
             "elements": {
               "Ba": "2.0",
-              "In": "-2*x+2",
+              "In": "2-2*x",
               "Ti": "2*x",
               "O": "x+5",
-              "□": "-x+1"
+              "□": "1-x"
             }
           }
         ]
@@ -1270,7 +1270,7 @@
             "elements": {
               "Li": "2.0",
               "Sr": "1.0",
-              "Ta": "-2*x+2",
+              "Ta": "2-2*x",
               "Nb": "2*x",
               "O": "7.0"
             }
@@ -1360,7 +1360,7 @@
             "formula": "EuxBa3-xSiO5",
             "amount": "1.0",
             "elements": {
-              "Ba": "-x+3",
+              "Ba": "3-x",
               "Si": "1.0",
               "O": "5.0",
               "Eu": "x"
@@ -1390,7 +1390,7 @@
             "formula": "CexCa2-2xLi1+xSiO4F",
             "amount": "1.0",
             "elements": {
-              "Ca": "-2*x+2",
+              "Ca": "2-2*x",
               "Li": "x+1",
               "Si": "1.0",
               "O": "4.0",
@@ -1408,7 +1408,7 @@
       {
         "material_string": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
         "material_name": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
-        "material_formula": "65GeS2-22Ga2S3-(-x+3)La2S3-10AgI-(x)Tm2S3",
+        "material_formula": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-(x)Tm2S3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1434,7 +1434,7 @@
           },
           {
             "formula": "La2S3",
-            "amount": "-x+3",
+            "amount": "3-x",
             "elements": {
               "La": "2.0",
               "S": "3.0"
@@ -1524,7 +1524,7 @@
             "elements": {
               "Bi": "1.0",
               "Sm": "x",
-              "Fe": "-x+1",
+              "Fe": "1-x",
               "O": "3.0"
             }
           },
@@ -1646,7 +1646,7 @@
             "formula": "La8Y2(GeO4)6-x(GaO4)xO3",
             "amount": "1.0",
             "elements": {
-              "Ge": "-x+6",
+              "Ge": "6-x",
               "O": "27.0",
               "Ga": "x",
               "La": "8.0",
@@ -1680,7 +1680,7 @@
             "amount": "1.0",
             "elements": {
               "Sr": "1.0",
-              "Fe": "-x+1",
+              "Fe": "1-x",
               "M": "x",
               "O": "3.0"
             }
