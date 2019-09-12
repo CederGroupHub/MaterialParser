@@ -12,21 +12,28 @@ for item in test_set:
 
     material = item['material']
     correct = item['parser_output']
-    print (material)
+    #print (material)
 
     list_of_materials = mp.reconstruct_list_of_materials(material)
-    list_of_materials = list_of_materials if list_of_materials != [] else [(material, '')]
+    list_of_materials = list_of_materials if list_of_materials != [] else [ material ]
     structure = []
-    for m, val in list_of_materials:
-        structure.append(mp.parse_material(m))
+    for m in list_of_materials:
+        structure.append(mp.parse_material_string(m))
     #pprint(structure)
 
     if structure != correct:
-        print (material)
-        print ('Found:')
-        pprint(structure)
-        print ('Correct:')
-        pprint(correct)
+        print("Mismatch for ", material)
+        print('-'*40)
+        for s, c in zip(structure, correct):
+            for key in c.keys():
+                if s[key] != c[key]:
+                    print(key)
+                    print("Correct:", c[key])
+                    print("Found:", s[key])
+        print('-' * 40)
+        break
+    else:
+        print(material, "->", "ok!")
 
 print ('Done!')
 

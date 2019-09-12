@@ -25,6 +25,7 @@
     {"c_name" : "hydrogen carbonate", "valency" : [-1], "e_name" : "HCO3", "n_atoms" : 5},
     {"c_name" : "hydrogen sulfate", "valency" : [-1], "e_name" : "HSO4", "n_atoms" : 6},
     {"c_name" : "hydrogen sulfite", "valency" : [-1], "e_name" : "HSO3", "n_atoms" : 5},
+	{"c_name" : "bisulfite", "valency" : [-1], "e_name" : "HSO3", "n_atoms" : 5},
     {"c_name" : "hydroxide", "valency" : [-1], "e_name" : "OH", "n_atoms" : 2},
     {"c_name" : "hypochlorite", "valency" : [-1], "e_name" : "ClO", "n_atoms" : 2},
     {"c_name" : "monohydrogen phosphate", "valency" : [-2], "e_name" : "HPO4", "n_atoms" : 6},
@@ -205,7 +206,8 @@
     {"c_name" : "ammonium", "valency" : [1], "e_name" : "NH4", "n_atoms" : 3},
     {"c_name" : "germanium", "valency" : [4], "e_name" : "Ge", "n_atoms" : 1},
     {"c_name" : "zirconyl", "valency" : [2], "e_name" : "ZrO", "n_atoms" : 2},
-    {"c_name" : "tellurium", "valency" : [6, 4, 2], "e_name" : "Te", "n_atoms" : 1}
+    {"c_name" : "tellurium", "valency" : [6, 4, 2], "e_name" : "Te", "n_atoms" : 1},
+	{"c_name" : "methylene", "valency" : [2], "e_name" : "CH2", "n_atoms" : 3}
 ],
   "chemicals":[
 	  "uranate",
