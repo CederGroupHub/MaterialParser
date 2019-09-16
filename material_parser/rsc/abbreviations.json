@@ -14,5 +14,8 @@
   "KNN": "K0.5Na0.5NbO3",
   "BNT": "Bi0.5Na0.5TiO3",
   "BTO": "BaTiO3",
-  "TEAB": "C8H20NBr"
+  "TEAB": "C8H20NBr",
+  "YSZ": "Y2O3-ZrO2",
+  "YIG": "YInGe2O7",
+  "PBZ": "(Pb1-xBax)ZrO3"
 }

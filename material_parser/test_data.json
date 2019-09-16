@@ -331,12 +331,12 @@
     ]
   },
   {
-    "material": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+    "material": "(1-x)Pb(Zr0.52Ti0.48)O3-xBaTiO3",
     "parser_output": [
       {
-        "material_string": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+        "material_string": "(1-x)Pb(Zr0.52Ti0.48)O3-xBaTiO3",
         "material_name": "",
-        "material_formula": "(1-x)Pb(Zr0.52Ti0.48)O3-(x)BaTiO3",
+        "material_formula": "(1-x)Pb(Zr0.52Ti0.48)O3-xBaTiO3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -523,7 +523,7 @@
       {
         "material_string": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
         "material_name": "",
-        "material_formula": "16Na2O-10CaO-(x)Al2O3-(74-x)SiO2",
+        "material_formula": "16Na2O-10CaO-xAl2O3-(74-x)SiO2",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -573,7 +573,7 @@
       {
         "material_string": "(40-x)BaO·xFe2O3·(60-x)P2O5",
         "material_name": "",
-        "material_formula": "(40-x)BaO-(x)Fe2O3-(60-x)P2O5",
+        "material_formula": "(40-x)BaO-xFe2O3-(60-x)P2O5",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -781,10 +781,10 @@
     ]
   },
   {
-    "material": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+ Ho0.013+",
+    "material": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+, Ho0.013+",
     "parser_output": [
       {
-        "material_string": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+ Ho0.013+",
+        "material_string": "Sr1.97MgSi2O7: Eu0.012+, Dy0.013+, Ho0.013+",
         "material_name": "",
         "material_formula": "Sr1.97MgSi2O7",
         "phase": "",
@@ -932,7 +932,7 @@
       {
         "material_string": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
         "material_name": "",
-        "material_formula": "(1-x)(K0.5Na0.5)NbO3-(x)Bi(Mg0.5Ti0.5)O3",
+        "material_formula": "(1-x)(K0.5Na0.5)NbO3-xBi(Mg0.5Ti0.5)O3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1001,7 +1001,7 @@
       {
         "material_string": "(1-x)(0.948K0.5Na0.5NbO3-0.052LiSbO3)-xBi2O3",
         "material_name": "",
-        "material_formula": "(0.948-0.948x)K0.5Na0.5NbO3-(0.052-0.052x)LiSbO3-(x)Bi2O3",
+        "material_formula": "(0.948-0.948x)K0.5Na0.5NbO3-(0.052-0.052x)LiSbO3-xBi2O3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1074,7 +1074,7 @@
       {
         "material_string": "(K0.16Na0.84)0.5Bi4.5Ti4O15+xwt.% CeO2",
         "material_name": "",
-        "material_formula": "(1-x)(K0.16Na0.84)0.5Bi4.5Ti4O15-(x)CeO2",
+        "material_formula": "(1-x)(K0.16Na0.84)0.5Bi4.5Ti4O15-xCeO2",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1111,7 +1111,7 @@
       {
         "material_string": "Ti0.4V0.3Mn0.15Cr0.15+x wt% LaNi3.55Co0.75Mn0.4Al0.3",
         "material_name": "",
-        "material_formula": "(1-x)Ti0.4V0.3Mn0.15Cr0.15-(x)LaNi3.55Co0.75Mn0.4Al0.3",
+        "material_formula": "(1-x)Ti0.4V0.3Mn0.15Cr0.15-xLaNi3.55Co0.75Mn0.4Al0.3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1179,7 +1179,7 @@
       {
         "material_string": "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2",
         "material_name": "",
-        "material_formula": "(1-x)(Na0.5K0.5)NbO3-(x)CuF2",
+        "material_formula": "(1-x)(Na0.5K0.5)NbO3-xCuF2",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -1429,7 +1429,7 @@
       {
         "material_string": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
         "material_name": "",
-        "material_formula": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-(x)Tm2S3",
+        "material_formula": "65GeS2-22Ga2S3-(3-x)La2S3-10AgI-xTm2S3",
         "phase": "",
         "additives": [],
         "is_abbreviation_like": false,
@@ -2166,6 +2166,278 @@
             "Sn": "x",
             "Ta": "0.667-0.667*x",
             "Ba": "1",
+            "O": "3"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Y0.8Ca0.2Ba2Cu3Oy",
+  "parser_output": [
+    {
+      "material_string": "Y0.8Ca0.2Ba2Cu3Oy",
+      "material_name": "",
+      "material_formula": "Y0.8Ca0.2Ba2Cu3O",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "y",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Y0.8Ca0.2Ba2Cu3O",
+          "amount": "1",
+          "elements": {
+            "Y": "0.8",
+            "Ca": "0.2",
+            "Ba": "2",
+            "Cu": "3",
+            "O": "1"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "BaCo1-x(Sm/Ce)xO3-δ",
+  "parser_output": [
+    {
+      "material_string": "BaCo1-x(Sm/Ce)xO3-δ",
+      "material_name": "",
+      "material_formula": "BaCo1-xMxO3",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": "-",
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {
+        "M": ["Sm", "Ce"]
+      },
+      "composition": [
+        {
+          "formula": "BaCo1-xMxO3",
+          "amount": "1",
+          "elements": {
+            "Ba": "1",
+            "Co": "1-x",
+            "M": "x",
+            "O": "3"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Nasicon (Na1+ x + yZr2- yYySixP3- xO12",
+  "parser_output": [
+    {
+      "material_string": "Nasicon (Na1+ x + yZr2- yYySixP3- xO12",
+      "material_name": "Nasicon",
+      "material_formula": "Na1+x+yZr2-yYySixP3-xO12",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": [],
+        "y": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "Na1+x+yZr2-yYySixP3-xO12",
+          "amount": "1",
+          "elements": {
+            "Na": "x+y+1",
+            "Zr": "2-y",
+            "Y": "y",
+            "Si": "x",
+            "P": "3-x",
+            "O": "12"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "(Ni1-x M x)Mn2O4",
+  "parser_output": [
+    {
+      "material_string": "(Ni1-x M x)Mn2O4",
+      "material_name": "",
+      "material_formula": "(Ni1-xMx)Mn2O4",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {
+        "M": []
+      },
+      "composition": [
+        {
+          "formula": "(Ni1-xMx)Mn2O4",
+          "amount": "1",
+          "elements": {
+            "Ni": "1-x",
+            "M": "x",
+            "Mn": "2",
+            "O": "4"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "(1 - x)KNN-xBT",
+  "parser_output": [
+    {
+      "material_string": "(1 - x)KNN-xBT",
+      "material_name": "",
+      "material_formula": "(1-x)K0.5Na0.5NbO3-xBaTiO3",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": true,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "K0.5Na0.5NbO3",
+          "amount": "1-x",
+          "elements": {
+            "K": "0.5",
+            "Na": "0.5",
+            "Nb": "1",
+            "O": "3"
+          }
+        },
+        {
+          "formula": "BaTiO3",
+          "amount": "x",
+          "elements": {
+            "Ba": "1",
+            "Ti": "1",
+            "O": "3"
+          }
+        }
+      ]
+    }
+  ]
+},
+    {
+  "material": "lanthanum-calcium chromites-titanates (La1-xCax)1-zCr1-yTiyO3",
+  "parser_output": [
+    {
+      "material_string": "lanthanum-calcium chromites-titanates (La1-xCax)1-zCr1-yTiyO3",
+      "material_name": "lanthanum-calcium chromites-titanates",
+      "material_formula": "(La1-xCax)1-zCr1-yTiyO3",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": [],
+        "y": [],
+        "z": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "(La1-xCax)1-zCr1-yTiyO3",
+          "amount": "1",
+          "elements": {
+            "La": "(x-1)*(z-1)",
+            "Ca": "x*(-z+1)",
+            "Cr": "1-y",
+            "Ti": "y",
+            "O": "3"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "SmCl3·xH2O",
+  "parser_output": [
+    {
+      "material_string": "SmCl3·xH2O",
+      "material_name": "",
+      "material_formula": "SmCl3·xH2O",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "SmCl3",
+          "amount": "1",
+          "elements": {
+            "Sm": "1",
+            "Cl": "3"
+          }
+        },
+        {
+          "formula": "H2O",
+          "amount": "x",
+          "elements": {
+            "H": "2",
+            "O": "1"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "(100 - x)[0.5PbO-0.5P2O5]-xMoO3",
+  "parser_output": [
+    {
+      "material_string": "(100 - x)[0.5PbO-0.5P2O5]-xMoO3",
+      "material_name": "",
+      "material_formula": "(0.5-0.5x)PbO-(0.5-0.5x)P2O5-xMoO3",
+      "phase": "",
+      "additives": [],
+      "is_abbreviation_like": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "PbO",
+          "amount": "0.5-0.5*x",
+          "elements": {
+            "Pb": "1",
+            "O": "1"
+          }
+        },
+        {
+          "formula": "P2O5",
+          "amount": "0.5-0.5*x",
+          "elements": {
+            "P": "2",
+            "O": "5"
+          }
+        },
+        {
+          "formula": "MoO3",
+          "amount": "x",
+          "elements": {
+            "Mo": "1",
             "O": "3"
           }
         }

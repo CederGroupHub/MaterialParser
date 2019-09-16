@@ -101,7 +101,8 @@
 	{"c_name" : "hexacyanoferrate", "valency" : [-3], "e_name" : "Fe(CN)6", "n_atoms" : 13},
 	{"c_name" : "tosylate", "valency" : [-1], "e_name" : "CH3C6H4SO3", "n_atoms" : 18},
 	{"c_name" : "metaborate", "valency" : [-1], "e_name" : "BO2", "n_atoms" : 3},
-	{"c_name" : "stearate", "valency" : [-1], "e_name" : "C17H35COO", "n_atoms" : 55}
+	{"c_name" : "stearate", "valency" : [-1], "e_name" : "C17H35COO", "n_atoms" : 55},
+	{"c_name" : "tungstate", "valency" : [-2], "e_name" : "WO4", "n_atoms" : 5}
 ],
 "cations" : [
     {"c_name" : "hydrogen", "valency" : [1], "e_name" : "H", "n_atoms" : 1},

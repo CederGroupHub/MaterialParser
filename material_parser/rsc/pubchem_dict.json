@@ -693,5 +693,9 @@
   "methyl acetate": "CH3COOCH3",
   "acryloyl chloride": "C3H3ClO",
   "tetraethylorthotitanate": "(C2H5O)4Ti",
-  "potassium citrate tribasic": "HOC(COOK)(CH2COOK)2·H2O"
+  "potassium citrate tribasic": "HOC(COOK)(CH2COOK)2·H2O",
+  "manganese (II,III) oxide": "Mn3O4",
+  "lithium fluorooxoborate": "LiB6O9F",
+  "yttrium indium germanate": "YInGe2O7",
+  "lead barium zirconate": "(Pb1-xBax)ZrO3"
 }

@@ -103,7 +103,7 @@ class MaterialParser:
 
         material_string = self.cleanup_name(material_string_)
         if self.__verbose:
-            print("After cleaning up string: \n", material_string_, "-->", material_string)
+            print("After cleaning up string:", material_string_, "-->", material_string)
 
         if material_string in self.__list_of_elements:
             return self.__element_structure(material_string)
@@ -118,15 +118,14 @@ class MaterialParser:
 
         additives, material_string = self.separate_additives(material_string)
         if self.__verbose:
-            print("After additives extraction:\n", material_string, "|", additives)
+            print("After additives extraction:", material_string, "|", additives)
 
         _, material_formula, material_name = self.string2formula(material_string)
 
         material_compounds = self.split_formula_into_compounds(material_formula)
 
         if self.__verbose:
-            print("After splitting:")
-            print(material_formula, "-->", material_compounds)
+            print("\tAfter splitting:", material_formula, "-->", material_compounds)
 
         output_structure = self.__empty_structure().copy()
         output_structure['material_string'] = material_string_
@@ -139,6 +138,8 @@ class MaterialParser:
         oxygen_deficiency = None
         for compound, amount in material_compounds:
             if compound in self.__abbreviations:
+                if self.__verbose:
+                    print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
             #try:
             composition = self.formula2structure(compound)
@@ -243,9 +244,9 @@ class MaterialParser:
         check for any weird syntax (A,B)zElxEly...
         replacing with MzElxEly... and M = [A, B]
         """
-        r = r"(\([A-Za-z\s]+[,\s]+[A-Za-z]+\))"
+        r = r"(\([A-Za-z\s]+[\/,\s]+[A-Za-z]+\))"
         for m in re.finditer(r, formula):
-            elements_variables["M"] = re.split(",", m.group(0).strip('()'))
+            elements_variables["M"] = re.split(r"[\/,]", m.group(0).strip('()'))
             formula = formula.replace(m.group(0), "M", 1)
 
         composition = self.__parse_formula(formula)
@@ -281,6 +282,13 @@ class MaterialParser:
 
         if not oxygen_deficiency and oxygen_deficiency_sym in stoichiometry_variables:
             oxygen_deficiency = None
+        variables = [v for v in stoichiometry_variables.keys()
+                     if [e for e, s in composition.items() if v in s] == ["O"]]
+        oxygen_deficiency = variables[0] if len(variables) > 0 else oxygen_deficiency
+        for var in variables:
+            del stoichiometry_variables[var]
+            composition["O"] = "1" if composition["O"] == var else composition["O"].replace(var, "").strip()
+            formula = formula.replace(var, "")
 
         formula_structure = dict(elements=composition,
                                  amounts_vars={x: v for x, v in stoichiometry_variables.items()},
@@ -475,13 +483,22 @@ class MaterialParser:
 
     def string2formula(self, material_string):
 
+        if self.__verbose:
+            print("Converting string to formula:")
+
         material_string_nodashes = ' '.join([t for t in re.split(r'\s|(?<=[a-z])-', material_string)])
+        material_string_nodashes = material_string_nodashes[0].lower() + material_string_nodashes[1:]
         if material_string_nodashes in self.__pubchem_dictionary:
             return material_string, self.__pubchem_dictionary[material_string_nodashes], material_string_nodashes
 
+        if material_string in self.__abbreviations:
+            if self.__verbose:
+                print("\tFound abbreviation:", material_string, "-->", self.__abbreviations[material_string])
+            return material_string, self.__abbreviations[material_string], ""
+
         material_formula, material_name = self.extract_formula_from_string(material_string)
         if self.__verbose:
-            print("After material name parsing into formula|name:\n",
+            print("\tAfter material name parsing into formula|name:\n",
                   material_string, "-->", material_formula, "|", material_name)
 
         if material_formula == "":
@@ -490,7 +507,7 @@ class MaterialParser:
                 pcp_compounds = pcp.get_compounds(material_name, 'name')
                 material_formula = pcp_compounds[0].molecular_formula if len(pcp_compounds) != 0 else ""
         if self.__verbose:
-            print("After material formula reconstruction:\n",
+            print("\tAfter material formula reconstruction:\n",
                   material_string, "-->", material_formula, "|", material_name)
 
         material_name = "" if material_formula == "" else material_name
@@ -719,6 +736,9 @@ class MaterialParser:
         :return: <list> of <tuples>: (compound, fraction)
         """
 
+        if self.__verbose:
+            print("Splitting formula into compounds:")
+
         split = self.__split_formula(material_name)
         l = 0
         while len(split) != l:
@@ -748,16 +768,17 @@ class MaterialParser:
                  r"0-9\)])[-⋅·∙\∗](?=[A-Z])"
         re_str = re_str + "".join(
             [r"|(?<=" + e + r")[-⋅·∙\∗](?=[\(0-9A-Z])" for e in self.__list_of_elements])
+        re_str = re_str + r"|[-·]([nx0-9\.]H2O)"
 
         material_name = material_name_.replace(" ", "")
 
-        if "(1-x)" == material_name[0:5]:
+        if "(1-x)" == material_name[0:5] or "(100-x)" == material_name[0:7] :
             material_name = material_name.replace("(x)", "x")
-            parts = re.findall(r"\(1-x\)(.*)[-+·∙\∗⋅]x(.*)", material_name)
+            parts = re.findall(r"\(10{0,2}-x\)(.*)[-+·∙\∗⋅]x(.*)", material_name)
             parts = parts[0] if parts != [] else (material_name[5:], "")
             return [(parts[0].lstrip(" ·*⋅"), "1-x"), (parts[1].lstrip(" ·*"), "x")]
 
-        parts = re.split(re_str, material_name)
+        parts = [p for p in re.split(re_str, material_name) if p]
 
         if len(parts) > 1:
             parts_upd = [p for part in parts for p in
@@ -809,14 +830,14 @@ class MaterialParser:
         new_material_name = new_material_name.replace("co-doped", "doped")
 
         # checking for "doped with"
-        for r in ["activated", "modified", "stabilized", "doped"]:
+        for r in ["activated", "modified", "stabilized", "doped", "added"]:
             parts = [w for w in re.split(r + " with", new_material_name) if w != ""]
             if len(parts) > 1:
                 new_material_name = parts[0].strip(" -+")
                 additives.append(parts[1].strip())
 
         # checking for element-doped prefix
-        for r in ["activated", "modified", "stabilized", "doped"]:
+        for r in ["activated", "modified", "stabilized", "doped", "added"]:
             parts = [w for w in re.split(r"(.*)[-\s]{1}" + r + " (.*)", new_material_name) if w != ""]
             if len(parts) > 1:
                 new_material_name = parts.pop()
@@ -1081,10 +1102,11 @@ class MaterialParser:
         #TODO: [Ti(N3)6]2−, Cu(NO3)2⋅4 H2O
 
         # correct dashes
-        dashes = [173, 8722, ord("\ue5f8")] + [i for i in range(8208, 8214)]
+        dashes = [45, 173, 8722, ord("\ue5f8")] + [i for i in range(8208, 8214)]
         re_str = "".join([chr(c) for c in dashes])
-        re_str = "[" + re_str + "]"
+        re_str = "\s*[" + re_str + "]\s*"
         material_name = re.sub(re_str, chr(45), material_name)
+        material_name = re.sub(r"\s*\+\s*", "+", material_name)
 
         material_name = material_name.replace(chr(160), "")
 
@@ -1109,7 +1131,7 @@ class MaterialParser:
             material_name = material_name.replace(c, "")
 
         #removing trach words
-        trash_list = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat", "crystal", "particl"]
+        trash_list = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat", "crystal", "particl", "glass"]
         for word in trash_list:
             material_name = re.sub("[A-Za-z-]*" + word + "[A-Za-z-]*", "", material_name)
             material_name = re.sub(word.capitalize() + "[a-z-]*", "", material_name)
@@ -1130,7 +1152,7 @@ class MaterialParser:
             return ""
 
         for c in [r"\(⩾99", r"\(99", r"\(98", r"\(90", r"\(95", r"\(96", r"\(Alfa", r"\(Aldrich", r"\(A.R.",
-                  r"\(Aladdin", r"\(Sigma", r"\(A.G", r"\(Fuchen", r"\(Furuuchi", r"\(AR\)", "（x", r"\(x", r"\(Acr",
+                  r"\(Aladdin", r"\(Sigma", r"\(A.G", r"\(Fuchen", r"\(Furuuchi", r"\(AR\)", "（x", r"\(x", r"\(Acr[a-z]*",
                   r"\(Koj", r"\(Sho", r"\(＞99"]:
             split = re.split(c, material_name)
             if len(split) > 1 and (len(split[-1]) == "" or all(not s.isalpha() for s in split[-1])):
@@ -1238,21 +1260,20 @@ class MaterialParser:
         :param formula:
         :return:
         """
-        parts = re.split(r"\s", formula)
-        parts_i = [i for i, p in enumerate(parts) if not self.parentheses_balanced(p)]
-        if len(parts_i) > 1:
-            formula_upd = ""
-            i = 0
-            while i < len(parts):
-                if i in parts_i and self.parentheses_balanced(parts[i]+parts[i+1]):
-                    formula_upd = formula_upd + parts[i]+parts[i+1]
-                    parts_i = [j for j in parts_i if j not in [i, i+1]]
-                    i = i + 2
-                else:
-                    formula_upd = formula_upd + parts[i]
-                    i = i + 1
-        else:
-            formula_upd = formula
+        parts = [p for p in reversed(re.split(r"\s", formula))]
+        formula_upd = ""
+        while parts:
+            part = parts.pop()
+            if self.parentheses_balanced(part):
+                formula_upd = formula_upd + part + " "
+            else:
+                part_i = part
+                while parts and not self.parentheses_balanced(part_i):
+                    part = parts.pop()
+                    part_i = part_i + part
+                formula_upd = formula_upd + part_i + " "
+
+        formula_upd = formula if formula_upd == "" else formula_upd.strip()
 
         return formula_upd
 
@@ -1316,8 +1337,12 @@ class MaterialParser:
             new_value = round(float(new_value), 3)
         else:
             new_value = new_value.evalf(3)
+        new_value = re.sub('\.0+(?![0-9])', '', str(new_value).replace(" ", ""))
+        if new_value[0] == "-":
+            split = re.split("\+", new_value)
+            new_value = split[1] + split[0] if len(split) == 2 else new_value
 
-        return re.sub('\.0+(?![0-9])', '', str(new_value).replace(" ", ""))
+        return new_value
 
     def __lcm(self, x, y):
         """This function takes two
@@ -1420,7 +1445,7 @@ class MaterialParser:
             if all(ch.isdigit() or ch == "." for ch in c["amount"]):
                 coeff = self.__cast_stoichiometry(c["amount"])
             else:
-                coeff = "(" + c["amount"] + ")"
+                coeff = "(" + c["amount"] + ")" if c["amount"] != "x" else c["amount"]
 
             sign = "-"
             if "H2O" in c["formula"]:
