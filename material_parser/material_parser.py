@@ -142,7 +142,7 @@ class MaterialParser:
                     print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
             #try:
-            composition = self.formula2structure(compound)
+            composition = self.formula2composition(compound)
             output_structure["phase"] = composition["phase"]
             output_structure["amounts_vars"].update(composition["amounts_vars"])
             output_structure["elements_vars"].update(composition["elements_vars"])
@@ -208,7 +208,7 @@ class MaterialParser:
 
         return output_structure
 
-    def formula2structure(self, formula):
+    def formula2composition(self, formula):
         """
         Parsing chemical formula in composition
         :param formula: <str> chemical formula
@@ -541,7 +541,7 @@ class MaterialParser:
             if re.match(r"(\s*\([IV,]+\))", formula):
                 return {}
             try:
-                composition = self.formula2structure(formula)
+                composition = self.formula2composition(formula)
             except:
                 composition = {'elements': {}, 'elements_vars': {}}
             if self.__is_abbreviation_composition(composition):
@@ -880,7 +880,7 @@ class MaterialParser:
 
         material_structure_new = material_structure.copy()
         try:
-            additive_composition = self.formula2structure(additive)
+            additive_composition = self.formula2composition(additive)
         except:
             additive_composition = self.__empty_composition().copy()
         if len(additive_composition["elements"]) > 1:
