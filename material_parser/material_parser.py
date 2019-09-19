@@ -146,6 +146,8 @@ class MaterialParser:
             output_structure["phase"] = composition["phase"]
             output_structure["amounts_vars"].update(composition["amounts_vars"])
             output_structure["elements_vars"].update(composition["elements_vars"])
+            output_structure["species"] = self.formula_to_species(compound)
+            print(self.formula_to_species(compound))
             if composition["elements"] != {}:
                 output_structure["composition"].append(
                     {"formula": composition["formula"],
@@ -298,6 +300,57 @@ class MaterialParser:
                                  oxygen_deficiency=oxygen_deficiency)
 
         return formula_structure
+
+    def formula_to_species(self, formula):
+        species_list = ['IO3', 'SO3', 'HSO3', 'ClO2', 'H2AsO4', 'HAsO4', 'AsO4', 'H2PO4', 'HPO4', 'PO4', 'CH2ClCOO',
+                        'H2C6H5O7', 'NO2', 'HCOO', 'CH3H5O3', 'HC6H6O6', 'C6H5COO', 'H2C2O4', 'HC2O4', 'C2O4', 'N3',
+                        'CH3COOH', 'CH3COO', 'CH3CH2COO', 'C5H4N', 'HCO3', 'CO3', 'HS', 'ClO', 'BrO', 'CN', 'H2BO3',
+                        'NH4', 'C6H5O', 'IO', 'HO2', 'C6H6O6', 'I', 'Br', 'ClO4', 'ClO3', 'HSO4', 'NO3', 'SO4', 'OH',
+                        'Cl', 'S2O8', 'C6H5O7', 'C6H12N4', 'CO(NH2)2', 'He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si',
+                        'Ar', 'Ca', 'Sc', 'Ti', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br',
+                        'Kr', 'Rb', 'Sr', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sb', 'Te', 'Xe',
+                        'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb',
+                        'Lu','Hf', 'Ta', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr',
+                        'Ra', 'Ac', 'Th', 'Pa', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf',
+                        'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Fl', 'Lv', 'K', 'Zn', 'Sn']
+        number_to_alphabet_dict = {
+            "specie0": "A",
+            "specie1": "B",
+            "specie2": "C",
+            "specie3": "D",
+            "specie4": "E",
+            "specie5": "F",
+            "specie6": "G",
+            "specie7": "H",
+            "specie8": "I",
+            "specie9": "J",
+        }
+        species_in_material = {}
+        species_indexs = {}
+        species_dict = {}
+        material_formula = formula
+        i = 0
+        for species in species_list:
+            while species in material_formula:
+                material_formula = material_formula.replace(species, "specie" + str(i))
+                species_in_material["specie" + str(i)] = species
+                i += 1
+        # print(material_formula, species_in_material)
+        for species in number_to_alphabet_dict:
+            while species in material_formula:
+                material_formula = material_formula.replace(
+                    species, number_to_alphabet_dict[species]
+                )
+                species_indexs[number_to_alphabet_dict[species]] = species_in_material[
+                    species
+                ]
+        parsed_mapped_material = self.formula2composition(material_formula)
+        # print(parsed_mapped_material)
+        species_info = parsed_mapped_material["elements"]
+        # print(species_info)
+        for species_index in species_info:
+            species_dict[species_indexs[species_index]] = species_info[species_index]
+        return species_dict
 
     def __fraction_convertion(self, formula):
         formula_upd = formula
