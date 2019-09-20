@@ -131,28 +131,29 @@ class MaterialParser:
         output_structure['material_string'] = material_string_
         output_structure['material_name'] = material_name
         output_structure["material_formula"] = material_formula
-
         hydrate = [f for m, f in material_compounds if m == "H2O"]
         material_compounds = [(m, f) for m, f in material_compounds if m!= "H2O"]
-
         oxygen_deficiency = None
         for compound, amount in material_compounds:
+            print(amount)
             if compound in self.__abbreviations:
                 if self.__verbose:
                     print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
             #try:
             composition = self.formula2composition(compound)
+            species = self.formula_to_species(compound)
             output_structure["phase"] = composition["phase"]
             output_structure["amounts_vars"].update(composition["amounts_vars"])
             output_structure["elements_vars"].update(composition["elements_vars"])
-            output_structure["species"] = self.formula_to_species(compound)
-            print(self.formula_to_species(compound))
+            # output_structure["species"] = self.formula_to_species(compound, species_dict)
+            # print(self.formula_to_species(compound, species_dict))
             if composition["elements"] != {}:
                 output_structure["composition"].append(
                     {"formula": composition["formula"],
                      "amount": amount,
-                     "elements": composition["elements"]
+                     "elements": composition["elements"],
+                     "species": species
                     }
                 )
             if composition["oxygen_deficiency"]:
@@ -302,38 +303,44 @@ class MaterialParser:
         return formula_structure
 
     def formula_to_species(self, formula):
-        species_list = ['IO3', 'SO3', 'HSO3', 'ClO2', 'H2AsO4', 'HAsO4', 'AsO4', 'H2PO4', 'HPO4', 'PO4', 'CH2ClCOO',
+        species_list = ['IO3', 'SO3', 'HSO3', 'ClO4','ClO2', 'H2AsO4', 'HAsO4', 'AsO4', 'H2PO4', 'HPO4', 'PO4', 'CH2ClCOO',
                         'H2C6H5O7', 'NO2', 'HCOO', 'CH3H5O3', 'HC6H6O6', 'C6H5COO', 'H2C2O4', 'HC2O4', 'C2O4', 'N3',
-                        'CH3COOH', 'CH3COO', 'CH3CH2COO', 'C5H4N', 'HCO3', 'CO3', 'HS', 'ClO', 'BrO', 'CN', 'H2BO3',
-                        'NH4', 'C6H5O', 'IO', 'HO2', 'C6H6O6', 'I', 'Br', 'ClO4', 'ClO3', 'HSO4', 'NO3', 'SO4', 'OH',
-                        'Cl', 'S2O8', 'C6H5O7', 'C6H12N4', 'CO(NH2)2', 'He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si',
+                        'C3H5O(COO)3', 'CH3COOH', 'CH3COO', 'CH3CH2COO', 'C5H4N', 'HCO3', 'CO3', 'HS', 'ClO', 'BrO',
+                        'CN', 'H2BO3', "Mo7O24", "CH3COCHCOCH3", "P2O5", "BO3", "Al2O4", "Si2O7", 'SiO5', "NbO3", "SbO3",
+                        'NH4', 'C6H5O', 'IO', 'HO2', 'C6H6O6', 'OCH(CH3)2', 'MoO4', "WO4", "Al2O6", 'GeO4', 'GaO4',
+                        'Br', 'ClO4', 'ClO3', 'HSO4', 'NO3', 'SO4', 'OH', 'Cl', 'S2O8', 'C6H5O7', 'C6H12N4', 'BO3',
+                        'CO(NH2)2', "MnO3", 'Si8O21', 'Mn2O4',
+                        'He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si',
                         'Ar', 'Ca', 'Sc', 'Ti', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br',
                         'Kr', 'Rb', 'Sr', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sb', 'Te', 'Xe',
                         'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb',
-                        'Lu','Hf', 'Ta', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr',
+                        'Lu', 'Hf', 'Ta', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr',
                         'Ra', 'Ac', 'Th', 'Pa', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf',
-                        'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Fl', 'Lv', 'K', 'Zn', 'Sn']
+                        'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Fl', 'Lv', 'K', 'Zn', 'Sn', 'O', 'Y', "F", 'V',
+                        '□', 'W', 'I', 'S', 'B', 'M', 'P']
         number_to_alphabet_dict = {
-            "specie0": "A",
-            "specie1": "B",
-            "specie2": "C",
-            "specie3": "D",
-            "specie4": "E",
-            "specie5": "F",
-            "specie6": "G",
-            "specie7": "H",
-            "specie8": "I",
-            "specie9": "J",
+            "specie0_": "A",
+            "specie1_": "B",
+            "specie2_": "C",
+            "specie3_": "D",
+            "specie4_": "E",
+            "specie5_": "F",
+            "specie6_": "G",
+            "specie7_": "H",
+            "specie8_": "I",
+            "specie9_": "J",
         }
         species_in_material = {}
         species_indexs = {}
         species_dict = {}
-        material_formula = formula
+        material_formula = self.formula2composition(formula)["formula"]
+        print(material_formula)
         i = 0
         for species in species_list:
             while species in material_formula:
-                material_formula = material_formula.replace(species, "specie" + str(i))
-                species_in_material["specie" + str(i)] = species
+                # print(species)
+                material_formula = material_formula.replace(species, "specie" + str(i) + "_")
+                species_in_material["specie" + str(i) + "_"] = species
                 i += 1
         # print(material_formula, species_in_material)
         for species in number_to_alphabet_dict:
@@ -943,7 +950,8 @@ class MaterialParser:
             material_structure_new["composition"].append(
                 {"formula": additive,
                  "amount": "x",
-                 "elements": additive_composition["elements"]
+                 "elements": additive_composition["elements"],
+                 "species": self.formula_to_species(additive)
                  }
             )
         elif all(c["elements"] != {} for c in material_structure_new["composition"]):
