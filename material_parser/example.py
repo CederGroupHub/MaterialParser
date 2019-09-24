@@ -19,8 +19,8 @@ for item in test_set:
     structure = []
     for m in list_of_materials:
         structure.append(mp.parse_material_string(m))
-    #pprint(structure)
-
+    pprint(structure)
+    pprint(correct)
     if structure != correct:
         print("Mismatch for ", material)
         print('-'*40)
