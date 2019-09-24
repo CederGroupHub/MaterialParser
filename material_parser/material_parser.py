@@ -195,7 +195,7 @@ class MaterialParser:
         """
         assigning abbreviations
         """
-        output_structure["is_abbreviation_like"] = self.__is_abbreviation_like(output_structure)
+        output_structure["is_acronym"] = self.__is_acronym(output_structure)
 
         """
         finally, combine unified material formula from its compounds 
@@ -416,7 +416,7 @@ class MaterialParser:
         return dict(
                 material_string=element, material_name="", material_formula=element,
                 additives=[], phase="", oxygen_deficiency=None,
-                is_abbreviation_like=False,
+                is_acronym=False,
                 amounts_vars={}, elements_vars={},
                 composition=[dict(
                     formula=element, amount="1", elements=collections.OrderedDict([(element, "1")])
@@ -1383,7 +1383,7 @@ class MaterialParser:
     def __empty_structure(self):
         return {"material_string": "", "material_name": "", "material_formula": "",
                 "phase": None, "additives": [], "oxygen_deficiency": None,
-                "is_abbreviation_like": False,
+                "is_acronym": False,
                 "amounts_vars": {}, "elements_vars": {},
                 "composition": []}
 
@@ -1404,7 +1404,7 @@ class MaterialParser:
         return False
 
 
-    def __is_abbreviation_like(self, structure):
+    def __is_acronym(self, structure):
         if any(all(e.isupper() and s in ["1.0", "1"] for e, s in compound["elements"].items()) for compound in
                structure["composition"]):
             return True
