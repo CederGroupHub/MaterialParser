@@ -25,17 +25,10 @@ class MaterialParser:
         self.__abbreviations = json.loads(open(os.path.join(self.__filename, "rsc/abbreviations.json")).read())
         self.__ions = json.loads(open(os.path.join(self.__filename, "rsc/ions_dictionary.json")).read())
 
-        self.__list_of_elements_1 = ["H", "B", "C", "N", "O", "F", "P", "S", "K", "V", "Y", "I", "W", "U"]
-        self.__list_of_elements_2 = ["He", "Li", "Be", "Ne", "Na", "Mg", "Al", "Si", "Cl", "Ar", "Ca", "Sc", "Ti", "Cr",
-                                     "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr",
-                                     "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "Xe",
-                                     "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er",
-                                     "Tm", "Yb", "Lu", "Hf", "Ta", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi",
-                                     "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "Np", "Pu", "Am", "Cm", "Bk", "Cf",
-                                     "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn",
-                                     "Fl", "Lv"]
-        self.__list_of_elements = self.__list_of_elements_1 + self.__list_of_elements_2
         self.__element2name = self.__ions["elements"]
+        self.__list_of_elements_1 = [el for el in self.__ions["elements"].keys() if len(el) == 1]
+        self.__list_of_elements_2 = [el for el in self.__ions["elements"].keys() if len(el) == 2]
+        self.__list_of_elements = self.__list_of_elements_1 + self.__list_of_elements_2
         self.__name2element = {v: k for k, v in self.__ions["elements"].items()}
         self.__anions = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
                          for ion in self.__ions["anions"]}
@@ -43,9 +36,6 @@ class MaterialParser:
                           for ion in self.__ions["cations"]}
         self.__list_of_anions = [ion["c_name"] for ion in self.__ions["anions"]]
         self.__list_of_cations = [ion["c_name"] for ion in self.__ions["cations"]]
-        self.__chemicals = self.__ions["chemicals"] \
-                           + [ion["c_name"] for ion in self.__ions["cations"]] \
-                           + [ion["c_name"] for ion in self.__ions["anions"]]
         self.__diatomic_molecules = {"O2": collections.OrderedDict([("O", "2")]),
                                      "N2": collections.OrderedDict([("N", "2")]),
                                      "H2": collections.OrderedDict([("H", "2")]),
