@@ -1,2041 +1,1939 @@
 {
-    "anions": [
-        {
-            "c_name": "oxide",
-            "valency": [
-                -2
-            ],
-            "e_name": "O",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "chloride",
-            "valency": [
-                -1
-            ],
-            "e_name": "Cl",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "iodide",
-            "valency": [
-                -1
-            ],
-            "e_name": "I",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "hydride",
-            "valency": [
-                -1
-            ],
-            "e_name": "H",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "nitride",
-            "valency": [
-                -3
-            ],
-            "e_name": "N",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "sulfide",
-            "valency": [
-                -2
-            ],
-            "e_name": "S",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "disulfide",
-            "valency": [
-                -2
-            ],
-            "e_name": "S2",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "fluoride",
-            "valency": [
-                -1
-            ],
-            "e_name": "F",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "bromide",
-            "valency": [
-                -1
-            ],
-            "e_name": "Br",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "phosphide",
-            "valency": [
-                -3
-            ],
-            "e_name": "P",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "azide",
-            "valency": [
-                -1
-            ],
-            "e_name": "N3",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "nitrate",
-            "valency": [
-                -1
-            ],
-            "e_name": "NO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "nitrite",
-            "valency": [
-                -1
-            ],
-            "e_name": "NO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "carbonate",
-            "valency": [
-                -2
-            ],
-            "e_name": "CO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "chlorate",
-            "valency": [
-                -1
-            ],
-            "e_name": "ClO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "chlorite",
-            "valency": [
-                -1
-            ],
-            "e_name": "ClO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "chromate",
-            "valency": [
-                -2
-            ],
-            "e_name": "CrO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "dichromate",
-            "valency": [
-                -2
-            ],
-            "e_name": "Cr2O7",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "dihydrogen phosphate",
-            "valency": [
-                -1
-            ],
-            "e_name": "H2PO4",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "dihydrogenphosphate",
-            "valency": [
-                -1
-            ],
-            "e_name": "H2PO4",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "hydrogen phosphate",
-            "valency": [
-                -2
-            ],
-            "e_name": "HPO4",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "hydrogenphosphate",
-            "valency": [
-                -2
-            ],
-            "e_name": "HPO4",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "hydrogen carbonate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HCO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "hydrogen sulfate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HSO4",
-            "n_atoms": 6
-        },
-        {
-            "c_name": "hydrogen sulfite",
-            "valency": [
-                -1
-            ],
-            "e_name": "HSO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "bisulfite",
-            "valency": [
-                -1
-            ],
-            "e_name": "HSO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "hydroxide",
-            "valency": [
-                -1
-            ],
-            "e_name": "OH",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "hypochlorite",
-            "valency": [
-                -1
-            ],
-            "e_name": "ClO",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "monohydrogen phosphate",
-            "valency": [
-                -2
-            ],
-            "e_name": "HPO4",
-            "n_atoms": 6
-        },
-        {
-            "c_name": "perchlorate",
-            "valency": [
-                -1
-            ],
-            "e_name": "ClO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "permanganate",
-            "valency": [
-                -1
-            ],
-            "e_name": "MnO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "peroxide",
-            "valency": [
-                -2
-            ],
-            "e_name": "O2",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "phosphate",
-            "valency": [
-                -3
-            ],
-            "e_name": "PO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "metaphosphate",
-            "valency": [
-                -1
-            ],
-            "e_name": "PO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "orthophosphate",
-            "valency": [
-                -3
-            ],
-            "e_name": "PO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "pyrophosphate",
-            "valency": [
-                -4
-            ],
-            "e_name": "P2O7",
-            "n_atoms": 9
-        },
-        {
-            "c_name": "phosphite",
-            "valency": [
-                -3
-            ],
-            "e_name": "PO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "sulfate",
-            "valency": [
-                -2
-            ],
-            "e_name": "SO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "sulphate",
-            "valency": [
-                -2
-            ],
-            "e_name": "SO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "sulfite",
-            "valency": [
-                -2
-            ],
-            "e_name": "SO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "superoxide",
-            "valency": [
-                -1
-            ],
-            "e_name": "O2",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "thiosulfate",
-            "valency": [
-                -2
-            ],
-            "e_name": "S2O3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "silicate",
-            "valency": [
-                -4
-            ],
-            "e_name": "SiO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "orthosilicate",
-            "valency": [
-                -4
-            ],
-            "e_name": "SiO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "pyrosilicate",
-            "valency": [
-                -6
-            ],
-            "e_name": "Si2O7",
-            "n_atoms": 9
-        },
-        {
-            "c_name": "disilicate",
-            "valency": [
-                -6
-            ],
-            "e_name": "Si2O7",
-            "n_atoms": 9
-        },
-        {
-            "c_name": "metasilicate",
-            "valency": [
-                -2
-            ],
-            "e_name": "SiO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "aluminium silicate",
-            "valency": [
-                -1
-            ],
-            "e_name": "AlSiO4",
-            "n_atoms": 6
-        },
-        {
-            "c_name": "acetate",
-            "valency": [
-                -1
-            ],
-            "e_name": "CH3COO",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "formate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HCOO",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "oxalate",
-            "valency": [
-                -2
-            ],
-            "e_name": "C2O4",
-            "n_atoms": 6
-        },
-        {
-            "c_name": "hydrogen oxalate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HC2O4",
-            "n_atoms": 6
-        },
-        {
-            "c_name": "cyanide",
-            "valency": [
-                -1
-            ],
-            "e_name": "CN",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "citrate",
-            "valency": [
-                -3
-            ],
-            "e_name": "C3H5O(COO)3",
-            "n_atoms": 18
-        },
-        {
-            "c_name": "tartrate",
-            "valency": [
-                -2
-            ],
-            "e_name": "C4H4O6",
-            "n_atoms": 14
-        },
-        {
-            "c_name": "borate",
-            "valency": [
-                -3
-            ],
-            "e_name": "BO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "diborate",
-            "valency": [
-                -4
-            ],
-            "e_name": "B2O5",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "triborate",
-            "valency": [
-                -5
-            ],
-            "e_name": "B3O7",
-            "n_atoms": 10
-        },
-        {
-            "c_name": "tetraborate",
-            "valency": [
-                -6
-            ],
-            "e_name": "B4O9",
-            "n_atoms": 13
-        },
-        {
-            "c_name": "arsenate",
-            "valency": [
-                -3
-            ],
-            "e_name": "AsO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "ferrate",
-            "valency": [
-                -3
-            ],
-            "e_name": "FeO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "arsenite",
-            "valency": [
-                -3
-            ],
-            "e_name": "AsO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "bromate",
-            "valency": [
-                -1
-            ],
-            "e_name": "BrO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "iodate",
-            "valency": [
-                -1
-            ],
-            "e_name": "IO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "bromite",
-            "valency": [
-                -1
-            ],
-            "e_name": "BrO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "vanadate",
-            "valency": [
-                -3
-            ],
-            "e_name": "VO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "orthovanadate",
-            "valency": [
-                -3
-            ],
-            "e_name": "VO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "metavanadate",
-            "valency": [
-                -1
-            ],
-            "e_name": "VO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "manganate",
-            "valency": [
-                -2
-            ],
-            "e_name": "MnO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "titanate",
-            "valency": [
-                -2
-            ],
-            "e_name": "TiO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "metatitanate",
-            "valency": [
-                -2
-            ],
-            "e_name": "TiO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "orthotitanate",
-            "valency": [
-                -4
-            ],
-            "e_name": "TiO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "tellurate",
-            "valency": [
-                -2
-            ],
-            "e_name": "TeO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "tellurite",
-            "valency": [
-                -2
-            ],
-            "e_name": "TeO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "nickelite",
-            "valency": [
-                -3
-            ],
-            "e_name": "NiO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "nickelate",
-            "valency": [
-                -3
-            ],
-            "e_name": "NiO3",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "fluorophosphate",
-            "valency": [
-                -2
-            ],
-            "e_name": "PO3F",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "difluorophosphate",
-            "valency": [
-                -1
-            ],
-            "e_name": "PO2F2",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "hexafluorophosphate",
-            "valency": [
-                -1
-            ],
-            "e_name": "PF6",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "selenide",
-            "valency": [
-                -2
-            ],
-            "e_name": "Se",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "fluorosilicate",
-            "valency": [
-                -2
-            ],
-            "e_name": "SiF6",
-            "n_atoms": 7
-        },
-        {
-            "c_name": "triflate",
-            "valency": [
-                -1
-            ],
-            "e_name": "CF3SO3",
-            "n_atoms": 8
-        },
-        {
-            "c_name": "hydrogen carbonate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HCO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "bicarbonate",
-            "valency": [
-                -1
-            ],
-            "e_name": "HCO3",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "tungstate",
-            "valency": [
-                -2
-            ],
-            "e_name": "WO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "ferrocyanide",
-            "valency": [
-                -4
-            ],
-            "e_name": "Fe(CN)6",
-            "n_atoms": 13
-        },
-        {
-            "c_name": "ferricyanide",
-            "valency": [
-                -3
-            ],
-            "e_name": "Fe(CN)6",
-            "n_atoms": 13
-        },
-        {
-            "c_name": "pyridyl",
-            "valency": [
-                -1
-            ],
-            "e_name": "C5H4N",
-            "n_atoms": 10
-        },
-        {
-            "c_name": "molybdate",
-            "valency": [
-                -2
-            ],
-            "e_name": "MoO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "heptamolybdate",
-            "valency": [
-                -6
-            ],
-            "e_name": "Mo7O24",
-            "n_atoms": 31
-        },
-        {
-            "c_name": "butoxide",
-            "valency": [
-                -1
-            ],
-            "e_name": "OCH2CH2CH2CH3",
-            "n_atoms": 14
-        },
-        {
-            "c_name": "acetylacetonate",
-            "valency": [
-                -1
-            ],
-            "e_name": "CH3COCHCOCH3",
-            "n_atoms": 14
-        },
-        {
-            "c_name": "isopropoxide",
-            "valency": [
-                -1
-            ],
-            "e_name": "OCH(CH3)2",
-            "n_atoms": 11
-        },
-        {
-            "c_name": "orthoferrite",
-            "valency": [
-                -3
-            ],
-            "e_name": "FeO3",
-            "n_atoms": 4
-        },
-        {
-            "c_name": "cyanamide",
-            "valency": [
-                -2
-            ],
-            "e_name": "CN2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "selenate",
-            "valency": [
-                -2
-            ],
-            "e_name": "SeO4",
-            "n_atoms": 5
-        },
-        {
-            "c_name": "thiocyanate",
-            "valency": [
-                -1
-            ],
-            "e_name": "SCN",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "ferricyanide",
-            "valency": [
-                -3
-            ],
-            "e_name": "Fe(CN)6",
-            "n_atoms": 13
-        },
-        {
-            "c_name": "hexacyanoferrate",
-            "valency": [
-                -3
-            ],
-            "e_name": "Fe(CN)6",
-            "n_atoms": 13
-        },
-        {
-            "c_name": "tosylate",
-            "valency": [
-                -1
-            ],
-            "e_name": "CH3C6H4SO3",
-            "n_atoms": 18
-        },
-        {
-            "c_name": "metaborate",
-            "valency": [
-                -1
-            ],
-            "e_name": "BO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "stearate",
-            "valency": [
-                -1
-            ],
-            "e_name": "C17H35COO",
-            "n_atoms": 55
-        },
-        {
-            "c_name": "tungstate",
-            "valency": [
-                -2
-            ],
-            "e_name": "WO4",
-            "n_atoms": 5
-        }
-    ],
-    "cations": [
-        {
-            "c_name": "hydrogen",
-            "valency": [
-                1
-            ],
-            "e_name": "H",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "silicon",
-            "valency": [
-                4
-            ],
-            "e_name": "Si",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "lithium",
-            "valency": [
-                1
-            ],
-            "e_name": "Li",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "sodium",
-            "valency": [
-                1
-            ],
-            "e_name": "Na",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "natric",
-            "valency": [
-                1
-            ],
-            "e_name": "Na",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "potassium",
-            "valency": [
-                1
-            ],
-            "e_name": "K",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "kalic",
-            "valency": [
-                1
-            ],
-            "e_name": "K",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "rubidium",
-            "valency": [
-                1
-            ],
-            "e_name": "Rb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cesium",
-            "valency": [
-                1
-            ],
-            "e_name": "Cs",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "caesium",
-            "valency": [
-                1
-            ],
-            "e_name": "Cs",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "beryllium",
-            "valency": [
-                2
-            ],
-            "e_name": "Be",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "magnesium",
-            "valency": [
-                2
-            ],
-            "e_name": "Mg",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "calcium",
-            "valency": [
-                2
-            ],
-            "e_name": "Ca",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "strontium",
-            "valency": [
-                2
-            ],
-            "e_name": "Sr",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "barium",
-            "valency": [
-                2
-            ],
-            "e_name": "Ba",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "scandium",
-            "valency": [
-                3
-            ],
-            "e_name": "Sc",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "yttrium",
-            "valency": [
-                3
-            ],
-            "e_name": "Y",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "lutetium",
-            "valency": [
-                3
-            ],
-            "e_name": "Lu",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "titanium",
-            "valency": [
-                4
-            ],
-            "e_name": "Ti",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "zirconium",
-            "valency": [
-                4
-            ],
-            "e_name": "Zr",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "hafnium",
-            "valency": [
-                4
-            ],
-            "e_name": "Hf",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "vanadium",
-            "valency": [
-                5
-            ],
-            "e_name": "V",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "niobium",
-            "valency": [
-                5
-            ],
-            "e_name": "Nb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "tantalum",
-            "valency": [
-                5
-            ],
-            "e_name": "Ta",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "chromium",
-            "valency": [
-                6,
-                4,
-                3,
-                2
-            ],
-            "e_name": "Cr",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "molybdenum",
-            "valency": [
-                6,
-                4
-            ],
-            "e_name": "Mo",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "molybdic",
-            "valency": [
-                6
-            ],
-            "e_name": "Mo",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "tungsten",
-            "valency": [
-                6,
-                4,
-                3
-            ],
-            "e_name": "W",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "tungstic",
-            "valency": [
-                6
-            ],
-            "e_name": "W",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "manganese",
-            "valency": [
-                7,
-                6,
-                4,
-                3,
-                2
-            ],
-            "e_name": "Mn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "manganous",
-            "valency": [
-                2
-            ],
-            "e_name": "Mn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "manganic",
-            "valency": [
-                3
-            ],
-            "e_name": "Mn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "permanganic",
-            "valency": [
-                7
-            ],
-            "e_name": "Mn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "technetium",
-            "valency": [
-                7,
-                4
-            ],
-            "e_name": "Tc",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "rhenium",
-            "valency": [
-                4
-            ],
-            "e_name": "Re",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "iron",
-            "valency": [
-                3,
-                2
-            ],
-            "e_name": "Fe",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ferrum",
-            "valency": [
-                3,
-                2
-            ],
-            "e_name": "Fe",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ferric",
-            "valency": [
-                3
-            ],
-            "e_name": "Fe",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ferrous",
-            "valency": [
-                2
-            ],
-            "e_name": "Fe",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ruthenium",
-            "valency": [
-                4,
-                3
-            ],
-            "e_name": "Ru",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "osmium",
-            "valency": [
-                4
-            ],
-            "e_name": "Os",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cobalt",
-            "valency": [
-                3,
-                2
-            ],
-            "e_name": "Co",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cobaltous",
-            "valency": [
-                2
-            ],
-            "e_name": "Co",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cobaltic",
-            "valency": [
-                3
-            ],
-            "e_name": "Co",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "rhodium",
-            "valency": [
-                3
-            ],
-            "e_name": "Rh",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "iridium",
-            "valency": [
-                4,
-                3
-            ],
-            "e_name": "Ir",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "nickel",
-            "valency": [
-                3,
-                2
-            ],
-            "e_name": "Ni",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "nickelous",
-            "valency": [
-                2
-            ],
-            "e_name": "Ni",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "palladium",
-            "valency": [
-                4,
-                2
-            ],
-            "e_name": "Pd",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "platinum",
-            "valency": [
-                4,
-                2
-            ],
-            "e_name": "Pt",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "copper",
-            "valency": [
-                3,
-                2,
-                1
-            ],
-            "e_name": "Cu",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cuprous",
-            "valency": [
-                1
-            ],
-            "e_name": "Cu",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cupric",
-            "valency": [
-                2
-            ],
-            "e_name": "Cu",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "silver",
-            "valency": [
-                1
-            ],
-            "e_name": "Ag",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "argentous",
-            "valency": [
-                1
-            ],
-            "e_name": "Ag",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "gold",
-            "valency": [
-                3
-            ],
-            "e_name": "Au",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "zinc",
-            "valency": [
-                2
-            ],
-            "e_name": "Zn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cadmium",
-            "valency": [
-                2
-            ],
-            "e_name": "Cd",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "mercury",
-            "valency": [
-                2,
-                1
-            ],
-            "e_name": "Hg",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "mercuric",
-            "valency": [
-                2
-            ],
-            "e_name": "Hg",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "mercurous",
-            "valency": [
-                1
-            ],
-            "e_name": "Hg",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "boron",
-            "valency": [
-                3
-            ],
-            "e_name": "B",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "aluminium",
-            "valency": [
-                3
-            ],
-            "e_name": "Al",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "aluminum",
-            "valency": [
-                3
-            ],
-            "e_name": "Al",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "gallium",
-            "valency": [
-                3
-            ],
-            "e_name": "Ga",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "indium",
-            "valency": [
-                3
-            ],
-            "e_name": "In",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "thallium",
-            "valency": [
-                3,
-                1
-            ],
-            "e_name": "Tl",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "tin",
-            "valency": [
-                4,
-                2
-            ],
-            "e_name": "Sn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "stannous",
-            "valency": [
-                2
-            ],
-            "e_name": "Sn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "stannic",
-            "valency": [
-                4
-            ],
-            "e_name": "Sn",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "lead",
-            "valency": [
-                4,
-                2
-            ],
-            "e_name": "Pb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "plumbous",
-            "valency": [
-                2
-            ],
-            "e_name": "Pb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "plumbic",
-            "valency": [
-                4
-            ],
-            "e_name": "Pb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "bismuth",
-            "valency": [
-                3
-            ],
-            "e_name": "Bi",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "antimony",
-            "valency": [
-                5,
-                3
-            ],
-            "e_name": "Sb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "antimonous",
-            "valency": [
-                3
-            ],
-            "e_name": "Sb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "arsenic",
-            "valency": [
-                5,
-                3
-            ],
-            "e_name": "As",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "lanthanum",
-            "valency": [
-                3
-            ],
-            "e_name": "La",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cerium",
-            "valency": [
-                4,
-                3
-            ],
-            "e_name": "Ce",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ceric",
-            "valency": [
-                4
-            ],
-            "e_name": "Ce",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "cerous",
-            "valency": [
-                3
-            ],
-            "e_name": "Ce",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "praseodymium",
-            "valency": [
-                3
-            ],
-            "e_name": "Pr",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "neodymium",
-            "valency": [
-                3
-            ],
-            "e_name": "Nd",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "promethium",
-            "valency": [
-                3
-            ],
-            "e_name": "Pm",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "samarium",
-            "valency": [
-                3
-            ],
-            "e_name": "Sm",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "europium",
-            "valency": [
-                3,
-                2
-            ],
-            "e_name": "Eu",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "gadolinium",
-            "valency": [
-                3
-            ],
-            "e_name": "Gd",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "terbium",
-            "valency": [
-                3
-            ],
-            "e_name": "Tb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "dysprosium",
-            "valency": [
-                3
-            ],
-            "e_name": "Dy",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "holmium",
-            "valency": [
-                3
-            ],
-            "e_name": "Ho",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "erbium",
-            "valency": [
-                3
-            ],
-            "e_name": "Er",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "thulium",
-            "valency": [
-                3
-            ],
-            "e_name": "Tm",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "ytterbium",
-            "valency": [
-                3
-            ],
-            "e_name": "Yb",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "americium",
-            "valency": [
-                3
-            ],
-            "e_name": "Am",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "thorium",
-            "valency": [
-                4
-            ],
-            "e_name": "Th",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "uranium",
-            "valency": [
-                6,
-                4
-            ],
-            "e_name": "U",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "uranyl",
-            "valency": [
-                2
-            ],
-            "e_name": "UO2",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "vanadyl",
-            "valency": [
-                2
-            ],
-            "e_name": "VO",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "titanyl",
-            "valency": [
-                2
-            ],
-            "e_name": "TiO",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "ammonium",
-            "valency": [
-                1
-            ],
-            "e_name": "NH4",
-            "n_atoms": 3
-        },
-        {
-            "c_name": "germanium",
-            "valency": [
-                4
-            ],
-            "e_name": "Ge",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "zirconyl",
-            "valency": [
-                2
-            ],
-            "e_name": "ZrO",
-            "n_atoms": 2
-        },
-        {
-            "c_name": "tellurium",
-            "valency": [
-                6,
-                4,
-                2
-            ],
-            "e_name": "Te",
-            "n_atoms": 1
-        },
-        {
-            "c_name": "methylene",
-            "valency": [
-                2
-            ],
-            "e_name": "CH2",
-            "n_atoms": 3
-        }
-    ],
-    "elements": {
-        "Ac": "actinium",
-        "Ag": "silver",
-        "Al": "aluminium",
-        "Am": "americium",
-        "Ar": "argon",
-        "At": "astatine",
-        "As": "arsenic",
-        "Au": "gold",
-        "B": "boron",
-        "Ba": "barium",
-        "Be": "beryllium",
-        "Bi": "bismuth",
-        "Bh": "bohrium",
-        "Bk": "berkelium",
-        "Br": "bromine",
-        "C": "carbon",
-        "Ca": "calcium",
-        "Cd": "cadmium",
-        "Ce": "cerium",
-        "Cf": "californium",
-        "Cl": "chlorine",
-        "Cm": "curium",
-        "Cn": "copernicium",
-        "Co": "cobalt",
-        "Cr": "chromium",
-        "Cs": "caesium",
-        "Cu": "copper",
-        "Db": "dubnium",
-        "Ds": "darmstadtium",
-        "Dy": "dysprosium",
-        "Er": "erbium",
-        "Eu": "europium",
-        "Es": "einsteinium",
-        "F": "fluorine",
-        "Fr": "francium",
-        "Fe": "iron",
-        "Fl": "flerovium",
-        "Fm": "fermium",
-        "Ga": "gallium",
-        "Gd": "gadolinium",
-        "Ge": "germanium",
-        "H": "hydrogen",
-        "He": "helium",
-        "Hf": "hafnium",
-        "Hg": "mercury",
-        "Ho": "holmium",
-        "Hs": "hassium",
-        "I": "iodine",
-        "In": "indium",
-        "Ir": "iridium",
-        "K": "potassium",
-        "La": "lanthanum",
-        "Li": "lithium",
-        "Lr": "lawrencium",
-        "Lu": "lutetium",
-        "Lv": "livermorium",
-        "Mc": "moscovium",
-        "Md": "mendelevium",
-        "Mg": "magnesium",
-        "Mn": "manganese",
-        "Mo": "molybdenum",
-        "Mt": "meitnerium",
-        "N": "nitrogen",
-        "Na": "sodium",
-        "Nb": "niobium",
-        "Nd": "neodymium",
-        "Nh": "nihonium",
-        "Ni": "nickel",
-        "No": "nobelium",
-        "Np": "neptunium",
-        "O": "oxygen",
-        "Og": "oganesson",
-        "Os": "osmium",
-        "P": "phosphorus",
-        "Pa": "protactinium",
-        "Pb": "lead",
-        "Pd": "palladium",
-        "Pm": "promethium",
-        "Po": "polonium",
-        "Pr": "praseodymium",
-        "Pt": "platinum",
-        "Pu": "plutonium",
-        "Ra": "radium",
-        "Rb": "rubidium",
-        "Re": "rhenium",
-        "Rf": "rutherfordium",
-        "Rg": "roentgenium",
-        "Rh": "rhodium",
-        "Ru": "ruthenium",
-        "S": "sulfur",
-        "Sb": "antimony",
-        "Sc": "scandium",
-        "Se": "selenium",
-        "Sg": "seaborgium",
-        "Si": "silicon",
-        "Sm": "samarium",
-        "Sn": "tin",
-        "Sr": "strontium",
-        "Ta": "tantalum",
-        "Tb": "terbium",
-        "Tc": "technetium",
-        "Te": "tellurium",
-        "Th": "thorium",
-        "Ti": "titanium",
-        "Tl": "thallium",
-        "Tm": "thulium",
-        "Ts": "tennessine",
-        "U": "uranium",
-        "V": "vanadium",
-        "W": "tungsten",
-        "Y": "yttrium",
-        "Yb": "ytterbium",
-        "Zn": "zinc",
-        "Zr": "zirconium"
-    },
-    "ions": [
-        "IO3",
-        "SO3",
-        "HSO3",
-        "ClO4",
-        "ClO2",
-        "H2AsO4",
-        "HAsO4",
-        "AsO4",
-        "H2PO4",
-        "HPO4",
-        "PO4",
-        "CH2ClCOO",
-        "H2C6H5O7",
-        "NO2",
-        "HCOO",
-        "CH3H5O3",
-        "HC6H6O6",
-        "C6H5COO",
-        "H2C2O4",
-        "HC2O4",
-        "C2O4",
-        "N3",
-        "C3H5O(COO)3",
-        "CH3COOH",
-        "CH3COO",
-        "CH3CH2COO",
-        "C5H4N",
-        "HCO3",
-        "CO3",
-        "HS",
-        "ClO",
-        "BrO",
-        "CN",
-        "H2BO3",
-        "Mo7O24",
-        "CH3COCHCOCH3",
-        "P2O5",
-        "BO3",
-        "Al2O4",
-        "Si2O7",
-        "SiO5",
-        "NbO3",
-        "SbO3",
-        "CO(NH2)2",
-        "MnO3",
-        "Si8O21",
-        "Mn2O4",
-        "H2O",
-        "NH4",
-        "C6H5O",
-        "IO",
-        "HO2",
-        "C6H6O6",
-        "OCH(CH3)2",
-        "MoO4",
-        "WO4",
-        "Al2O6",
-        "GeO4",
-        "GaO4",
-        "Br",
-        "ClO4",
-        "ClO3",
-        "HSO4",
-        "NO3",
-        "SO4",
-        "OH",
-        "Cl",
-        "S2O8",
-        "C6H5O7",
-        "C6H12N4",
-        "BO3",
-        "AsO3",
-        "PO3",
-        "C4H4O6",
-        "SiF6",
-        "CH3C6H4SO3",
-        "PO3F",
-        "FeO4",
-        "TeO4",
-        "CN2",
-        "SiO3",
-        "C17H35COO",
-        "TiO3",
-        "BO2",
-        "ZrO",
-        "NiO3",
-        "Fe(CN)6",
-        "BrO3",
-        "SCN",
-        "VO3",
-        "UO2FeO3",
-        "VO4",
-        "TiO4",
-        "B2O5",
-        "CF3SO3",
-        "CH2",
-        "MnO4",
-        "S2O3",
-        "CrO4",
-        "SiO4",
-        "TeO3",
-        "AlSiO4",
-        "BrO2",
-        "B4O9",
-        "PO2F2",
-        "PF6",
-        "OCH2CH2CH2CH3",
-        "VO",
-        "B3O7",
-        "SeO4",
-        "P2O7",
-        "S2",
-        "Cr2O7",
-        "NiO2",
-        "He",
-        "Li",
-        "Be",
-        "Ne",
-        "Na",
-        "Mg",
-        "Al",
-        "Si",
-        "Ar",
-        "Ca",
-        "Sc",
-        "Ti",
-        "Cr",
-        "Mn",
-        "Fe",
-        "Co",
-        "Ni",
-        "Cu",
-        "Zn",
-        "Ga",
-        "Ge",
-        "As",
-        "Se",
-        "Br",
-        "Kr",
-        "Rb",
-        "Sr",
-        "Zr",
-        "Nb",
-        "Mo",
-        "Tc",
-        "Ru",
-        "Rh",
-        "Pd",
-        "Ag",
-        "Cd",
-        "In",
-        "Sb",
-        "Te",
-        "Xe",
-        "Cs",
-        "Ba",
-        "La",
-        "Ce",
-        "Pr",
-        "Nd",
-        "Pm",
-        "Sm",
-        "Eu",
-        "Gd",
-        "Tb",
-        "Dy",
-        "Ho",
-        "Er",
-        "Tm",
-        "Yb",
-        "Lu",
-        "Hf",
-        "Ta",
-        "Re",
-        "Os",
-        "Ir",
-        "Pt",
-        "Au",
-        "Hg",
-        "Tl",
-        "Pb",
-        "Bi",
-        "Po",
-        "At",
-        "Rn",
-        "Fr",
-        "Ra",
-        "Ac",
-        "Th",
-        "Pa",
-        "Np",
-        "Pu",
-        "Am",
-        "Cm",
-        "Bk",
-        "Cf",
-        "Es",
-        "Fm",
-        "Md",
-        "No",
-        "Lr",
-        "Rf",
-        "Db",
-        "Sg",
-        "Bh",
-        "Hs",
-        "Mt",
-        "Ds",
-        "Rg",
-        "Cn",
-        "Fl",
-        "Lv",
-        "K",
-        "Zn",
-        "Sn",
-        "O",
-        "Y",
-        "F",
-        "V",
-        "\u25a1",
-        "W",
-        "I",
-        "S",
-        "B",
-        "M",
-        "P",
-        "U",
-        "O",
-        "H"
-    ]
+ "anions":[
+  {
+   "c_name":"oxide",
+   "e_name":"O",
+   "n_atoms":1,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"chloride",
+   "e_name":"Cl",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"acetate",
+   "e_name":"Ac",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"acetate",
+   "e_name":"CH3COO",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"oxido(oxo)alumane",
+   "e_name":"Al2O4",
+   "n_atoms":6,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"Hypobromite",
+   "e_name":"BrO",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"dihydrogenarsorate",
+   "e_name":"H2AsO4",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogenarsorate",
+   "e_name":"HAsO4",
+   "n_atoms":6,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"dihydrogenborate",
+   "e_name":"H2BO3",
+   "n_atoms":6,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogenborate",
+   "e_name":"HBO3",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"oxido(dioxo)niobium",
+   "e_name":"NbO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"bisulfide",
+   "e_name":"HS",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"iodite",
+   "e_name":"IO",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"peroxydisulfate",
+   "e_name":"S2O8",
+   "n_atoms":10,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"antimony",
+   "e_name":"SbO3",
+   "n_atoms":4,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"iodide",
+   "e_name":"I",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydride",
+   "e_name":"H",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"nitride",
+   "e_name":"N",
+   "n_atoms":1,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"sulfide",
+   "e_name":"S",
+   "n_atoms":1,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"disulfide",
+   "e_name":"S2",
+   "n_atoms":2,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"fluoride",
+   "e_name":"F",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"bromide",
+   "e_name":"Br",
+   "n_atoms":1,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"phosphide",
+   "e_name":"P",
+   "n_atoms":1,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"azide",
+   "e_name":"N3",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"nitrate",
+   "e_name":"NO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"nitrite",
+   "e_name":"NO2",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"carbonate",
+   "e_name":"CO3",
+   "n_atoms":4,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"chlorate",
+   "e_name":"ClO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"chlorite",
+   "e_name":"ClO2",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"chromate",
+   "e_name":"CrO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"dichromate",
+   "e_name":"Cr2O7",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"dihydrogen phosphate",
+   "e_name":"H2PO4",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"dihydrogenphosphate",
+   "e_name":"H2PO4",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogen phosphate",
+   "e_name":"HPO4",
+   "n_atoms":7,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"hydrogenphosphate",
+   "e_name":"HPO4",
+   "n_atoms":7,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"hydrogen carbonate",
+   "e_name":"HCO3",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogen sulfate",
+   "e_name":"HSO4",
+   "n_atoms":6,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogen sulfite",
+   "e_name":"HSO3",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"bisulfite",
+   "e_name":"HSO3",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydroxide",
+   "e_name":"OH",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hypochlorite",
+   "e_name":"ClO",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"monohydrogen phosphate",
+   "e_name":"HPO4",
+   "n_atoms":6,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"perchlorate",
+   "e_name":"ClO4",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"permanganate",
+   "e_name":"MnO4",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"peroxide",
+   "e_name":"O2",
+   "n_atoms":2,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"phosphate",
+   "e_name":"PO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"metaphosphate",
+   "e_name":"PO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"orthophosphate",
+   "e_name":"PO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"pyrophosphate",
+   "e_name":"P2O7",
+   "n_atoms":9,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"phosphite",
+   "e_name":"PO3",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"sulfate",
+   "e_name":"SO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"sulphate",
+   "e_name":"SO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"sulfite",
+   "e_name":"SO3",
+   "n_atoms":4,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"superoxide",
+   "e_name":"O2",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"thiosulfate",
+   "e_name":"S2O3",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"silicate",
+   "e_name":"SiO4",
+   "n_atoms":5,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"orthosilicate",
+   "e_name":"SiO4",
+   "n_atoms":5,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"pyrosilicate",
+   "e_name":"Si2O7",
+   "n_atoms":9,
+   "valency":[
+    -6
+   ]
+  },
+  {
+   "c_name":"disilicate",
+   "e_name":"Si2O7",
+   "n_atoms":9,
+   "valency":[
+    -6
+   ]
+  },
+  {
+   "c_name":"metasilicate",
+   "e_name":"SiO3",
+   "n_atoms":4,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"aluminium silicate",
+   "e_name":"AlSiO4",
+   "n_atoms":6,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"acetate",
+   "e_name":"CH3COO",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"formate",
+   "e_name":"HCOO",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"oxalate",
+   "e_name":"C2O4",
+   "n_atoms":6,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"hydrogen oxalate",
+   "e_name":"HC2O4",
+   "n_atoms":6,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"cyanide",
+   "e_name":"CN",
+   "n_atoms":2,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"citrate",
+   "e_name":"C3H5O(COO)3",
+   "n_atoms":18,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"tartrate",
+   "e_name":"C4H4O6",
+   "n_atoms":14,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"borate",
+   "e_name":"BO3",
+   "n_atoms":4,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"diborate",
+   "e_name":"B2O5",
+   "n_atoms":7,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"triborate",
+   "e_name":"B3O7",
+   "n_atoms":10,
+   "valency":[
+    -5
+   ]
+  },
+  {
+   "c_name":"tetraborate",
+   "e_name":"B4O9",
+   "n_atoms":13,
+   "valency":[
+    -6
+   ]
+  },
+  {
+   "c_name":"arsenate",
+   "e_name":"AsO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"ferrate",
+   "e_name":"FeO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"arsenite",
+   "e_name":"AsO3",
+   "n_atoms":4,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"bromate",
+   "e_name":"BrO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"iodate",
+   "e_name":"IO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"bromite",
+   "e_name":"BrO2",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"vanadate",
+   "e_name":"VO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"orthovanadate",
+   "e_name":"VO4",
+   "n_atoms":5,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"metavanadate",
+   "e_name":"VO3",
+   "n_atoms":4,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"manganate",
+   "e_name":"MnO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"titanate",
+   "e_name":"TiO3",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"metatitanate",
+   "e_name":"TiO3",
+   "n_atoms":4,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"orthotitanate",
+   "e_name":"TiO4",
+   "n_atoms":5,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"tellurate",
+   "e_name":"TeO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"tellurite",
+   "e_name":"TeO3",
+   "n_atoms":4,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"nickelite",
+   "e_name":"NiO2",
+   "n_atoms":3,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"nickelate",
+   "e_name":"NiO3",
+   "n_atoms":3,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"fluorophosphate",
+   "e_name":"PO3F",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"difluorophosphate",
+   "e_name":"PO2F2",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hexafluorophosphate",
+   "e_name":"PF6",
+   "n_atoms":7,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"selenide",
+   "e_name":"Se",
+   "n_atoms":1,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"fluorosilicate",
+   "e_name":"SiF6",
+   "n_atoms":7,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"triflate",
+   "e_name":"CF3SO3",
+   "n_atoms":8,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"hydrogen carbonate",
+   "e_name":"HCO3",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"bicarbonate",
+   "e_name":"HCO3",
+   "n_atoms":5,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"tungstate",
+   "e_name":"WO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"ferrocyanide",
+   "e_name":"Fe(CN)6",
+   "n_atoms":13,
+   "valency":[
+    -4
+   ]
+  },
+  {
+   "c_name":"ferricyanide",
+   "e_name":"Fe(CN)6",
+   "n_atoms":13,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"pyridyl",
+   "e_name":"C5H4N",
+   "n_atoms":10,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"molybdate",
+   "e_name":"MoO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"heptamolybdate",
+   "e_name":"Mo7O24",
+   "n_atoms":31,
+   "valency":[
+    -6
+   ]
+  },
+  {
+   "c_name":"butoxide",
+   "e_name":"OCH2CH2CH2CH3",
+   "n_atoms":14,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"acetylacetonate",
+   "e_name":"CH3COCHCOCH3",
+   "n_atoms":14,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"isopropoxide",
+   "e_name":"OCH(CH3)2",
+   "n_atoms":11,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"orthoferrite",
+   "e_name":"FeO3",
+   "n_atoms":4,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"cyanamide",
+   "e_name":"CN2",
+   "n_atoms":3,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"selenate",
+   "e_name":"SeO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  },
+  {
+   "c_name":"thiocyanate",
+   "e_name":"SCN",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"ferricyanide",
+   "e_name":"Fe(CN)6",
+   "n_atoms":13,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"hexacyanoferrate",
+   "e_name":"Fe(CN)6",
+   "n_atoms":13,
+   "valency":[
+    -3
+   ]
+  },
+  {
+   "c_name":"tosylate",
+   "e_name":"CH3C6H4SO3",
+   "n_atoms":18,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"metaborate",
+   "e_name":"BO2",
+   "n_atoms":3,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"stearate",
+   "e_name":"C17H35COO",
+   "n_atoms":55,
+   "valency":[
+    -1
+   ]
+  },
+  {
+   "c_name":"tungstate",
+   "e_name":"WO4",
+   "n_atoms":5,
+   "valency":[
+    -2
+   ]
+  }
+ ],
+ "cations":[
+  {
+   "c_name":"hydrogen",
+   "e_name":"H",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"silicon",
+   "e_name":"Si",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"lithium",
+   "e_name":"Li",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"sodium",
+   "e_name":"Na",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"natric",
+   "e_name":"Na",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"potassium",
+   "e_name":"K",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"kalic",
+   "e_name":"K",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"rubidium",
+   "e_name":"Rb",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"cesium",
+   "e_name":"Cs",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"caesium",
+   "e_name":"Cs",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"beryllium",
+   "e_name":"Be",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"magnesium",
+   "e_name":"Mg",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"calcium",
+   "e_name":"Ca",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"strontium",
+   "e_name":"Sr",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"barium",
+   "e_name":"Ba",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"scandium",
+   "e_name":"Sc",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"yttrium",
+   "e_name":"Y",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"lutetium",
+   "e_name":"Lu",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"titanium",
+   "e_name":"Ti",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"zirconium",
+   "e_name":"Zr",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"hafnium",
+   "e_name":"Hf",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"vanadium",
+   "e_name":"V",
+   "n_atoms":1,
+   "valency":[
+    5
+   ]
+  },
+  {
+   "c_name":"niobium",
+   "e_name":"Nb",
+   "n_atoms":1,
+   "valency":[
+    5
+   ]
+  },
+  {
+   "c_name":"tantalum",
+   "e_name":"Ta",
+   "n_atoms":1,
+   "valency":[
+    5
+   ]
+  },
+  {
+   "c_name":"chromium",
+   "e_name":"Cr",
+   "n_atoms":1,
+   "valency":[
+    6,
+    4,
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"molybdenum",
+   "e_name":"Mo",
+   "n_atoms":1,
+   "valency":[
+    6,
+    4
+   ]
+  },
+  {
+   "c_name":"molybdic",
+   "e_name":"Mo",
+   "n_atoms":1,
+   "valency":[
+    6
+   ]
+  },
+  {
+   "c_name":"tungsten",
+   "e_name":"W",
+   "n_atoms":1,
+   "valency":[
+    6,
+    4,
+    3
+   ]
+  },
+  {
+   "c_name":"tungstic",
+   "e_name":"W",
+   "n_atoms":1,
+   "valency":[
+    6
+   ]
+  },
+  {
+   "c_name":"manganese",
+   "e_name":"Mn",
+   "n_atoms":1,
+   "valency":[
+    7,
+    6,
+    4,
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"manganous",
+   "e_name":"Mn",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"manganic",
+   "e_name":"Mn",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"permanganic",
+   "e_name":"Mn",
+   "n_atoms":1,
+   "valency":[
+    7
+   ]
+  },
+  {
+   "c_name":"technetium",
+   "e_name":"Tc",
+   "n_atoms":1,
+   "valency":[
+    7,
+    4
+   ]
+  },
+  {
+   "c_name":"rhenium",
+   "e_name":"Re",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"iron",
+   "e_name":"Fe",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"ferrum",
+   "e_name":"Fe",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"ferric",
+   "e_name":"Fe",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"ferrous",
+   "e_name":"Fe",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"ruthenium",
+   "e_name":"Ru",
+   "n_atoms":1,
+   "valency":[
+    4,
+    3
+   ]
+  },
+  {
+   "c_name":"osmium",
+   "e_name":"Os",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"cobalt",
+   "e_name":"Co",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"cobaltous",
+   "e_name":"Co",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"cobaltic",
+   "e_name":"Co",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"rhodium",
+   "e_name":"Rh",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"iridium",
+   "e_name":"Ir",
+   "n_atoms":1,
+   "valency":[
+    4,
+    3
+   ]
+  },
+  {
+   "c_name":"nickel",
+   "e_name":"Ni",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"nickelous",
+   "e_name":"Ni",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"palladium",
+   "e_name":"Pd",
+   "n_atoms":1,
+   "valency":[
+    4,
+    2
+   ]
+  },
+  {
+   "c_name":"platinum",
+   "e_name":"Pt",
+   "n_atoms":1,
+   "valency":[
+    4,
+    2
+   ]
+  },
+  {
+   "c_name":"copper",
+   "e_name":"Cu",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2,
+    1
+   ]
+  },
+  {
+   "c_name":"cuprous",
+   "e_name":"Cu",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"cupric",
+   "e_name":"Cu",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"silver",
+   "e_name":"Ag",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"argentous",
+   "e_name":"Ag",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"gold",
+   "e_name":"Au",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"zinc",
+   "e_name":"Zn",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"cadmium",
+   "e_name":"Cd",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"mercury",
+   "e_name":"Hg",
+   "n_atoms":1,
+   "valency":[
+    2,
+    1
+   ]
+  },
+  {
+   "c_name":"mercuric",
+   "e_name":"Hg",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"mercurous",
+   "e_name":"Hg",
+   "n_atoms":1,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"boron",
+   "e_name":"B",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"aluminium",
+   "e_name":"Al",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"aluminum",
+   "e_name":"Al",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"gallium",
+   "e_name":"Ga",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"indium",
+   "e_name":"In",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"thallium",
+   "e_name":"Tl",
+   "n_atoms":1,
+   "valency":[
+    3,
+    1
+   ]
+  },
+  {
+   "c_name":"tin",
+   "e_name":"Sn",
+   "n_atoms":1,
+   "valency":[
+    4,
+    2
+   ]
+  },
+  {
+   "c_name":"stannous",
+   "e_name":"Sn",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"stannic",
+   "e_name":"Sn",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"lead",
+   "e_name":"Pb",
+   "n_atoms":1,
+   "valency":[
+    4,
+    2
+   ]
+  },
+  {
+   "c_name":"plumbous",
+   "e_name":"Pb",
+   "n_atoms":1,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"plumbic",
+   "e_name":"Pb",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"bismuth",
+   "e_name":"Bi",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"antimony",
+   "e_name":"Sb",
+   "n_atoms":1,
+   "valency":[
+    5,
+    3
+   ]
+  },
+  {
+   "c_name":"antimonous",
+   "e_name":"Sb",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"arsenic",
+   "e_name":"As",
+   "n_atoms":1,
+   "valency":[
+    5,
+    3
+   ]
+  },
+  {
+   "c_name":"lanthanum",
+   "e_name":"La",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"cerium",
+   "e_name":"Ce",
+   "n_atoms":1,
+   "valency":[
+    4,
+    3
+   ]
+  },
+  {
+   "c_name":"ceric",
+   "e_name":"Ce",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"cerous",
+   "e_name":"Ce",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"praseodymium",
+   "e_name":"Pr",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"neodymium",
+   "e_name":"Nd",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"promethium",
+   "e_name":"Pm",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"samarium",
+   "e_name":"Sm",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"europium",
+   "e_name":"Eu",
+   "n_atoms":1,
+   "valency":[
+    3,
+    2
+   ]
+  },
+  {
+   "c_name":"gadolinium",
+   "e_name":"Gd",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"terbium",
+   "e_name":"Tb",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"dysprosium",
+   "e_name":"Dy",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"holmium",
+   "e_name":"Ho",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"erbium",
+   "e_name":"Er",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"thulium",
+   "e_name":"Tm",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"ytterbium",
+   "e_name":"Yb",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"americium",
+   "e_name":"Am",
+   "n_atoms":1,
+   "valency":[
+    3
+   ]
+  },
+  {
+   "c_name":"thorium",
+   "e_name":"Th",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"uranium",
+   "e_name":"U",
+   "n_atoms":1,
+   "valency":[
+    6,
+    4
+   ]
+  },
+  {
+   "c_name":"uranyl",
+   "e_name":"UO2",
+   "n_atoms":3,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"vanadyl",
+   "e_name":"VO",
+   "n_atoms":2,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"titanyl",
+   "e_name":"TiO",
+   "n_atoms":2,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"ammonium",
+   "e_name":"NH4",
+   "n_atoms":3,
+   "valency":[
+    1
+   ]
+  },
+  {
+   "c_name":"germanium",
+   "e_name":"Ge",
+   "n_atoms":1,
+   "valency":[
+    4
+   ]
+  },
+  {
+   "c_name":"zirconyl",
+   "e_name":"ZrO",
+   "n_atoms":2,
+   "valency":[
+    2
+   ]
+  },
+  {
+   "c_name":"tellurium",
+   "e_name":"Te",
+   "n_atoms":1,
+   "valency":[
+    6,
+    4,
+    2
+   ]
+  },
+  {
+   "c_name":"methylene",
+   "e_name":"CH2",
+   "n_atoms":3,
+   "valency":[
+    2
+   ]
+  }
+ ],
+ "elements":{
+  "Ac":"actinium",
+  "Ag":"silver",
+  "Al":"aluminium",
+  "Am":"americium",
+  "Ar":"argon",
+  "As":"arsenic",
+  "At":"astatine",
+  "Au":"gold",
+  "B":"boron",
+  "Ba":"barium",
+  "Be":"beryllium",
+  "Bh":"bohrium",
+  "Bi":"bismuth",
+  "Bk":"berkelium",
+  "Br":"bromine",
+  "C":"carbon",
+  "Ca":"calcium",
+  "Cd":"cadmium",
+  "Ce":"cerium",
+  "Cf":"californium",
+  "Cl":"chlorine",
+  "Cm":"curium",
+  "Cn":"copernicium",
+  "Co":"cobalt",
+  "Cr":"chromium",
+  "Cs":"caesium",
+  "Cu":"copper",
+  "Db":"dubnium",
+  "Ds":"darmstadtium",
+  "Dy":"dysprosium",
+  "Er":"erbium",
+  "Es":"einsteinium",
+  "Eu":"europium",
+  "F":"fluorine",
+  "Fe":"iron",
+  "Fl":"flerovium",
+  "Fm":"fermium",
+  "Fr":"francium",
+  "Ga":"gallium",
+  "Gd":"gadolinium",
+  "Ge":"germanium",
+  "H":"hydrogen",
+  "He":"helium",
+  "Hf":"hafnium",
+  "Hg":"mercury",
+  "Ho":"holmium",
+  "Hs":"hassium",
+  "I":"iodine",
+  "In":"indium",
+  "Ir":"iridium",
+  "K":"potassium",
+  "Kr":"Krypton",
+  "La":"lanthanum",
+  "Li":"lithium",
+  "Lr":"lawrencium",
+  "Lu":"lutetium",
+  "Lv":"livermorium",
+  "Mc":"moscovium",
+  "Md":"mendelevium",
+  "Mg":"magnesium",
+  "Mn":"manganese",
+  "Mo":"molybdenum",
+  "Mt":"meitnerium",
+  "N":"nitrogen",
+  "Na":"sodium",
+  "Nb":"niobium",
+  "Nd":"neodymium",
+  "Ne":"Neon",
+  "Nh":"nihonium",
+  "Ni":"nickel",
+  "No":"nobelium",
+  "Np":"neptunium",
+  "O":"oxygen",
+  "Og":"oganesson",
+  "Os":"osmium",
+  "P":"phosphorus",
+  "Pa":"protactinium",
+  "Pb":"lead",
+  "Pd":"palladium",
+  "Pm":"promethium",
+  "Po":"polonium",
+  "Pr":"praseodymium",
+  "Pt":"platinum",
+  "Pu":"plutonium",
+  "Ra":"radium",
+  "Rb":"rubidium",
+  "Re":"rhenium",
+  "Rf":"rutherfordium",
+  "Rg":"roentgenium",
+  "Rh":"rhodium",
+  "Ru":"ruthenium",
+  "Rn":"Radon",
+  "S":"sulfur",
+  "Sb":"antimony",
+  "Sc":"scandium",
+  "Se":"selenium",
+  "Sg":"seaborgium",
+  "Si":"silicon",
+  "Sm":"samarium",
+  "Sn":"tin",
+  "Sr":"strontium",
+  "Ta":"tantalum",
+  "Tb":"terbium",
+  "Tc":"technetium",
+  "Te":"tellurium",
+  "Th":"thorium",
+  "Ti":"titanium",
+  "Tl":"thallium",
+  "Tm":"thulium",
+  "Ts":"tennessine",
+  "U":"uranium",
+  "V":"vanadium",
+  "W":"tungsten",
+  "Xe":"Xenon",
+  "Y":"yttrium",
+  "Yb":"ytterbium",
+  "Zn":"zinc",
+  "Zr":"zirconium"
+ },
+ "ions":[
+  "C6H12N4",
+  "C6H5COO",
+  "C6H5O",
+  "C6H5O7",
+  "C6H6O6",
+  "CH2ClCOO",
+  "CH3CH2COO",
+  "CH3COOH",
+  "CH3H5O3",
+  "CO(NH2)2",
+  "H2C2O4",
+  "H2C6H5O7",
+  "H2O",
+  "HC6H6O6",
+  "HO2",
+  "M",
+  "P2O5",
+  "Si8O21",
+  "\u25a1"
+ ]
 }

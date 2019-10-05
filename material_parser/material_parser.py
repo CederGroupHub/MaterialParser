@@ -34,7 +34,13 @@ class MaterialParser:
                          for ion in self.__ions["anions"]}
         self.__cations = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
                           for ion in self.__ions["cations"]}
-        self.__species = self.__ions["ions"]
+        # self.__species = self.__ions["ions"]
+        self.__species = list(set(([ion["e_name"] for ion in self.__ions["anions"]] +
+                          [ion["e_name"] for ion in self.__ions["cations"]] +
+                          list(self.__ions["elements"].keys()) +
+                          self.__ions["ions"])))
+        self.__species.remove("O2")
+        self.__species = sorted(self.__species, key=lambda i: len(i), reverse=True)
         self.__list_of_anions = [ion["c_name"] for ion in self.__ions["anions"]]
         self.__list_of_cations = [ion["c_name"] for ion in self.__ions["cations"]]
         self.__diatomic_molecules = {"O2": collections.OrderedDict([("O", "2")]),
@@ -142,7 +148,8 @@ class MaterialParser:
                     {"formula": composition["formula"],
                      "amount": amount,
                      "elements": composition["elements"],
-                     "ions": self.formula_to_ions(composition["formula"])
+                     "ions": self.formula_to_ions(composition["formula"]) if len(composition["elements"]) > 2
+                     else composition["elements"]
                     }
                 )
             if composition["oxygen_deficiency"]:
@@ -297,7 +304,7 @@ class MaterialParser:
             "specie0_": "A",
             "specie1_": "B",
             "specie2_": "C",
-            "specie3_": "D",
+            "specie3_": "Q",
             "specie4_": "K",
             "specie5_": "F",
             "specie6_": "G",
@@ -978,7 +985,8 @@ class MaterialParser:
                     formula=new_name,
                     amount=compound["amount"],
                     elements=new_composition,
-                    ions=self.formula_to_ions(new_name)
+                    ions=self.formula_to_ions(new_name) if len(new_composition) > 2
+                     else new_composition
                 ))
                 new_material_formula = new_material_formula.replace(compound["formula"], new_name)
             else:
@@ -986,7 +994,8 @@ class MaterialParser:
                     formula=compound["formula"],
                     amount=compound["amount"],
                     elements=compound["elements"],
-                    ions=self.formula_to_ions(compound["formula"])
+                    ions=self.formula_to_ions(compound["formula"]) if len(compound["elements"]) > 2
+                    else compound["elements"]
                 ))
 
         return new_material_formula, new_material_composition
