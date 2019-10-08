@@ -72,23 +72,21 @@ class MaterialParser:
 
     def parse_material_string(self, material_string_):
         """
-        Main method to parse material string into chemical structure and convert chemical name into chemical formula
-        :param material_string_: < str> material name/formula
-        :return: dict(material_string: <str> initial material string,
-                     material_name: <str> chemical name of material found in the string
-                     material_formula: <str> chemical formula of material
-                     additives: <list> list of dopped materials/elements appeared in material string
-                     phase: <str> material phase appeared in material string
-                     hydrate: <float> if material is hydrate fraction of H2O
-                     is_mixture: <bool> material is mixture/composite/alloy/solid solution
-                     is_abbreviation: <bool> material is similar to abbreviation
-                     amount_vars: {amount variable: <list> values}
-                     elements_vars: {elements variable: <list> values}
-                     composition: <list> of dict(
-                                formula: <str> compound formula
-                                amount: <str> fraction of compound in mixture
-                                elements: {element: amount}
-                     )
+        Main method to convert chemical name into chemical formula and parse formula into chemical structure
+        :param material_string_: < str> - material name and/or formula
+        :return: dict(material_string: <str> - initial material string,
+                      material_name: <str> - chemical name of material if found in the string
+                      material_formula: <str> - chemical formula of material reconstructed from the string
+                      composition: <list> of Object(dict):
+                                formula: <str> - compound formula
+                                amount: <str> - fraction of compound in mixture
+                                elements: Object(dict) - {element: ratio/amount}
+                      additives: <list> of <str> - list of dopped materials/elements found in material string
+                      amount_vars: Object(dict) - {amount variable: <list> - values}
+                      elements_vars: Object(dict) - {element variable: <list> - values}
+                      oxygen_deficiency: <str> - sign of fraction (excess or deficiency) as given in material string
+                      phase: <str> - material phase given in material string
+                      is_acronym: <bool> - material string looks like acronym
         """
 
         material_string = self.cleanup_name(material_string_)
@@ -103,6 +101,9 @@ class MaterialParser:
             output_structure["composition"][0]["elements"] = self.__diatomic_molecules[material_string]
             return output_structure
 
+        """
+        Converting material string into chemical formula
+        """
         if material_string in self.__name2element:
             return self.__element_structure(self.__name2element[material_string])
 
@@ -112,6 +113,10 @@ class MaterialParser:
 
         _, material_formula, material_name = self.string2formula(material_string)
 
+
+        """
+        Extracting composition from chemical formula
+        """
         material_compounds = self.split_formula_into_compounds(material_formula)
 
         if self.__verbose:
@@ -131,7 +136,6 @@ class MaterialParser:
                 if self.__verbose:
                     print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
-            #try:
             composition = self.formula2composition(compound)
             output_structure["phase"] = composition["phase"]
             output_structure["amounts_vars"].update(composition["amounts_vars"])
@@ -145,8 +149,6 @@ class MaterialParser:
                 )
             if composition["oxygen_deficiency"]:
                 oxygen_deficiency = composition["oxygen_deficiency"]
-            #except:
-                #pass
         output_structure["oxygen_deficiency"] = oxygen_deficiency
 
         """
