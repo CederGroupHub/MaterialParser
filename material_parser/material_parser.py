@@ -25,27 +25,22 @@ class MaterialParser:
         self.__abbreviations = json.loads(open(os.path.join(self.__filename, "rsc/abbreviations.json")).read())
         self.__ions = json.loads(open(os.path.join(self.__filename, "rsc/ions_dictionary.json")).read())
 
-        self.__list_of_elements_1 = ["H", "B", "C", "N", "O", "F", "P", "S", "K", "V", "Y", "I", "W", "U"]
-        self.__list_of_elements_2 = ["He", "Li", "Be", "Ne", "Na", "Mg", "Al", "Si", "Cl", "Ar", "Ca", "Sc", "Ti", "Cr",
-                                     "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr",
-                                     "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "Xe",
-                                     "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er",
-                                     "Tm", "Yb", "Lu", "Hf", "Ta", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi",
-                                     "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "Np", "Pu", "Am", "Cm", "Bk", "Cf",
-                                     "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn",
-                                     "Fl", "Lv"]
-        self.__list_of_elements = self.__list_of_elements_1 + self.__list_of_elements_2
         self.__element2name = self.__ions["elements"]
+        self.__list_of_elements_1 = [el for el in self.__ions["elements"].keys() if len(el) == 1]
+        self.__list_of_elements_2 = [el for el in self.__ions["elements"].keys() if len(el) == 2]
+        self.__list_of_elements = self.__list_of_elements_1 + self.__list_of_elements_2
         self.__name2element = {v: k for k, v in self.__ions["elements"].items()}
         self.__anions = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
                          for ion in self.__ions["anions"]}
         self.__cations = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
                           for ion in self.__ions["cations"]}
+        self.__species = sorted([ion["e_name"] for ion in self.__ions["anions"] if ion["e_name"] != "O2"] +
+                                [ion["e_name"] for ion in self.__ions["cations"]] +
+                                [e for e in self.__ions["elements"].keys()] +
+                                self.__ions["species"] +
+                                self.__ions["oxyanions"], key=lambda x: len(x), reverse=True)
         self.__list_of_anions = [ion["c_name"] for ion in self.__ions["anions"]]
         self.__list_of_cations = [ion["c_name"] for ion in self.__ions["cations"]]
-        self.__chemicals = self.__ions["chemicals"] \
-                           + [ion["c_name"] for ion in self.__ions["cations"]] \
-                           + [ion["c_name"] for ion in self.__ions["anions"]]
         self.__diatomic_molecules = {"O2": collections.OrderedDict([("O", "2")]),
                                      "N2": collections.OrderedDict([("N", "2")]),
                                      "H2": collections.OrderedDict([("H", "2")]),
@@ -135,31 +130,25 @@ class MaterialParser:
         material_compounds = [(m, f) for m, f in material_compounds if m!= "H2O"]
         oxygen_deficiency = None
         for compound, amount in material_compounds:
-            print(amount)
             if compound in self.__abbreviations:
                 if self.__verbose:
                     print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
-            #try:
             composition = self.formula2composition(compound)
-            species = self.formula_to_species(compound)
             output_structure["phase"] = composition["phase"]
             output_structure["amounts_vars"].update(composition["amounts_vars"])
             output_structure["elements_vars"].update(composition["elements_vars"])
-            # output_structure["species"] = self.formula_to_species(compound, species_dict)
-            # print(self.formula_to_species(compound, species_dict))
             if composition["elements"] != {}:
                 output_structure["composition"].append(
                     {"formula": composition["formula"],
                      "amount": amount,
                      "elements": composition["elements"],
-                     "species": species
+                     "ions": self.formula2ions(composition["formula"]) if len(composition["elements"]) > 2
+                     else composition["elements"]
                     }
                 )
             if composition["oxygen_deficiency"]:
                 oxygen_deficiency = composition["oxygen_deficiency"]
-            #except:
-                #pass
         output_structure["oxygen_deficiency"] = oxygen_deficiency
 
         """
@@ -178,7 +167,8 @@ class MaterialParser:
             output_structure["composition"].append(
                 {"formula": "H2O",
                  "amount": hydrate[0],
-                 "elements": self.__diatomic_molecules["H2O"]
+                 "elements": self.__diatomic_molecules["H2O"],
+                 "ions": self.formula2ions("H2O")
                  }
             )
 
@@ -302,59 +292,36 @@ class MaterialParser:
 
         return formula_structure
 
-    def formula_to_species(self, formula):
-        species_list = ['IO3', 'SO3', 'HSO3', 'ClO4','ClO2', 'H2AsO4', 'HAsO4', 'AsO4', 'H2PO4', 'HPO4', 'PO4', 'CH2ClCOO',
-                        'H2C6H5O7', 'NO2', 'HCOO', 'CH3H5O3', 'HC6H6O6', 'C6H5COO', 'H2C2O4', 'HC2O4', 'C2O4', 'N3',
-                        'C3H5O(COO)3', 'CH3COOH', 'CH3COO', 'CH3CH2COO', 'C5H4N', 'HCO3', 'CO3', 'HS', 'ClO', 'BrO',
-                        'CN', 'H2BO3', "Mo7O24", "CH3COCHCOCH3", "P2O5", "BO3", "Al2O4", "Si2O7", 'SiO5', "NbO3", "SbO3",
-                        'NH4', 'C6H5O', 'IO', 'HO2', 'C6H6O6', 'OCH(CH3)2', 'MoO4', "WO4", "Al2O6", 'GeO4', 'GaO4',
-                        'Br', 'ClO4', 'ClO3', 'HSO4', 'NO3', 'SO4', 'OH', 'Cl', 'S2O8', 'C6H5O7', 'C6H12N4', 'BO3',
-                        'CO(NH2)2', "MnO3", 'Si8O21', 'Mn2O4',
-                        'He', 'Li', 'Be', 'Ne', 'Na', 'Mg', 'Al', 'Si',
-                        'Ar', 'Ca', 'Sc', 'Ti', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br',
-                        'Kr', 'Rb', 'Sr', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sb', 'Te', 'Xe',
-                        'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb',
-                        'Lu', 'Hf', 'Ta', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr',
-                        'Ra', 'Ac', 'Th', 'Pa', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf',
-                        'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Fl', 'Lv', 'K', 'Zn', 'Sn', 'O', 'Y', "F", 'V',
-                        '□', 'W', 'I', 'S', 'B', 'M', 'P']
+    def formula2ions(self, formula):
         number_to_alphabet_dict = {
             "specie0_": "A",
             "specie1_": "B",
             "specie2_": "C",
-            "specie3_": "D",
-            "specie4_": "E",
+            "specie3_": "Q",
+            "specie4_": "K",
             "specie5_": "F",
             "specie6_": "G",
             "specie7_": "H",
             "specie8_": "I",
             "specie9_": "J",
         }
-        species_in_material = {}
-        species_indexs = {}
-        species_dict = {}
-        material_formula = self.formula2composition(formula)["formula"]
-        print(material_formula)
+        species_in_material, species_indexs, species_dict = {}, {}, {}
+        material_formula = formula
         i = 0
-        for species in species_list:
+        for species in self.__species:
             while species in material_formula:
                 # print(species)
                 material_formula = material_formula.replace(species, "specie" + str(i) + "_")
                 species_in_material["specie" + str(i) + "_"] = species
                 i += 1
-        # print(material_formula, species_in_material)
+        if species_in_material == {}:
+            return None
         for species in number_to_alphabet_dict:
             while species in material_formula:
-                material_formula = material_formula.replace(
-                    species, number_to_alphabet_dict[species]
-                )
-                species_indexs[number_to_alphabet_dict[species]] = species_in_material[
-                    species
-                ]
+                material_formula = material_formula.replace(species, number_to_alphabet_dict[species])
+                species_indexs[number_to_alphabet_dict[species]] = species_in_material[species]
         parsed_mapped_material = self.formula2composition(material_formula)
-        # print(parsed_mapped_material)
         species_info = parsed_mapped_material["elements"]
-        # print(species_info)
         for species_index in species_info:
             species_dict[species_indexs[species_index]] = species_info[species_index]
         return species_dict
@@ -951,7 +918,7 @@ class MaterialParser:
                 {"formula": additive,
                  "amount": "x",
                  "elements": additive_composition["elements"],
-                 "species": self.formula_to_species(additive)
+                 "ions": self.formula2ions(additive)
                  }
             )
         elif all(c["elements"] != {} for c in material_structure_new["composition"]):
@@ -1000,14 +967,18 @@ class MaterialParser:
                 new_material_composition.append(dict(
                     formula=new_name,
                     amount=compound["amount"],
-                    elements=new_composition
+                    elements=new_composition,
+                    ions=self.formula2ions(new_name) if len(new_composition) > 2
+                     else new_composition
                 ))
                 new_material_formula = new_material_formula.replace(compound["formula"], new_name)
             else:
                 new_material_composition.append(dict(
                     formula=compound["formula"],
                     amount=compound["amount"],
-                    elements=compound["elements"]
+                    elements=compound["elements"],
+                    ions=self.formula2ions(compound["formula"]) if len(compound["elements"]) > 2
+                    else compound["elements"]
                 ))
 
         return new_material_formula, new_material_composition
@@ -1438,6 +1409,7 @@ class MaterialParser:
     def __empty_composition(self):
         return {"formula": "",
                 "elements": collections.OrderedDict(),
+                "ion": "",
                 "amounts_vars": {}, "elements_vars": {},
                 "phase": None, "oxygen_deficiency": None}
 
