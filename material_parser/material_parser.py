@@ -147,9 +147,7 @@ class MaterialParser:
                 output_structure["composition"].append(
                     {"formula": composition["formula"],
                      "amount": amount,
-                     "elements": composition["elements"],
-                     "ions": self.formula2ions(composition["formula"]) if len(composition["elements"]) > 2
-                     else composition["elements"]
+                     "elements": composition["elements"]
                     }
                 )
             if composition["oxygen_deficiency"]:
@@ -173,7 +171,7 @@ class MaterialParser:
                 {"formula": "H2O",
                  "amount": hydrate[0],
                  "elements": self.__diatomic_molecules["H2O"],
-                 "ions": self.formula2ions("H2O")
+                 "species": self.formula2species("H2O")
                  }
             )
 
@@ -194,6 +192,22 @@ class MaterialParser:
         assigning abbreviations
         """
         output_structure["is_acronym"] = self.__is_acronym(output_structure)
+
+        """
+        extracting species
+        """
+        if not output_structure["is_acronym"]:
+            for compound in output_structure["composition"]:
+                try:
+                    compound["species"] = self.formula2species(compound["formula"]) if len(compound["elements"]) > 2 or compound["formula"] == "H2O" \
+                        else compound["elements"]
+                except:
+                    compound["species"] = collections.OrderedDict()
+        else:
+            for compound in output_structure["composition"]:
+                compound["elements"] = {}
+                compound["species"] = collections.OrderedDict()
+            output_structure["elements_vars"] = {}
 
         """
         finally, combine unified material formula from its compounds 
@@ -297,7 +311,7 @@ class MaterialParser:
 
         return formula_structure
 
-    def formula2ions(self, formula):
+    def formula2species(self, formula):
         number_to_alphabet_dict = {
             "specie0_": "A",
             "specie1_": "B",
@@ -310,7 +324,7 @@ class MaterialParser:
             "specie8_": "I",
             "specie9_": "J",
         }
-        species_in_material, species_indexs, species_dict = {}, {}, {}
+        species_in_material, species_indexs, species_dict = {}, {}, collections.OrderedDict()
         material_formula = formula
         i = 0
         for species in self.__species:
@@ -923,7 +937,7 @@ class MaterialParser:
                 {"formula": additive,
                  "amount": "x",
                  "elements": additive_composition["elements"],
-                 "ions": self.formula2ions(additive)
+                 "species": self.formula2species(additive)
                  }
             )
         elif all(c["elements"] != {} for c in material_structure_new["composition"]):
@@ -973,8 +987,6 @@ class MaterialParser:
                     formula=new_name,
                     amount=compound["amount"],
                     elements=new_composition,
-                    ions=self.formula2ions(new_name) if len(new_composition) > 2
-                     else new_composition
                 ))
                 new_material_formula = new_material_formula.replace(compound["formula"], new_name)
             else:
@@ -982,8 +994,6 @@ class MaterialParser:
                     formula=compound["formula"],
                     amount=compound["amount"],
                     elements=compound["elements"],
-                    ions=self.formula2ions(compound["formula"]) if len(compound["elements"]) > 2
-                    else compound["elements"]
                 ))
 
         return new_material_formula, new_material_composition
@@ -1455,7 +1465,7 @@ class MaterialParser:
             return True
 
         if re.findall("[A-Z]{3,}", structure["material_formula"]) != [] and \
-                all(w not in structure["material_formula"] for w in ["CH", "COO", "OH"]):
+                all(w not in structure["material_formula"] for w in ["CH", "COO", "OH"]+[a for a in self.__abbreviations.keys()]):
             return True
 
         if "PV" == structure["material_formula"][0:2]:
