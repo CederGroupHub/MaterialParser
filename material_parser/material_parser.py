@@ -532,6 +532,9 @@ class MaterialParser:
         if self.__verbose:
             print("Converting string to formula:")
 
+        if material_string == '':
+            return "", "", ""
+
         material_string_nodashes = ' '.join([t for t in re.split(r'\s|(?<=[a-z])-', material_string)])
         material_string_nodashes = material_string_nodashes[0].lower() + material_string_nodashes[1:]
         if material_string_nodashes in self.__pubchem_dictionary:
@@ -781,6 +784,9 @@ class MaterialParser:
         :param material_name: <str> material formula
         :return: <list> of <tuples>: (compound, fraction)
         """
+
+        if material_name == "":
+            return []
 
         if self.__verbose:
             print("Splitting formula into compounds:")
