@@ -3005,5 +3005,37 @@
       ]
     }
   ]
+},
+  {
+  "material": "(NH4)2HPO4",
+  "parser_output": [
+    {
+      "material_string": "(NH4)2HPO4",
+      "material_name": "",
+      "material_formula": "(NH4)2HPO4",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "(NH4)2HPO4",
+          "amount": "1",
+          "elements": {
+            "N": "2",
+            "H": "9",
+            "P": "1",
+            "O": "4"
+          },
+          "species": {
+            "NH4": "2",
+            "HPO4": "1"
+          }
+        }
+      ]
+    }
+  ]
 }
 ]

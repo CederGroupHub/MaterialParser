@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "6.0.0"
+__version__ = "6.0.1"
 
 import os
 import json
@@ -18,7 +18,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print("Initializing MaterialParser (forked) version 6.0.0")
+        print("Initializing MaterialParser (forked) version 6.0.1")
 
         self.__filename = os.path.dirname(os.path.realpath(__file__))
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, "rsc/pubchem_dict.json")).read())
@@ -155,10 +155,15 @@ class MaterialParser:
         output_structure["oxygen_deficiency"] = oxygen_deficiency
 
         """
+        assigning abbreviations
+        """
+        output_structure["is_acronym"] = self.__is_acronym(output_structure)
+
+        """
         substituting additive into composition if it makes fractions to sum-up to integer
         adding to composition if it is compound
         """
-        if len(additives) == 1:
+        if len(additives) == 1 and not output_structure["is_acronym"]:
             output_structure = self.substitute_additives(additives, output_structure)
         else:
             output_structure["additives"] = additives
@@ -187,11 +192,6 @@ class MaterialParser:
         for compound in output_structure["composition"]:
             if len(re.findall("[b-mo-w]+", compound["amount"])) > 0:
                 compound["amount"] = "1"
-
-        """
-        assigning abbreviations
-        """
-        output_structure["is_acronym"] = self.__is_acronym(output_structure)
 
         """
         extracting species
@@ -453,8 +453,11 @@ class MaterialParser:
         """
         refinement of non-variable values
         """
-        for el, amt in sym_dict.items():
-            sym_dict[el] = self.__simplify(amt)
+        try:
+            for el, amt in sym_dict.items():
+                sym_dict[el] = self.__simplify(amt)
+        except:
+            sym_dict = collections.OrderedDict()
 
         return sym_dict
 
@@ -930,6 +933,11 @@ class MaterialParser:
         """
         additive = additives[0]
 
+        if self.__verbose:
+            print("Substituting additives for:")
+            pprint(material_structure)
+            print(additives)
+
         material_structure_new = material_structure.copy()
         try:
             additive_composition = self.formula2composition(additive)
@@ -1186,7 +1194,7 @@ class MaterialParser:
         #removing trach words
         trash_list = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat", "crystal", "particl", "glass"]
         for word in trash_list:
-            material_name = re.sub("[A-Za-z-]*" + word + "[A-Za-z-]*", "", material_name)
+            material_name = re.sub("[A-Za-z-]*" + word + "[a-z-]*", "", material_name)
             material_name = re.sub(word.capitalize() + "[a-z-]*", "", material_name)
 
         if any(a in material_name for a in ["→", "⟶", "↑", "↓", "↔", "⇌", "⇒", "⇔", "⟹"]):
@@ -1259,8 +1267,8 @@ class MaterialParser:
             for v in re.findall(r"[a-z](\([IV,]+\))", material_name):
                 material_name = material_name.replace(v, " " + v)
 
-        if material_name != "":
-            material_name = self.__check_parentheses(material_name)
+        # if material_name != "":
+        #     material_name = self.__check_parentheses(material_name)
 
         trash_symbs = ["#", "$", "!", "@", "©", "®", chr(8201), "Ⓡ", "\u200b"]
         for c in trash_symbs:
@@ -1336,6 +1344,9 @@ class MaterialParser:
         :param formula:
         :return:
         """
+
+        if formula == "":
+            return ""
 
         new_formula = formula
         new_formula = new_formula.replace("{", "(")
@@ -1471,7 +1482,7 @@ class MaterialParser:
             return True
 
         if re.findall("[A-Z]{3,}", structure["material_formula"]) != [] and \
-                all(w not in structure["material_formula"] for w in ["CH", "COO", "OH"]+[a for a in self.__abbreviations.keys()]):
+                all(w not in structure["material_formula"] for w in ["CH", "COO", "OH", "NH"]+[a for a in self.__abbreviations.keys()]):
             return True
 
         if "PV" == structure["material_formula"][0:2]:
