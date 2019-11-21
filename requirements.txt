@@ -1,4 +1,0 @@
-regex
-pubchempy
-sympy
-spacy
