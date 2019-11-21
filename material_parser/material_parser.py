@@ -176,7 +176,7 @@ class MaterialParser:
                 {"formula": "H2O",
                  "amount": hydrate[0],
                  "elements": self.__diatomic_molecules["H2O"],
-                 "species": self.formula2species("H2O")
+                 "species": self.get_species("H2O")
                  }
             )
 
@@ -199,7 +199,7 @@ class MaterialParser:
         if not output_structure["is_acronym"]:
             for compound in output_structure["composition"]:
                 try:
-                    compound["species"] = self.formula2species(compound["formula"]) if len(compound["elements"]) > 2 or compound["formula"] == "H2O" \
+                    compound["species"] = self.get_species(compound["formula"]) if len(compound["elements"]) > 2 or compound["formula"] == "H2O" \
                         else compound["elements"]
                 except:
                     compound["species"] = collections.OrderedDict()
@@ -311,7 +311,7 @@ class MaterialParser:
 
         return formula_structure
 
-    def formula2species(self, formula):
+    def get_species(self, formula):
         number_to_alphabet_dict = {
             "specie0_": "A",
             "specie1_": "B",
@@ -951,7 +951,7 @@ class MaterialParser:
                 {"formula": additive,
                  "amount": "x",
                  "elements": additive_composition["elements"],
-                 "species": self.formula2species(additive)
+                 "species": self.get_species(additive)
                  }
             )
         elif all(c["elements"] != {} for c in material_structure_new["composition"]):
