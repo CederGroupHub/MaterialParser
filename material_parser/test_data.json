@@ -3037,5 +3037,143 @@
       ]
     }
   ]
+},
+  {
+  "material": "YBa2Cu3O7-y (YBCO)",
+  "parser_output": [
+    {
+      "material_string": "YBa2Cu3O7-y (YBCO)",
+      "material_name": "(YBCO)",
+      "material_formula": "YBa2Cu3O7",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": "-",
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+          "formula": "YBa2Cu3O7",
+          "amount": "1",
+          "elements": {
+            "Y": "1",
+            "Ba": "2",
+            "Cu": "3",
+            "O": "7"
+          },
+          "species": {
+            "Y": "1",
+            "Ba": "2",
+            "Cu": "3",
+            "O": "7"
+          }
+        }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Hydrated tin (II) chloride",
+  "parser_output": [
+    {
+      "material_string": "Hydrated tin (II) chloride",
+      "material_name": "Hydrated tin (II) chloride",
+      "material_formula": "SnCl2·H2O",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "SnCl2",
+            "amount": "1",
+            "elements": {
+              "Sn": "1",
+              "Cl": "2"
+            },
+            "species": {
+              "Sn": "1",
+              "Cl": "2"
+            }
+          },
+          {
+            "formula": "H2O",
+            "amount": "1",
+            "elements": {
+              "H": "2",
+              "O": "1"
+            },
+            "species": {
+              "H2O": "1"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "YAG",
+  "parser_output": [
+    {
+      "material_string": "YAG",
+      "material_name": "",
+      "material_formula": "Y3Al5O12",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "Y3Al5O12",
+            "amount": "1",
+            "elements": {
+              "Y": "3",
+              "Al": "5",
+              "O": "12"
+            },
+            "species": {
+              "Y": "3",
+              "Al": "5",
+              "O": "12"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "ilmenite",
+  "parser_output": [
+    {
+      "material_string": "ilmenite",
+      "material_name": "ilmenite",
+      "material_formula": "FeTiO3",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "FeTiO3",
+            "amount": "1",
+            "elements": {
+              "Fe": "1",
+              "Ti": "1",
+              "O": "3"
+            },
+            "species": {
+              "Fe": "1",
+              "TiO3": "1"
+            }
+          }
+      ]
+    }
+  ]
 }
 ]
