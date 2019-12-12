@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "6.0.1"
+__version__ = "6.0.2"
 
 import os
 import json
@@ -19,7 +19,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print("Initializing MaterialParser (forked) version 6.0.1")
+        print("Initializing MaterialParser (forked) version 6.0.2")
 
         self.__filename = os.path.dirname(os.path.realpath(__file__))
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, "rsc/pubchem_dict.json")).read())
@@ -828,11 +828,22 @@ class MaterialParser:
 
         material_name = material_name_.replace(" ", "")
 
-        if "(1-x)" == material_name[0:5] or "(100-x)" == material_name[0:7]:
-            material_name = material_name.replace("(x)", "x")
-            parts = re.findall(r"\(10{0,2}-x\)(.*)[-+·∙\∗⋅]x(.*)", material_name)
-            parts = parts[0] if parts != [] else (material_name[5:], "")
-            return [(parts[0].lstrip(" ·*⋅"), "1-x"), (parts[1].lstrip(" ·*"), "x")]
+        pref = [s for s in re.split("(^\(1-[xyz][-xyz]*\))", material_name) if s]
+        if len(pref) > 1:
+            material_name_temp = pref.pop()
+            amount = pref.pop()
+            variables = re.findall("[a-z]", amount)
+            for v in variables:
+                material_name = material_name.replace("(" + v + ")", v)
+            compounds = []
+            while variables:
+                v = variables.pop()
+                parts = re.findall(r"(.*)[-+·∙\∗⋅]" + v + "(.*)$", material_name_temp)
+                if parts:
+                    compounds.append((parts[0][1], v))
+                    material_name_temp = parts[0][0]
+            compounds.append((material_name_temp, amount.strip("()")))
+            return [c for c in reversed(compounds)]
 
         parts = [p for p in re.split(re_str, material_name) if p]
 
@@ -1161,7 +1172,7 @@ class MaterialParser:
         """
         subs_array = []
         l_dict = len(subs_dict)
-        t_array = [dict(var=k, val=v) for k, vs in subs_dict.items() for v in vs]
+        t_array = [dict(var=k, val=v) for k, vs in subs_dict.items() for v in vs["values"]]
         for comb in itertools.combinations(range(0, len(t_array)), l_dict):
             s = ''.join([t_array[i]['var'] for i in comb])
             if len(s) == len(set(s)):
@@ -1579,7 +1590,7 @@ class MaterialParser:
             if all(ch.isdigit() or ch == "." for ch in c["amount"]):
                 coeff = self.__cast_stoichiometry(c["amount"])
             else:
-                coeff = "(" + c["amount"] + ")" if c["amount"] != "x" else c["amount"]
+                coeff = "(" + c["amount"] + ")" if len(c["amount"]) != 1  else c["amount"]
 
             sign = "-"
             if "H2O" in c["formula"]:

@@ -2915,60 +2915,6 @@
   ]
 },
   {
-  "material": "(100 - x)[0.5PbO-0.5P2O5]-xMoO3",
-  "parser_output": [
-    {
-      "material_string": "(100 - x)[0.5PbO-0.5P2O5]-xMoO3",
-      "material_name": "",
-      "material_formula": "(0.5-0.5x)PbO-(0.5-0.5x)P2O5-xMoO3",
-      "phase": "",
-      "additives": [],
-      "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
-      "composition": [
-        {
-          "formula": "PbO",
-          "amount": "0.5-0.5*x",
-          "elements": {
-            "Pb": "1",
-            "O": "1"
-          },
-          "species": {
-            "Pb": "1",
-            "O": "1"
-          }
-        },
-        {
-          "formula": "P2O5",
-          "amount": "0.5-0.5*x",
-          "elements": {
-            "P": "2",
-            "O": "5"
-          },
-          "species": {
-            "P": "2",
-            "O": "5"
-          }
-        },
-        {
-          "formula": "MoO3",
-          "amount": "x",
-          "elements": {
-            "Mo": "1",
-            "O": "3"
-          },
-          "species": {
-            "Mo": "1",
-            "O": "3"
-          }
-        }
-      ]
-    }
-  ]
-},
-  {
   "material": "La0.4Ba0.6Ti0.6RE0.4O3",
   "parser_output": [
     {
@@ -3169,6 +3115,66 @@
             },
             "species": {
               "Fe": "1",
+              "TiO3": "1"
+            }
+          }
+      ]
+    }
+  ]
+},
+    {
+  "material": "(1-x-y)BaTiO3-xBaBiO3-y(Bi0.5Na0.5)TiO3",
+  "parser_output": [
+    {
+      "material_string": "(1-x-y)BaTiO3-xBaBiO3-y(Bi0.5Na0.5)TiO3",
+      "material_name": "",
+      "material_formula": "(1-x-y)BaTiO3-xBaBiO3-y(Bi0.5Na0.5)TiO3",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "BaTiO3",
+            "amount": "1-x-y",
+            "elements": {
+              "Ba": "1",
+              "Ti": "1",
+              "O": "3"
+            },
+            "species": {
+              "Ba": "1",
+              "TiO3": "1"
+            }
+          },
+        {
+            "formula": "BaBiO3",
+            "amount": "x",
+            "elements": {
+              "Ba": "1",
+              "Bi": "1",
+              "O": "3"
+            },
+            "species": {
+              "Ba": "1",
+              "Bi": "1",
+              "O": "3"
+            }
+          },
+        {
+            "formula": "(Bi0.5Na0.5)TiO3",
+            "amount": "y",
+            "elements": {
+              "Bi": "0.5",
+              "Na": "0.5",
+              "Ti": "1",
+              "O": "3"
+            },
+            "species": {
+              "Bi": "0.5",
+              "Na": "0.5",
               "TiO3": "1"
             }
           }
