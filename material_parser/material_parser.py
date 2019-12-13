@@ -372,10 +372,13 @@ class MaterialParser:
         r = "O[0-9]*([-+±∓]{1})[a-z" + r + "]{1}[0-9]*$"
         for m in re.finditer(r, formula_upd.rstrip(")")):
             end = formula_upd[m.start():m.end()]
-            splt = re.split("[-+±]", end)
+            splt = re.split("[-+±∓]", end)
             oxy_def_sym = splt[-1]
             oxy_def = m.group(1)
             formula_upd = formula_upd[:m.start()] + formula_upd[m.start():].replace(end, splt[0])
+
+        if oxy_def_sym not in "[-+±∓]" and oxy_def_sym in re.findall("O(a-z)$", formula_upd.rstrip(")")):
+            oxy_def_sym = "±"
 
         return formula_upd, oxy_def, oxy_def_sym
 
@@ -827,8 +830,12 @@ class MaterialParser:
         re_str = re_str + r"|[-·]([nx0-9\.]H2O)"
 
         material_name = material_name_.replace(" ", "")
-
-        pref = [s for s in re.split("(^\(1-[xyz][-xyz]*\))", material_name) if s]
+        # if "(1-x)" == material_name[0:5] or "(100-x)" == material_name[0:7]:
+        #     material_name = material_name.replace("(x)", "x")
+        #     parts = re.findall(r"\(10{0,2}-x\)(.*)[-+·∙\∗⋅]x(.*)", material_name)
+        #     parts = parts[0] if parts != [] else (material_name[5:], "")
+        #     return [(parts[0].lstrip(" ·*⋅"), "1-x"), (parts[1].lstrip(" ·*"), "x")]
+        pref = [s for s in re.split("(^\(1-[xyz][-xyz]*\))|(^\(100-[xyz][-xyz]*\))", material_name) if s]
         if len(pref) > 1:
             material_name_temp = pref.pop()
             amount = pref.pop()
