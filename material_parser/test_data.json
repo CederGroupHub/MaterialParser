@@ -3181,5 +3181,47 @@
       ]
     }
   ]
+},
+  {
+  "material": "LiMn2-y-zLiyMzO4-ηFη",
+  "parser_output": [
+    {
+      "material_string": "LiMn2-y-zLiyMzO4-ηFη",
+      "material_name": "",
+      "material_formula": "LiMn2-y-zLiyMzO4-δFδ",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "y": [],
+        "z": [],
+        "δ": []
+      },
+      "elements_vars": {
+        "M": []
+      },
+      "composition": [
+        {
+            "formula": "LiMn2-y-zLiyMzO4-δFδ",
+            "amount": "1",
+            "elements": {
+              "Li": "y+1",
+              "Mn": "2-y-z",
+              "M": "z",
+              "O": "4-δ",
+              "F": "δ"
+            },
+            "species": {
+              "Li": "y+1",
+              "Mn": "2-y-z",
+              "M": "z",
+              "O": "4-δ",
+              "F": "δ"
+            }
+          }
+      ]
+    }
+  ]
 }
 ]
