@@ -1272,8 +1272,8 @@ class MaterialParser:
         re_str = "[\\" + re_str + "]"
         material_name = re.sub(re_str, chr(47), material_name)
 
-        material_name = re.sub(r"\s*([-+±]){1}\s*([" + "".join([c for c in self.__greek_letters]) + "]{1})", "\\1δ",
-                               material_name)
+        for c in re.findall("O[0-9\.]*\s*[-+±∓]\s*([" + "".join([c for c in self.__greek_letters]) + "]{1})", material_name):
+            material_name = material_name.replace(c, "δ")
 
         # removing phase
         for c in ["(s)", "(l)", "(g)", "(aq)"]:
