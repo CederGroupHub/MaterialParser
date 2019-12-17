@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "6.0.2"
+__version__ = "6.0.3"
 
 import os
 import json
@@ -19,7 +19,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print("Initializing MaterialParser (forked) version 6.0.2")
+        print("Initializing MaterialParser version 6.0.3")
 
         self.__filename = os.path.dirname(os.path.realpath(__file__))
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, "rsc/pubchem_dict.json")).read())

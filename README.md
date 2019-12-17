@@ -1,14 +1,16 @@
-# Material Parser
+# MaterialParser
 
-The class to extract composition of a given material
+The class providing functionality to extract chemical data from a string of chemical terms/formulas/material names
 
-**Material Parser** processes one material entity per run, and allows for:
+This parser was created in order to address the problem of unification of materials entitites found in scieitific publications to facilitate text mining.
 
- * parsing material string into composition,
- * constructing dictionary of materials abbreviations,
- * finding values of stoichiometric and elements variables,
+**Material Parser** functionality includes:
+
+ * converting chemical terms into chemical formula
+ * parsing chemical formula into composition,
+ * constructing dictionary of materials abbreviations from a text snippets,
+ * finding values of stoichiometric and elements variables froma a text snippets,
  * splitting mixtures/composites/alloys/solid solutions into compounds
- * reconstructing chemical formula from chemical name
  
 ### Installation:
 ```
@@ -33,116 +35,68 @@ mp = MaterialParser(verbose=False, pubchem_lookup=False, fails_log=False)
  fails_log: <bool> outputs log of materials for which mp.parse_material failed (useful when long list of materials in processes)
  ```
 
-#### Methods to extract material composition
+#### Primary functionality
 
- * mp.parse_material(material_string)
-     ```
-     main method to parse material string into chemical structure and
-     convert chemical name into chemical formula
-    :param material_string: <str> material name/formula
-    :return: dict(material_string: <str> initial material string,
-                 material_name: <str> chemical name of material found in the string
-                 material_formula: <str> chemical formula of material
-                 dopants: <list> list of dopped materials/elements appeared in material string
-                 phase: <str> material phase appeared in material string
-                 hydrate: <float> if material is hydrate fraction of H2O
-                 is_mixture: <bool> material is mixture/composite/alloy/solid solution
-                 is_abbreviation: <bool> material is similar to abbreviation
-                 fraction_vars: <dict> elements fraction variables and their values
-                 elements_vars: <dict> elements variables and their values
-                 composition: <dict> compound constitute of the material: composition (element: fraction) and
-                                                                        fraction of compound)
+ * Main method to compile string of chemical terms/formulas into data structure
+    ```
+     mp.parse_material_string(material_string)
      ```
 
- * mp.get_structure_by_formula(chemical_formula)
+ * Method to convert chemical name into formula
+    ```
+    mp.string2formula(material_string)
+    ```
+
+ * Method to compile chemical formula into data structure containing composition
      ```
-     parsing chemical formula in composition
-    :param chemical_formula: <str> chemical formula
-    :return: dict(formula: <str> formula string corresponding to obtained composition
-                 composition: <dict> element: fraction
-                 fraction_vars: <dict> elements fraction variables: <list> values
-                 elements_vars: <dict> elements variables: <list> values
-                 hydrate: <str> if material is hydrate fraction of H2O
-                 phase: <str> material phase appeared in formula
-                )
+     mp.formula2composition(chemical_formula)
      ```
 
-#### Methods to reconstruct chemical formula from material name
+#### Auxiliary functions
 
- * mp.split_material_name(material_string)
+ * Extracting snippets of the string recognized as doped elements, stabilizers, coatings, activators, etc.
     ```
-    splitting material string into chemical name + chemical formula
-    :param material_string: <str> in form of
-    "chemical name chemical formula"/"chemical name [chemical formula]"
-    :return: name: <str> chemical name found in material string
-            formula: <str> chemical formula found in material string
-            structure: <dict> output of get_structure_by_formula()
+    mp.separate_additives(material_string)
     ```
 
- * mp.reconstruct_formula(material_name, valency='')
+ * Spliting mixtures, alloys, composites, etc into list of constituting compounds with their fractions
     ```
-    reconstructing chemical formula for simple chemical names anion + cation
-    :param material_name: <str> chemical name
-    :param valency: <str> anion valency
-    :return: <str> chemical formula
+    mp.split_formula_into_compounds(material_string)
     ```
-
-#### Methods to simplify material string
-
- * mp.split_material(material_name)
+ * Extracting species from material string
     ```
-    splitting mixture/composite/solid solution/alloy into compound+fraction
-    :param material_name: <str> material formula
-    :return: <list> of <tuples>: (compound, fraction)
+    mp.get_species(material_string)
     ```
 
- * mp.get_dopants(material_name)
+#### Additional functionality
+
+ * Constructing dictionary of acronyms based on provided list of materials strings and text
     ```
-    resolving doped part in material string
-    :param material_name: <str> material string
-    :return: <list> of dopants,
-            <str> new material name
-    ```
- * mp.reconstruct_list_of_materials(material_string)
-    ```
-    split material string into list of compounds
-    when it's given in form cation + several anions
-    for example: "oxides of manganese and lithium"
-    :param material_string: <str>
-    :return: <list> of <str> chemical names
+    mp.build_acronyms_dict(list_of_materials, text)
     ```
 
- * mp.cleanup_name(material_name)
+ * Looking for the values of elements variables in the text
     ```
-    cleaning up material name - fix due to tokenization imperfectness
-    :param material_name: <str> material string
-    :return: <str> updated material string
+    mp.get_elements_values(variable, text)
     ```
 
-#### Methods to resolve abbreviations and variables
-
- * mp.build_abbreviations_dict(materials_list, sentences)
+ * Looking for the values of the variables for stoichiometric amounts in the text
     ```
-    constructing dictionary of abbreviations appeared in material list
-    :param paragraph: <list> of sentences to look for abbreviations names
-    :param materials_list: <list> of <str> list of materials entities
-    :return: <dict> abbreviation: corresponding string
+    mp.get_stoichiometric_values(variable, text)
     ```
 
- * mp.get_stoichiometric_values(var, sentence)
+ * Spliting in into list of chemical names material string in the format list of cations+anion
     ```
-    find numeric values of var in sentence
-    :param var: <str> variable name
-    :param sentence: <str> sentence to look for
-    :return: <dict>: max_value: upper limit
-                    min_value: lower limit
-                    values: <list> of <float> numeric values
+    mp.split_materials_list(material_string)
     ```
 
- * mp.get_elements_values(var, sentence):
+ * Substituting doped elements into original chemical formula to complete total stoiciometry to integer value
     ```
-    find elements values for var in the sentence
-    :param var: <str> variable name
-    :param sentence: <str> sentence to look for
-    :return: <list> of <str> found values
+    mp.substitute_additives(list_of_additives, data_structure)
     ```
+
+#### Citing
+
+If you use Material Parser in your work, please cite the following paper:
+
+ * Kononova et. al "Text-mined dataset of inorganic materials synthesis recipes", Scientific Data 6 (1), 1-11 (2019) [10.1038/s41597-019-0224-1](https://www.nature.com/articles/s41597-019-0224-1)
