@@ -1,0 +1,5 @@
+regex
+pubchempy
+sympy
+spacy
+json
