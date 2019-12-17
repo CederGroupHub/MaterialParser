@@ -37,62 +37,62 @@ mp = MaterialParser(verbose=False, pubchem_lookup=False, fails_log=False)
 
 #### Primary functionality
 
- * mp.parse_material_string(material_string)
-     ```
-     main method to compile string of chemical terms/formulas into data structure
+ * Main method to compile string of chemical terms/formulas into data structure
+    ```
+     mp.parse_material_string(material_string)
      ```
 
- * mp.string2formula(material_string)
+ * Method to convert chemical name into formula
     ```
-    method to convert chemical name into formula
+    mp.string2formula(material_string)
     ```
 
- * mp.formula2composition(chemical_formula)
+ * Method to compile chemical formula into data structure containing composition
      ```
-     method to compile chemical formula into data structure containing composition
+     mp.formula2composition(chemical_formula)
      ```
 
 #### Auxiliary functions
 
- * mp.separate_additives(material_string)
+ * Extracting snippets of the string recognized as doped elements, stabilizers, coatings, activators, etc.
     ```
-    extracts snippets of the string recognized as doped elements, stabilizers, coatings, activators, etc.
+    mp.separate_additives(material_string)
     ```
 
- * mp.split_formula_into_compounds(material_string)
+ * Spliting mixtures, alloys, composites, etc into list of constituting compounds with their fractions
     ```
-    splits mixtures, alloys, composites, etc into list of constituting compounds with their fractions
+    mp.split_formula_into_compounds(material_string)
     ```
- * mp.get_species(material_string)
+ * Extracting species from material string
     ```
-    extract species from material string
+    mp.get_species(material_string)
     ```
 
 #### Additional functionality
 
- * mp.build_acronyms_dict(list_of_materials, text)
+ * Constructing dictionary of acronyms based on provided list of materials strings and text
     ```
-    constructs dictionary of acronyms based on provided list of materials strings and text
-    ```
-
- * mp.get_elements_values(variable, text)
-    ```
-    looks for the values of elements variables in the text
+    mp.build_acronyms_dict(list_of_materials, text)
     ```
 
- * mp.get_stoichiometric_values(variable, text)
+ * Looking for the values of elements variables in the text
     ```
-    looks for the values of the variables for stoichiometric amounts in the text
-    ```
-
- * mp.split_materials_list(material_string)
-    ```
-    for material string in the format list of cations+anion, splits in into list of chemical names
+    mp.get_elements_values(variable, text)
     ```
 
- * mp.substitute_additives(list_of_additives, data_structure)
+ * Looking for the values of the variables for stoichiometric amounts in the text
     ```
-    substitutes doped elements into original chemical formula to complete total stoiciometry to integer value
+    mp.get_stoichiometric_values(variable, text)
+    ```
+
+ * Spliting in into list of chemical names material string in the format list of cations+anion
+    ```
+    mp.split_materials_list(material_string)
+    ```
+
+ * Substituting doped elements into original chemical formula to complete total stoiciometry to integer value
+    ```
+    mp.substitute_additives(list_of_additives, data_structure)
     ```
 
 #### Citing
