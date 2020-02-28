@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "6.0.2"
+__version__ = "6.1.0"
 
 import os
 import json
@@ -19,7 +19,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print("Initializing MaterialParser (forked) version 6.0.2")
+        print("Initializing MaterialParser version 6.1.0")
 
         self.__filename = os.path.dirname(os.path.realpath(__file__))
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, "rsc/pubchem_dict.json")).read())
@@ -113,6 +113,7 @@ class MaterialParser:
         if material_string in self.__name2element:
             return self.__element_structure(self.__name2element[material_string])
 
+        phase, material_string = self.separate_phase(material_string)
         additives, material_string = self.separate_additives(material_string)
         if self.__verbose:
             print("After additives extraction:", material_string, "|", additives)
@@ -140,7 +141,8 @@ class MaterialParser:
                     print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
                 compound = self.__abbreviations[compound]
             composition = self.formula2composition(compound)
-            output_structure["phase"] = composition["phase"]
+            if self.__verbose:
+                print("Resolved composition:", compound, "-->", composition)
             output_structure["amounts_vars"].update(composition["amounts_vars"])
             output_structure["elements_vars"].update(composition["elements_vars"])
             if composition["elements"] != {}:
@@ -152,6 +154,7 @@ class MaterialParser:
                 )
             if composition["oxygen_deficiency"]:
                 oxygen_deficiency = composition["oxygen_deficiency"]
+            output_structure["phase"] = phase
         output_structure["oxygen_deficiency"] = oxygen_deficiency
 
         """
@@ -235,13 +238,6 @@ class MaterialParser:
 
         formula = formula.replace(" ", "")
         """
-        check if there any phase specified
-        """
-        phase = ""
-        if formula[0].islower():
-            for m in re.finditer("([" + "".join(self.__greek_letters) + "]*)-{0,1}(.*)", formula):
-                phase, formula = (m.group(1), m.group(2)) if m.group(2) != "" else ("", formula)
-        """
         find oxygen deficiency
         """
         formula, oxygen_deficiency, oxygen_deficiency_sym = self.__get_oxygen_deficiency(formula)
@@ -305,7 +301,7 @@ class MaterialParser:
         formula_structure = dict(elements=composition,
                                  amounts_vars={x: v for x, v in stoichiometry_variables.items()},
                                  elements_vars={e: v for e, v in elements_variables.items()},
-                                 phase=phase,
+                                 #phase=phase,
                                  formula=formula,
                                  oxygen_deficiency=oxygen_deficiency)
 
@@ -889,6 +885,15 @@ class MaterialParser:
             if m != "":
                 composition.append((m, fraction))
         return composition
+
+    def separate_phase(self, material_name):
+        phase = ""
+        string_start = 0
+        for m in re.finditer("^([A-Za-z" + "".join(self.__greek_letters) + "][0-9]{0,1})\-[A-Z]\.*", material_name):
+            phase = m.group(1)
+            string_start = m.end()-1
+
+        return phase, material_name[string_start:]
 
     def separate_additives(self, material_name):
         """

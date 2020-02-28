@@ -3223,5 +3223,71 @@
       ]
     }
   ]
+},
+  {
+  "material": "P2-Na2/3[CoxNi1/3-xMn2/3]O2",
+  "parser_output": [
+    {
+      "material_string": "P2-Na2/3[CoxNi1/3-xMn2/3]O2",
+      "material_name": "",
+      "material_formula": "Na2/3(CoxNi1/3-xMn2/3)O2",
+      "phase": "P2",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "Na2/3(CoxNi1/3-xMn2/3)O2",
+            "amount": "1",
+            "elements": {
+              "Co": "x",
+              "Ni": "0.333-x",
+              "Mn": "0.667",
+              "Na": "0.667",
+              "O": "2"
+            },
+            "species": {
+              "Co": "x",
+              "Ni": "0.333-x",
+              "Mn": "0.667",
+              "Na": "0.667",
+              "O": "2"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "γ-MnOOH",
+  "parser_output": [
+    {
+      "material_string": "γ-MnOOH",
+      "material_name": "",
+      "material_formula": "MnOOH",
+      "phase": "γ",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {},
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "MnOOH",
+            "amount": "1",
+            "elements": {
+              "Mn": "1",
+              "O": "2",
+              "H": "1"
+            },
+            "species": {}
+          }
+      ]
+    }
+  ]
 }
 ]
