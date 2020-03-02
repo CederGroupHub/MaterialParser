@@ -3,7 +3,7 @@
 __author__ = "Olga Kononova"
 __maintainer__ = "Olga Kononova"
 __email__ = "0lgaGkononova@yandex.ru"
-__version__ = "6.0.3"
+__version__ = "6.1.1"
 
 import os
 import json
@@ -19,7 +19,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, verbose=False, pubchem_lookup=False, fails_log=False, dictionary_update=False):
-        print("Initializing MaterialParser version 6.1.0")
+        print("Initializing MaterialParser version 6.1.1")
 
         self.__filename = os.path.dirname(os.path.realpath(__file__))
         self.__pubchem_dictionary = json.loads(open(os.path.join(self.__filename, "rsc/pubchem_dict.json")).read())
@@ -343,19 +343,29 @@ class MaterialParser:
 
     def __fraction_convertion(self, formula):
         formula_upd = formula
-        r = r"([0-9\.]*)(\([0-9\.a-z]+[\-\+]+[0-9\.a-z]+\))(?=[/]*([0-9\.]*))"
+        r_a = r"([0-9\.]*)"
+        r_b = r"(\([0-9\.]*)"
+        r_x = r"([a-z]*)"
+        r_s = r"([\-\+]+)"
+        r_d = r"([0-9\.]*)"
+        r_y = r"([a-z]+\))"
+        r_c = r"(?=[/]*([0-9\.]*))"
+        r = r"(" + r_a + r_b + r_x + r_s + r_d + r_y + r_c + ")"
         for m in re.finditer(r, formula_upd):
-            a = m.group(1) if m.group(1) != '' else '1'
-            c = m.group(3) if m.group(3) != '' else '1'
-            bx = m.group(2).strip(')(')
-            expr_str = a + '/' + c + '*' + bx[0] + bx[1] + a + '/' + c + '*' + bx[2]
+            expr_old = m.group(1) + "/" + m.group(8) if m.group(8) != "" else m.group(1)
+            a = m.group(2).strip(")(") if m.group(2).strip(")(") != '' else '1'
+            b = m.group(3).strip(')(') if m.group(3).strip(')(') != '' else '1'
+            x = m.group(4).strip(")(") if m.group(4).strip(")(") != '' else '1'
+            s = m.group(5).strip(")(") if m.group(5).strip(")(") != '' else '+'
+            d = m.group(6).strip(")(") if m.group(6).strip(")(") != '' else '1'
+            y = m.group(7).strip(")(") if m.group(7).strip(")(") != '' else '1'
+            c = m.group(8).strip(")(") if m.group(8).strip(")(") != '' else '1'
+            expr_str = a + '/' + c + '*' + b + '*' + x + s + a + '/' + c + '*' + d + "*" + y
             expr = str(smp.simplify(expr_str)).strip()
             if expr[0] == '-':
                 s_expr = re.split(r"\+", expr)
                 expr = s_expr[1] + s_expr[0]
-            # expr_new = '(' + expr.strip() + ')'
-            expr_new = expr.strip()
-            expr_old = m.group(1) + m.group(2) + "/" + m.group(3) if m.group(3) != '' else m.group(1) + m.group(2)
+            expr_new = expr.strip().replace(" ", "")
             formula_upd = formula_upd.replace(expr_old, expr_new.strip(), 1)
 
         return re.sub(r"\s{1,}", "", formula_upd)
@@ -819,10 +829,11 @@ class MaterialParser:
 
     def __split_formula(self, material_name_, init_fraction="1"):
 
-        re_str = r"(?<=[0-9\)])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z])[-⋅·∙\∗](?=[\(0-9])|(?<=[A-Z\)])[-⋅·∙\∗](?=[A-Z])|(?<=[" \
-                 r"0-9\)])[-⋅·∙\∗](?=[A-Z])"
-        re_str = re_str + "".join(
-            [r"|(?<=" + e + r")[-⋅·∙\∗](?=[\(0-9A-Z])" for e in self.__list_of_elements])
+        re_str = r"(?<=[0-9\)])[-⋅·∙\∗](?=[\(0-9](?!x))|" + \
+                 r"(?<=[A-Z])[-⋅·∙\∗](?=[\(0-9])|" + \
+                 r"(?<=[A-Z\)])[-⋅·∙\∗](?=[A-Z])|" + \
+                 r"(?<=[0-9\)])[-⋅·∙\∗](?=[A-Z])"
+        re_str = re_str + "".join([r"|(?<=" + e + r")[-⋅·∙\∗](?=[\(0-9A-Z])" for e in self.__list_of_elements])
         re_str = re_str + r"|[-·]([nx0-9\.]H2O)"
 
         material_name = material_name_.replace(" ", "")
@@ -849,6 +860,7 @@ class MaterialParser:
             return [c for c in reversed(compounds)]
 
         parts = [p for p in re.split(re_str, material_name) if p]
+        #print("-->", material_name, parts)
 
         if len(parts) > 1:
             parts_upd = [p for part in parts for p in

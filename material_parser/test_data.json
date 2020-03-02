@@ -3289,5 +3289,119 @@
       ]
     }
   ]
+},
+  {
+  "material": "LiCo1-2xNixMnxO2",
+  "parser_output": [
+    {
+      "material_string": "LiCo1-2xNixMnxO2",
+      "material_name": "",
+      "material_formula": "LiCo1-2xNixMnxO2",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "LiCo1-2xNixMnxO2",
+            "amount": "1",
+            "elements": {
+              "Li": "1",
+              "Co": "1-2*x",
+              "Ni": "x",
+              "Mn": "x",
+              "O": "2"
+            },
+            "species": {
+              "Li": "1",
+              "Co": "1-2*x",
+              "Ni": "x",
+              "Mn": "x",
+              "O": "2"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Mn(1-3x)In2x□xWO4",
+  "parser_output": [
+    {
+      "material_string": "Mn(1-3x)In2x□xWO4",
+      "material_name": "",
+      "material_formula": "Mn1-3xIn2x□xWO4",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "Mn1-3*xIn2x□xWO4",
+            "amount": "1",
+            "elements": {
+              "Mn": "1-3*x",
+              "In": "2*x",
+              "□": "x",
+              "W": "1",
+              "O": "4"
+            },
+            "species": {
+              "Mn": "1-3*x",
+              "In": "2*x",
+              "□": "x",
+              "WO4": "1"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "Zn1.92-2xYxLixSiO4:0.08Mn2+",
+  "parser_output": [
+    {
+      "material_string": "Zn1.92-2xYxLixSiO4:0.08Mn2+",
+      "material_name": "",
+      "material_formula": "Mn0.08Zn1.92-2xYxLixSiO4",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": null,
+      "amounts_vars": {
+        "x": []
+      },
+      "elements_vars": {},
+      "composition": [
+        {
+            "formula": "Mn0.08Zn1.92-2xYxLixSiO4",
+            "amount": "1",
+            "elements": {
+              "Mn": "0.08",
+              "Zn": "1.92-2*x",
+              "Y": "x",
+              "Li": "x",
+              "Si": "1",
+              "O": "4"
+            },
+            "species": {
+              "Mn": "0.08",
+              "Zn": "1.92-2*x",
+              "Y": "x",
+              "Li": "x",
+              "SiO4": "1"
+            }
+          }
+      ]
+    }
+  ]
 }
 ]
