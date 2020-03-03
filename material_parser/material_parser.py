@@ -411,7 +411,7 @@ class MaterialParser:
         r = r"\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
 
         for m in re.finditer(r, init_formula):
-            print("--->", m.group(0), m.group(1), m.group(2))
+            #print("--->", m.group(0), m.group(1), m.group(2))
             factor = "1"
             if m.group(2) != "":
                 factor = m.group(2)
@@ -1400,7 +1400,7 @@ class MaterialParser:
 
         material_name = re.sub(r"\s([0-9\.]*H2O)$", chr(183) + "\\1", material_name)
 
-        print("-->", material_name)
+        #print("-->", material_name)
         material_name = self.combine_formula_parts(material_name)
         material_name = self.__check_parentheses(material_name)
 
