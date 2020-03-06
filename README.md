@@ -13,6 +13,13 @@ This parser was created in order to address the problem of unification of materi
  * splitting mixtures/composites/alloys/solid solutions into compounds
  
 ### Installation:
+
+The installation can be performed directly via `pip`: 
+```
+pip install git+https://github.com/CederGroupHub/MaterialParser.git
+```
+
+or, in two steps: 
 ```
 git clone https://github.com/CederGroupHub/MaterialParser.git
 cd MaterialParser
