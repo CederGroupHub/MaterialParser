@@ -1956,7 +1956,7 @@
     "parser_output": [
       {
         "material_string": "H2",
-        "material_name": "",
+        "material_name": "hydrogen",
         "material_formula": "H2",
         "additives": [],
         "phase": "",
@@ -1970,6 +1970,9 @@
             "amount": "1",
             "elements": {
               "H": "2"
+            },
+            "species": {
+              "H2": "1"
             }
           }
         ]
@@ -1981,7 +1984,7 @@
     "parser_output": [
       {
         "material_string": "O2",
-        "material_name": "",
+        "material_name": "oxygen",
         "material_formula": "O2",
         "additives": [],
         "phase": "",
@@ -1995,6 +1998,9 @@
             "amount": "1",
             "elements": {
               "O": "2"
+            },
+            "species": {
+              "O2": "1"
             }
           }
         ]
