@@ -26,40 +26,48 @@ class MaterialParser:
         self.__abbreviations = json.loads(open(os.path.join(self.__filename, "rsc/abbreviations.json")).read())
         self.__ions = json.loads(open(os.path.join(self.__filename, "rsc/ions_dictionary.json")).read())
 
-        self.__element2name = self.__ions["elements"]
-        self.__list_of_elements_1 = [el for el in self.__ions["elements"].keys() if len(el) == 1]
-        self.__list_of_elements_2 = [el for el in self.__ions["elements"].keys() if len(el) == 2]
-        self.__list_of_elements = self.__list_of_elements_1 + self.__list_of_elements_2
-        self.__name2element = {v: k for k, v in self.__ions["elements"].items()}
-        self.__anions = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
-                         for ion in self.__ions["anions"]}
-        self.__cations = {ion["c_name"]: {"valency": ion["valency"], "e_name": ion["e_name"], "n_atoms": ion["n_atoms"]}
-                          for ion in self.__ions["cations"]}
-        self.__species = sorted([ion["e_name"] for ion in self.__ions["anions"] if ion["e_name"] != "O2"] +
-                                [ion["e_name"] for ion in self.__ions["cations"]] +
-                                [e for e in self.__ions["elements"].keys()] +
-                                self.__ions["species"] +
-                                self.__ions["oxyanions"], key=lambda x: len(x), reverse=True)
-        self.__list_of_anions = [ion["c_name"] for ion in self.__ions["anions"]]
-        self.__list_of_cations = [ion["c_name"] for ion in self.__ions["cations"]]
+        self.__element2name = self.__ions.get("elements")
+        self.__list_of_elements_1 = {el for el in self.__element2name.keys() if len(el) == 1}
+        self.__list_of_elements_2 = {el for el in self.__element2name.keys() if len(el) == 2}
+        self.__list_of_elements = self.__list_of_elements_1|self.__list_of_elements_2
+        self.__name2element = {v: k for k, v in self.__element2name.items()}
+
+        self.__anions = {ion.get("c_name"): {"valency": ion.get("valency"),
+                                             "e_name": ion.get("e_name"),
+                                             "n_atoms": ion.get("n_atoms")}
+                         for ion in self.__ions.get("anions")}
+        self.__cations = {ion.get("c_name"): {"valency": ion.get("valency"),
+                                             "e_name": ion.get("e_name"),
+                                             "n_atoms": ion.get("n_atoms")}
+                          for ion in self.__ions.get("cations")}
+        self.__list_of_anions = set(self.__anions.keys()) # [ion["c_name"] for ion in self.__ions["anions"]]
+        self.__list_of_cations = set(self.__cations.keys()) # [ion["c_name"] for ion in self.__ions["cations"]]
+
+        self.__species = tuple(sorted([ion.get("e_name") for ion in self.__ions.get("anions")
+                                                         if ion.get("e_name") != "O2"] +
+                                      [ion.get("e_name") for ion in self.__ions.get("cations")] +
+                                      [e for e in self.__element2name.keys()] +
+                                      self.__ions.get("species") +
+                                      self.__ions["oxyanions"], key=lambda x: len(x), reverse=True))
+
         self.__diatomic_molecules = {"O2": collections.OrderedDict([("O", "2")]),
                                      "N2": collections.OrderedDict([("N", "2")]),
                                      "H2": collections.OrderedDict([("H", "2")]),
                                      "H2O": collections.OrderedDict([("H", "2"), ("O", "1")])}
 
-        self.__greek_letters = [chr(i) for i in range(945, 970)]
+        self.__greek_letters = tuple([chr(i) for i in range(945, 970)])
 
         self.__prefixes2num = {"": 1, "mono": 1, "di": 2, "tri": 3, "tetra": 4, "pent": 5, "penta": 5, "hexa": 6,
                                "hepta": 7, "octa": 8, "nano": 9, "ennea": 9, "nona": 9, "deca": 10, "undeca": 11,
                                "dodeca": 12}
-        self.__neg_prefixes = ["an", "de", "non"]
+        self.__neg_prefixes = set(["an", "de", "non"])
 
         self.__rome2num = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
 
-        self.__fails_log = fails_log
-        if fails_log:
-            self.__pubchem_file = open(os.path.join(self.__filename, "pubchem_log"), "w")
-            self.__pubchem_file.close()
+        # self.__fails_log = fails_log
+        # if fails_log:
+        #     self.__pubchem_file = open(os.path.join(self.__filename, "pubchem_log"), "w")
+        #     self.__pubchem_file.close()
 
         self.__pubchem = pubchem_lookup
         if pubchem_lookup:
@@ -104,14 +112,14 @@ class MaterialParser:
 
         if material_string in self.__diatomic_molecules:
             output_structure = self.__element_structure(material_string)
-            output_structure["composition"][0]["elements"] = self.__diatomic_molecules[material_string]
+            output_structure["composition"][0]["elements"] = self.__diatomic_molecules.get(material_string)
             return output_structure
 
         """
         Converting material string into chemical formula
         """
         if material_string in self.__name2element:
-            return self.__element_structure(self.__name2element[material_string])
+            return self.__element_structure(self.__name2element.get(material_string))
 
         phase, material_string = self.separate_phase(material_string)
         additives, material_string = self.separate_additives(material_string)
@@ -138,20 +146,17 @@ class MaterialParser:
         for compound, amount in material_compounds:
             if compound in self.__abbreviations:
                 if self.__verbose:
-                    print("Found abbreviation:", compound, "-->", self.__abbreviations[compound])
-                compound = self.__abbreviations[compound]
+                    print("Found abbreviation:", compound, "-->", self.__abbreviations.get(compound))
+                compound = self.__abbreviations.get(compound)
             composition = self.formula2composition(compound)
             if self.__verbose:
                 print("Resolved composition:", compound, "-->", composition)
-            output_structure["amounts_vars"].update(composition["amounts_vars"])
-            output_structure["elements_vars"].update(composition["elements_vars"])
+            output_structure["amounts_vars"].update(composition.get("amounts_vars"))
+            output_structure["elements_vars"].update(composition.get("elements_vars"))
             if composition["elements"] != {}:
-                output_structure["composition"].append(
-                    {"formula": composition["formula"],
-                     "amount": amount,
-                     "elements": composition["elements"]
-                     }
-                )
+                output_structure["composition"].append({"formula": composition.get("formula"),
+                                                        "amount": amount,
+                                                        "elements": composition.get("elements")})
             if composition["oxygen_deficiency"]:
                 oxygen_deficiency = composition["oxygen_deficiency"]
             output_structure["phase"] = phase
@@ -265,7 +270,7 @@ class MaterialParser:
         looking for variables in elements and stoichiometry 
         """
         for el, amt in composition.items():
-            if el not in self.__list_of_elements + list(elements_variables.keys()) + ["□"]:
+            if el not in self.__list_of_elements|elements_variables.keys()|{"□"}:
                 elements_variables[el] = []
             for var in re.findall("[a-z" + "".join(self.__greek_letters) + "]", amt):
                 stoichiometry_variables[var] = []
@@ -298,12 +303,11 @@ class MaterialParser:
             composition["O"] = "1" if composition["O"] == var else composition["O"].replace(var, "").strip()
             formula = formula.replace(var, "")
 
-        formula_structure = dict(elements=composition,
-                                 amounts_vars={x: v for x, v in stoichiometry_variables.items()},
-                                 elements_vars={e: v for e, v in elements_variables.items()},
-                                 #phase=phase,
-                                 formula=formula,
-                                 oxygen_deficiency=oxygen_deficiency)
+        formula_structure = {"elements": composition,
+                             "amounts_vars": {x: v for x, v in stoichiometry_variables.items()},
+                             "elements_vars": {e: v for e, v in elements_variables.items()},
+                             "formula": formula,
+                             "oxygen_deficiency": oxygen_deficiency}
 
         return formula_structure
 
@@ -447,8 +451,8 @@ class MaterialParser:
             """
             checking for correct elements names
             """
-            el_bin = "{0}{1}".format(str(int(m.group(1)[0] in self.__list_of_elements_1 + ["M", "□"])), str(
-                int(m.group(1) in self.__list_of_elements + ["Ln", "M", "□"])))
+            el_bin = "{0}{1}".format(str(int(m.group(1)[0] in self.__list_of_elements_1|{"M", "□"})),
+                                     str(int(m.group(1) in self.__list_of_elements|{"Ln", "M", "□"})))
             el, amt = get_code_value(el_bin, m)
             if amt.strip() == "":
                 amt = "1"
@@ -472,15 +476,21 @@ class MaterialParser:
         return sym_dict
 
     def __element_structure(self, element):
-        return dict(
-            material_string=element, material_name="", material_formula=element,
-            additives=[], phase="", oxygen_deficiency=None,
-            is_acronym=False,
-            amounts_vars={}, elements_vars={},
-            composition=[dict(
-                formula=element, amount="1", elements=collections.OrderedDict([(element, "1")])
-            )]
-        )
+        return {"material_string": element,
+                "material_name": self.__element2name.get(element.rstrip("0987654321"), ""),
+                "material_formula": element,
+                "additives": [],
+                "phase": "",
+                "oxygen_deficiency": None,
+                "is_acronym": False,
+                "amounts_vars": {},
+                "elements_vars": {},
+                "composition": [{"formula": element,
+                                 "amount": "1",
+                                 "elements": collections.OrderedDict([(element, "1")]),
+                                 "species": collections.OrderedDict([(element, "1")])
+                                 }]
+                }
 
     ###################################################################################################################
     # Splitting list of materials
@@ -502,10 +512,10 @@ class MaterialParser:
 
         parts = [p for p in re.split(r"[\s\,]", material_string) if p != ""]
 
-        anion = [(i, p[:-1]) for i, p in enumerate(parts) if
-                 p[:-1].lower() in self.__anions.keys() or p[:-1].lower() == "metal"]
-        cation = [(i, p) for i, p in enumerate(parts) if p.lower() in self.__cations.keys()
-                  or p in self.__list_of_elements]
+        anion = [(i, p[:-1]) for i, p in enumerate(parts)
+                 if p[:-1].lower() in self.__anions.keys() or p[:-1].lower() == "metal"]
+        cation = [(i, p) for i, p in enumerate(parts)
+                  if p.lower() in self.__cations.keys() or p in self.__list_of_elements]
         valencies = [(i - 1, p.strip("()")) for i, p in enumerate(parts) if p.strip("()") in self.__rome2num and i != 0]
 
         result = []
@@ -594,8 +604,8 @@ class MaterialParser:
             return "", material_string
 
         if len(split) == 2 and \
-                all(t in self.__list_of_elements or t.rstrip('s').lower() in self.__list_of_anions + ['metal'] for t in
-                    split):
+                all(t in self.__list_of_elements or t.rstrip('s').lower() in self.__list_of_anions|{'metal'}
+                    for t in split):
             t1 = self.__element2name[split[0]] if split[0] in self.__element2name else split[0].rstrip('s').lower()
             t2 = self.__element2name[split[1]] if split[1] in self.__element2name else split[1].rstrip('s').lower()
             return "", t1 + " " + t2
@@ -922,18 +932,18 @@ class MaterialParser:
         new_material_name = new_material_name.replace("co-doped", "doped")
 
         # checking for "doped with"
-        for r in ["activated", "modified", "stabilized", "doped", "added"]:
+        for r in ("activated", "modified", "stabilized", "doped", "added"):
             parts = [w for w in re.split(r + " with", new_material_name) if w != ""]
             if len(parts) > 1:
                 new_material_name = parts[0].strip(" -+")
                 additives.append(parts[1].strip())
 
         # checking for element-doped prefix
-        for r in ["activated", "modified", "stabilized", "doped", "added"]:
+        for r in ("activated", "modified", "stabilized", "doped", "added"):
             parts = [w for w in re.split(r"(.*)[-\s]{1}" + r + " (.*)", new_material_name) if w != ""]
             if len(parts) > 1:
                 new_material_name = parts.pop()
-                additives.extend(p for p in parts)
+                additives.extend(parts)
 
         if "%" in new_material_name:
             new_material_name = new_material_name.replace(".%", "%")
@@ -951,7 +961,7 @@ class MaterialParser:
                 for e in self.__list_of_elements_2:
                     part = part.replace(e, "&&")
 
-            if all(e.strip("zyx,+0987654321. ") in self.__list_of_elements_1 + ["R"] + ["&&"]
+            if all(e.strip("zyx,+0987654321. ") in self.__list_of_elements_1|{"R", "&&"}
                    for e in re.split(r"[\s,/]", part) if e != ""):
                 additives.append(part_.strip(" "))
             else:
@@ -1034,18 +1044,16 @@ class MaterialParser:
                 new_composition.update({element: coeff})
                 new_composition.move_to_end(element, last=False)
 
-                new_material_composition.append(dict(
-                    formula=new_name,
-                    amount=compound["amount"],
-                    elements=new_composition,
-                ))
-                new_material_formula = new_material_formula.replace(compound["formula"], new_name)
+                new_material_composition.append({"formula": new_name,
+                                                 "amount": compound.get("amount"),
+                                                 "elements": new_composition
+                                                 })
+                new_material_formula = new_material_formula.replace(compound.get("formula"), new_name)
             else:
-                new_material_composition.append(dict(
-                    formula=compound["formula"],
-                    amount=compound["amount"],
-                    elements=compound["elements"],
-                ))
+                new_material_composition.append({"formula": compound.get("formula"),
+                                                 "amount": compound.get("amount"),
+                                                 "elements": compound.get("elements")
+                                                 })
 
         return new_material_formula, new_material_composition
 
@@ -1109,7 +1117,9 @@ class MaterialParser:
         min_value = None
 
         if len(string) == 0:
-            return dict(values=[], max_value=None, min_value=None)
+            return {"values": [],
+                    "max_value": None,
+                    "min_value": None}
 
         # given range
         if mode == "range":
@@ -1129,7 +1139,9 @@ class MaterialParser:
                 print(message)
             values = []
 
-            return dict(values=values, max_value=max_value, min_value=min_value)
+            return {"values": values,
+                    "max_value": max_value,
+                    "min_value": min_value}
 
         # given list
         if mode == "values":
@@ -1197,7 +1209,7 @@ class MaterialParser:
         """
         subs_array = []
         l_dict = len(subs_dict)
-        t_array = [dict(var=k, val=v) for k, vs in subs_dict.items() for v in vs["values"]]
+        t_array = [{"var": k, "val": v} for k, vs in subs_dict.items() for v in vs["values"]]
         for comb in itertools.combinations(range(0, len(t_array)), l_dict):
             s = ''.join([t_array[i]['var'] for i in comb])
             if len(s) == len(set(s)):
@@ -1232,12 +1244,10 @@ class MaterialParser:
         for subs in fractions_array:
             material_composition = []
             for m in material_structure['composition']:
-                composition = dict(
-                    formula=m['formula'],
-                    amounts=m['amount'],
-                    elements=collections.OrderedDict(),
-                    species=collections.OrderedDict()
-                )
+                composition = {"formula": m.get('formula'),
+                               "amounts": m.get('amount'),
+                               "elements": collections.OrderedDict(),
+                               "species": collections.OrderedDict()}
 
                 for el, stoich in m['elements'].items():
                     stoich_upd = update_stoichiometry(stoich, subs)
