@@ -46,18 +46,15 @@ class ChemicalNameProcessing(PreprocessingABC):
         """
         if material_formula == "":
             material_formula = self.__reconstruct_formula_from_string(material_name)
-            ## TODO: look-up in pubchem if formula is not found and pubchem option is on
-            #if material_formula == "" and self.__pubchem:
-            #    pcp_compounds = pcp.get_compounds(material_name, 'name')
-            #    material_formula = pcp_compounds[0].molecular_formula if len(pcp_compounds) != 0 else ""
 
         material_name = "" if material_formula == "" else material_name
-        material_formula = material_string if material_formula == "" else material_formula
+        material_string = material_formula if material_formula else material_string
+        #material_formula = material_string if material_formula == "" else material_formula
 
         chemical_structure.material_name = material_name
         chemical_structure.material_formula = material_formula
 
-        return material_formula, chemical_structure
+        return material_string, chemical_structure
 
     def __separate_formula_from_string(self, material_string):
         """

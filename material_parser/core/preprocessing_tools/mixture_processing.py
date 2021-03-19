@@ -41,6 +41,8 @@ class MixtureProcessing(PreprocessingABC):
 
         chemical_structure.composition = [{"formula": check_parentheses(m),
                                            "amount": f} for m, f in output_compounds]
+        if output_compounds:
+            chemical_structure.material_formula = material_string
 
         return chemical_structure.material_formula, chemical_structure
 

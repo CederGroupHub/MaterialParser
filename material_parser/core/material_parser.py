@@ -6,9 +6,9 @@ from pprint import pprint
 
 
 class MaterialParser:
-    def __init__(self, data, regexParser, preprocessings, postprocessings):
+    def __init__(self, options, regexParser, preprocessings, postprocessings):
         print ("initializing MP")
-        self._data = data
+        self._options = options
         self._regexParser = regexParser
         self._default_processing = DefaultProcessing()
         self._preprocessings = preprocessings
@@ -42,6 +42,10 @@ class MaterialParser:
         """
         for p in self._preprocessings:
             material_string, output_structure = p.process_string(material_string, output_structure)
+            # print (p.__class__.__name__)
+            # print ("String: {}, formula: {}, name: {}".format(material_string,
+            #                                                   output_structure.material_formula,
+            #                                                   output_structure.material_name))
 
         """
         default functionality: extraction of data from chemical formula
@@ -86,8 +90,8 @@ class MaterialParserBuilder():
     def build(self): # -> MaterialParser
         #data = fileReader.read()
         print ("building parser")
-        data = None
-        return MaterialParser(data,
+        options = None
+        return MaterialParser(options,
                               self._regexParser,
                               self._preprocessings,
                               self._postprocessings)
