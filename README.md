@@ -32,28 +32,28 @@ separate relevant information from an input string and fill it into an output ch
 Postprocessing tools augment chemical structure with any other information that can be found in a surrounding text.
 
 The current version of Material Parser package includes the following preprocessing tools:
- * phase_processing.py - gets information about material phase if it is presented in the string,
-e.g. for ``P2-Na2/3(CoxNi1/3-xMn2/3)O2'', P2 will be separated and stored in the structure
+ * ``phase_processing.py`` - gets information about material phase if it is presented in the string,
+e.g. for "P2-Na2/3(CoxNi1/3-xMn2/3)O2", "P2" will be separated and stored in the structure
 while the rest of the string will be sent down the pipeline.
- * additives_processing.py - gets information about any additives, such as dopants, stabilizers or mixed compounds,
-e.g. i) for ``(Na0.5K0.5)NbO3 + 1.5 mol% CuF2'', CuF2 will be separated as an additive
-and (Na0.5K0.5)NbO3 will be sent down the pipeline; ii) for ``Ca2BO3Cl:Sm3+, Eu3+'', Sm3+ and Eu3+ will be separated
-and Ca2BO3Cl will be sent down the pipeline.
- * chemical_name_processing.py - attempts to convert sequence of chemical terms into a formula,
-e.g. ``zinc (II) acetate dihydrate'' will be converted into Zn(CH3COO)2·2H2O that will be sent down the pipeline
+ * ``additives_processing.py`` - gets information about any additives, such as dopants, stabilizers or mixed compounds,
+e.g. i) for "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2", "CuF2" will be separated as an additive
+and "(Na0.5K0.5)NbO3" will be sent down the pipeline; ii) for "Ca2BO3Cl:Sm3+, Eu3+", "Sm3+" and "Eu3+" will be separated
+and "Ca2BO3Cl" will be sent down the pipeline.
+ * ``chemical_name_processing.py`` - attempts to convert sequence of chemical terms into a formula,
+e.g. "zinc (II) acetate dihydrate" will be converted into "Zn(CH3COO)2·2H2O" that will be sent down the pipeline
 and the chemical terms will be stored in output structure as material name.
 This tool can also separate chemical formula from the rest of the terms is they are combined by tokenizer,
-e.g.  ``ammonium molybdate (NH4)6Mo7O24⋅4H2O'' will be split into ``ammonium molybdate'' - material name
-and (NH4)6Mo7O24⋅4H2O - chemical formula that will be sent down the pipeline.
- * mixture_processing.py - split mixture/solid solution/alloy/composite/hydrate into constituting compounds,
-e.g. ``(1-x-y)BaTiO3-xBaBiO3-y(Bi0.5Na0.5)TiO3'' will be split into BaTiO3, BaBiO3, and (Bi0.5Na0.5)TiO3
-with the corresponding amounts (1-x-y), x and y, respectively.
+e.g.  "ammonium molybdate (NH4)6Mo7O24⋅4H2O" will be split into "ammonium molybdate" - material name
+and "(NH4)6Mo7O24⋅4H2O" - chemical formula that will be sent down the pipeline.
+ * ``mixture_processing.py`` - split mixture/solid solution/alloy/composite/hydrate into constituting compounds,
+e.g. "(1-x-y)BaTiO3-xBaBiO3-y(Bi0.5Na0.5)TiO3" will be split into "BaTiO3", "BaBiO3", and "(Bi0.5Na0.5)TiO3"
+with the corresponding amounts "(1-x-y)", "x" and "y", respectively.
 
 The postprocessing tool includes:
- * substitute_additives.py - appends dopand elements to the formula to have integer total stoichiometry
+ * ``substitute_additives.py`` - appends dopand elements to the formula to have integer total stoichiometry
 or add mixture compound to the composition,
-e.g. i) ``Zn1.92-2xYxLixSiO4:0.08Mn2+'' becomes Mn0.08Zn1.92-2xYxLixSiO4 and
-ii) ``(Na0.5K0.5)NbO3 + 1.5 mol% CuF2'' becomes (1-x)(Na0.5K0.5)NbO3-(x)CuF2.
+e.g. i) "Zn1.92-2xYxLixSiO4:0.08Mn2+" becomes "Mn0.08Zn1.92-2xYxLixSiO4" and
+ii) "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2" becomes "(1-x)(Na0.5K0.5)NbO3-(x)CuF2".
 
 
 ### Installation:
@@ -98,22 +98,22 @@ Note: the order of the blocks may affect the resulted output.
 
 Material Parser provides capabilities for creating customized pre- and post-processing tools.
 This are defined by the corresponding interface:
-core/preprocessing_tools/preprocessing_abc.py and core/postprocessing_tools/postprocessing_abc.py.
+``core/preprocessing_tools/preprocessing_abc.py`` and ``core/postprocessing_tools/postprocessing_abc.py``.
 Add the class implementing the interface into a corresponding directory and import as a regular block.
 
 ### Output
 
 mp.parse() output the ChemicalStructure with the following attributes:
 
- * material_string: <str>
- * material_name: <str>
- * material_formula: <str>
- * additives: <list> or <str>
- * phase: <str>
- * oxygen_deficiency: <char>
- * amounts_x: <Variables>
- * elements_x: <Variables>
- * composition: <list> of <Compound>
+ * material_string: ``string``
+ * material_name: ``string``
+ * material_formula: ``string``
+ * additives: ``list`` or ``string``
+ * phase: ``string``
+ * oxygen_deficiency: ``char``
+ * amounts_x: ``Variables``
+ * elements_x: ``Variables``
+ * composition: ``list`` of ``Compound``
 
 
 ### Citing
