@@ -2,8 +2,8 @@ import sympy as smp
 import regex as re
 
 from sympy.abc import _clash
-import constants as C
-import regex_parser as rp
+import material_parser.core.constants as C
+import material_parser.core.regex_parser as rp
 
 
 def simplify(value):
@@ -12,6 +12,9 @@ def simplify(value):
     :param value: string
     :return: string
     """
+
+    if not value:
+        return value
 
     for l in C.GREEK_CHARS:
         _clash[l] = smp.Symbol(l)
@@ -42,6 +45,8 @@ def simplify_str(value):
 
 
 def cast_stoichiometry(value):
+    if not value:
+        return value
     value = float(value)
     if value == 1.0:
         return ""
@@ -123,3 +128,10 @@ def check_parentheses(formula):
     new_formula = '('*len(par_close) + new_formula + ")"*len(par_open)
 
     return new_formula
+
+
+def is_int(num):
+    try:
+        return round(float(num), 3) == round(float(num), 0)
+    except:
+        return False

@@ -1,7 +1,8 @@
 from collections import OrderedDict
-import chemical_sets as cs
-from data_descriptors import Variables, Compound
-from constants import DEFICIENCY_CHARS, FORMULA_SYMBOLS_SET
+import material_parser.core.chemical_sets as cs
+from material_parser.core.utils import simplify, cast_stoichiometry
+from material_parser.core.data_descriptors import Variables, Compound
+from material_parser.core.constants import DEFICIENCY_CHARS, FORMULA_SYMBOLS_SET
 
 
 class ChemicalStructure:
@@ -13,7 +14,6 @@ class ChemicalStructure:
         self._additives = []
         self._phase = ""
         self._oxygen_deficiency = ""
-        self._is_acronym = False
 
         self._amounts_x = Variables()
         self._elements_x = Variables()
@@ -28,7 +28,6 @@ class ChemicalStructure:
         obj.additives = data.get("additives", [])
         obj.phase = data.get("phase", "")
         obj.oxygen_deficiency = data.get("oxygen_deficiency", "")
-        obj.is_acronym = data.get("is_acronym", False)
         obj.amounts_x = data.get("amounts_x", {})
         obj.elements_x = data.get("elements_x", {})
         obj.composition = data.get("composition", [])
@@ -97,16 +96,6 @@ class ChemicalStructure:
         self._oxygen_deficiency = value
 
     @property
-    def is_acronym(self):
-        return self._is_acronym
-
-    @is_acronym.setter
-    def is_acronym(self, value):
-        if not isinstance(value, bool):
-            raise TypeError('Expected {value} to be a boolean'.format(value))
-        self._is_acronym = value
-
-    @property
     def elements_x(self):
         return self._elements_x.data
 
@@ -118,7 +107,7 @@ class ChemicalStructure:
             raise TypeError('Expected {} to have keys od a str'.format(value))
         if any(not isinstance(v, list) for v in value.values()):
             raise TypeError('Expected {} to have values of alist'.format(value))
-        self._elements_x.data = value
+        self._elements_x = value
 
     @property
     def amounts_x(self):
@@ -132,7 +121,7 @@ class ChemicalStructure:
             raise TypeError('Expected {} to have keys of a str'.format(value))
         if any(not isinstance(v, list) for v in value.values()):
             raise TypeError('Expected {} to have values of a list'.format(value))
-        self._amounts_x.data = value
+        self._amounts_x = value
 
     @property
     def composition(self):
@@ -150,22 +139,57 @@ class ChemicalStructure:
                                       species=v.get("species", OrderedDict()))
                              for v in value]
 
+    def add_compound(self, compound_data):
+        if not isinstance(compound_data, dict):
+            raise TypeError('Expected {} to be a dict'.format(compound_data))
+        self._composition.append(Compound(formula=compound_data.get("formula", ""),
+                                          amount=compound_data.get("amount", ""),
+                                          elements=compound_data.get("elements", OrderedDict()),
+                                          species=compound_data.get("species", OrderedDict())))
+
+    def combine_formula(self):
+        new_formula = ""
+        if len(self._composition) == 1:
+            self._material_formula = self._composition[0].formula.replace("*", "")
+
+        coeff = ""
+        for compound in self._composition:
+            amount = compound.amount
+            formula = compound.formula
+            if all(c.isdigit() or c == "." for c in amount):
+                coeff = cast_stoichiometry(amount)
+            else:
+                coeff = "(" + amount + ")" if len(amount) != 1 else amount
+
+            delimiter = chr(183) if "H2O" in formula else "-"
+            new_formula = new_formula + delimiter + coeff + formula
+
+        new_formula = new_formula.replace("*", "").lstrip("-")
+        self._material_formula = new_formula
+
     def element_structure(self, element):
         self._material_name = cs.element2name[element]
         self._material_formula = element
-        self._composition = [Compound(element, 1, [(element, 1)], [(element, 1)])]
+        self._composition = [Compound(element, "1", OrderedDict([(element, "1")]), OrderedDict([(element, "1")]))]
+        self._elements_x = {}
+        self._amounts_x = {}
         return self
 
     def diatomic_molecule_structure(self, element):
+        formula = element + "2"
         self._material_name = cs.element2name[element]
-        self._material_formula = element
-        self._composition = [Compound(element, 1, [(element, 2)], [(element, 1)])]
+        self._material_formula = formula
+        self._composition = [Compound(formula, "1", OrderedDict([(element, "2")]), OrderedDict([(formula, "1")]))]
+        self._elements_x = {}
+        self._amounts_x = {}
         return self
 
     def water_structure(self):
         self._material_name = "water"
         self._material_formula = "H2O"
-        self._composition = [Compound("H2O", 1, [("H", 2), ("O", 1)], [("H2O", 1)])]
+        self._composition = [Compound("H2O", "1", OrderedDict([("H", "1"), ("O", "1")]), OrderedDict([("H2O", "1")]))]
+        self._elements_x = {}
+        self._amounts_x = {}
         return self
 
     def to_dict(self):
@@ -175,7 +199,6 @@ class ChemicalStructure:
                     additives=self._additives,
                     phase=self._phase,
                     oxygen_deficiency=self._oxygen_deficiency,
-                    is_acronym=self._is_acronym,
-                    amounts_x=self._amounts_x.data,
-                    elements_x=self._elements_x.data,
+                    amounts_x=self._amounts_x,
+                    elements_x=self._elements_x,
                     composition=[c.to_dict() for c in self._composition])

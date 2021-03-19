@@ -3,15 +3,15 @@
     "material": "manganese (II) nitrate Mn(NO3)2×4H2O",
     "parser_output": [
       {
-        "material_string": "manganese (II) nitrate Mn(NO3)2×4H2O",
+        "material_string": "manganese (II) nitrate Mn(NO3)2·4H2O",
         "material_name": "manganese (II) nitrate",
         "material_formula": "Mn(NO3)2·4H2O",
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Mn(NO3)2",
@@ -22,8 +22,8 @@
               "Mn": "1"
             },
             "species": {
-              "Mn": "1",
-              "NO3": "2"
+              "NO3": "2",
+              "Mn": "1"
             }
           },
           {
@@ -51,9 +51,9 @@
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(La0.8Sr0.2)0.97MnO3",
@@ -79,15 +79,15 @@
     "material": "lutetium oxide Lu2O3(99.9",
     "parser_output": [
       {
-        "material_string": "lutetium oxide Lu2O3(99.9",
+        "material_string": "lutetium oxide Lu2O3",
         "material_name": "lutetium oxide",
         "material_formula": "Lu2O3",
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Lu2O3",
@@ -115,9 +115,9 @@
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ag1/8Pr5/8MoO4",
@@ -142,15 +142,15 @@
     "material": "Er chlorides",
     "parser_output": [
       {
-        "material_string": "erbium chloride",
+        "material_string": "Er chlorides",
         "material_name": "erbium chloride",
         "material_formula": "ErCl3",
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "ErCl3",
@@ -178,9 +178,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Fe(ClO4)3",
@@ -191,8 +191,8 @@
               "Fe": "1"
             },
             "species": {
-              "Fe": "1",
-              "ClO4": "3"
+              "ClO4": "3",
+              "Fe": "1"
             }
           }
         ]
@@ -209,9 +209,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(NH4)3C3H5O(COO)3",
@@ -235,15 +235,15 @@
     "material": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]",
     "parser_output": [
       {
-        "material_string": "ammonium molybdate [(NH4)6Mo7O24⋅4H2O]",
+        "material_string": "ammonium molybdate ((NH4)6Mo7O24·4H2O)",
         "material_name": "ammonium molybdate",
         "material_formula": "(NH4)6Mo7O24·4H2O",
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(NH4)6Mo7O24",
@@ -255,8 +255,8 @@
               "O": "24"
             },
             "species": {
-              "Mo7O24": "1",
-              "NH4": "6"
+              "NH4": "6",
+              "Mo7O24": "1"
             }
           },
           {
@@ -284,9 +284,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Cu2(SO4)3",
@@ -297,8 +297,8 @@
               "Cu": "2"
             },
             "species": {
-              "Cu": "2",
-              "SO4": "3"
+              "SO4": "3",
+              "Cu": "2"
             }
           },
           {
@@ -326,9 +326,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Sb2O5",
@@ -356,9 +356,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Zn(CH3COO)2",
@@ -399,23 +399,23 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Pb(Zr0.52Ti0.48)O3",
             "amount": "1-x",
             "elements": {
-              "Pb": "1",
               "Zr": "0.52",
               "Ti": "0.48",
+              "Pb": "1",
               "O": "3"
             },
             "species": {
-              "Pb": "1",
               "Zr": "0.52",
               "Ti": "0.48",
+              "Pb": "1",
               "O": "3"
             }
           },
@@ -446,11 +446,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Li5+xLa3Ta2-xGexO12",
@@ -484,9 +484,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ce(CH3COCHCOCH3)4",
@@ -511,9 +511,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "La(CH3COCHCOCH3)3",
@@ -543,9 +543,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "MgO",
@@ -568,9 +568,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ni2O3",
@@ -593,9 +593,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Nb2O5",
@@ -617,15 +617,15 @@
     "material": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
     "parser_output": [
       {
-        "material_string": "16Na2O∗10CaO∗xAl2O3∗(74-x)SiO2",
+        "material_string": "16Na2O·10CaO·xAl2O3·(74-x)SiO2",
         "material_name": "",
         "material_formula": "16Na2O-10CaO-xAl2O3-(74-x)SiO2",
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Na2O",
@@ -689,9 +689,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "BaO",
@@ -743,11 +743,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ni0.6Mg0.3Mn1.5-xAl0.6+xO4",
@@ -781,11 +781,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "EuxLiSr1-xPO4",
@@ -820,9 +820,9 @@
           "Tb3+"
         ],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "NaSrBO3",
@@ -853,9 +853,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "K2O",
@@ -920,9 +920,9 @@
           "Eu0.01"
         ],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "SrAl2O4",
@@ -953,9 +953,9 @@
           "Eu0.012+", "Dy0.013+", "Ho0.013+"
         ],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Sr1.97MgSi2O7",
@@ -988,9 +988,9 @@
           "Sm3+", "Eu3+"
         ],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ca2BO3Cl",
@@ -1021,9 +1021,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ni(CH3COO)2",
@@ -1048,9 +1048,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Mn(CH3COO)2",
@@ -1080,9 +1080,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Y(NO3)3",
@@ -1122,9 +1122,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(K0.5Na0.5)NbO3",
@@ -1145,15 +1145,15 @@
             "formula": "Bi(Mg0.5Ti0.5)O3",
             "amount": "x",
             "elements": {
-              "Bi": "1",
               "Mg": "0.5",
               "Ti": "0.5",
+              "Bi": "1",
               "O": "3"
             },
             "species": {
-              "Bi": "1",
               "Mg": "0.5",
               "Ti": "0.5",
+              "Bi": "1",
               "O": "3"
             }
           }
@@ -1171,12 +1171,12 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": [],
           "z": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Li1+xMn2-xO4-zFz",
@@ -1208,9 +1208,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "K0.5Na0.5NbO3",
@@ -1266,9 +1266,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ti(OCH(CH3)2)4",
@@ -1298,9 +1298,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(K0.16Na0.84)0.5Bi4.5Ti4O15",
@@ -1346,9 +1346,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ti0.4V0.3Mn0.15Cr0.15",
@@ -1400,9 +1400,9 @@
           "Eu3+"
         ],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Sc2(MoO4)3",
@@ -1425,15 +1425,15 @@
     "material": "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2",
     "parser_output": [
       {
-        "material_string": "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2",
+        "material_string": "(Na0.5K0.5)NbO3+1.5 mol% CuF2",
         "material_name": "",
         "material_formula": "(1-x)(Na0.5K0.5)NbO3-xCuF2",
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(Na0.5K0.5)NbO3",
@@ -1476,9 +1476,9 @@
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Cd0.25Pr0.50□0.25WO4",
@@ -1511,11 +1511,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ba2In2-2*xTi2xO5+x□1-x",
@@ -1549,11 +1549,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Li2SrTa2-2*xNb2xO7",
@@ -1587,11 +1587,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Lix+1Mg3AlSi3*x+3O10+6.5xF2",
@@ -1627,26 +1627,26 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Eu0.10Ca0.90Sr2Al2O6",
             "amount": "1",
             "elements": {
+              "Eu": "0.10",
               "Ca": "0.9",
               "Sr": "2",
               "Al": "2",
-              "O": "6",
-              "Eu": "0.10"
+              "O": "6"
             },
             "species": {
+              "Eu": "0.10",
               "Ca": "0.9",
               "Sr": "2",
               "Al": "2",
-              "O": "6",
-              "Eu": "0.1"
+              "O": "6"
             }
           }
         ]
@@ -1663,26 +1663,26 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "EuxBa3-xSiO5",
             "amount": "1",
             "elements": {
+              "Eu": "x",
               "Ba": "3-x",
               "Si": "1",
-              "O": "5",
-              "Eu": "x"
+              "O": "5"
             },
             "species": {
+              "Eu": "x",
               "Ba": "3-x",
               "Si": "1",
-              "O": "5",
-              "Eu": "x"
+              "O": "5"
             }
           }
         ]
@@ -1699,29 +1699,29 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "CexCa2-2xLi1+xSiO4F",
             "amount": "1",
             "elements": {
+              "Ce": "x",
               "Ca": "2-2*x",
               "Li": "x+1",
               "Si": "1",
               "O": "4",
-              "F": "1",
-              "Ce": "x"
+              "F": "1"
             },
             "species": {
+              "Ce": "x",
               "Ca": "2-2*x",
               "Li": "x+1",
               "SiO4": "1",
-              "F": "1",
-              "Ce": "x"
+              "F": "1"
             }
           }
         ]
@@ -1738,9 +1738,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "GeS2",
@@ -1816,9 +1816,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "BaO",
@@ -1870,11 +1870,11 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {
+        "oxygen_deficiency": "",
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "BiSmxFe1-xO3",
@@ -1913,15 +1913,15 @@
     "material": "europium(III) nitrate pentahydrate",
     "parser_output": [
       {
-        "material_string": "europium(III) nitrate pentahydrate",
+        "material_string": "europium (III) nitrate pentahydrate",
         "material_name": "europium (III) nitrate pentahydrate",
         "material_formula": "Eu(NO3)3·5H2O",
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Eu(NO3)3",
@@ -1961,9 +1961,9 @@
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "H2",
@@ -1989,9 +1989,9 @@
         "additives": [],
         "phase": "",
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "O2",
@@ -2018,10 +2018,10 @@
         "additives": [],
         "is_acronym": false,
         "oxygen_deficiency": "-",
-        "amounts_vars": {
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "La8Y2(GeO4)6-x(GaO4)xO3",
@@ -2056,10 +2056,10 @@
         "additives": [],
         "is_acronym": false,
         "oxygen_deficiency": "-",
-        "amounts_vars": {
+        "amounts_x": {
           "x": []
         },
-        "elements_vars": {
+        "elements_x": {
           "M": []
         },
         "composition": [
@@ -2094,8 +2094,8 @@
         "additives": [],
         "is_acronym": false,
         "oxygen_deficiency": "-",
-        "amounts_vars": {},
-        "elements_vars": {},
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Re0.2Ce0.8O2",
@@ -2126,8 +2126,8 @@
         "additives": [],
         "is_acronym": false,
         "oxygen_deficiency": "+",
-        "amounts_vars": {},
-        "elements_vars": {
+        "amounts_x": {},
+        "elements_x": {
           "M": [
             "Y",
             "In"
@@ -2160,15 +2160,15 @@
     "material": "(Ba0.5Sr0.5Co0.8Fe0.2 O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)",
     "parser_output": [
       {
-        "material_string": "(Ba0.5Sr0.5Co0.8Fe0.2 O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)",
+        "material_string": "(Ba0.5Sr0.5Co0.8Fe0.2O3-δ)-(BaCe0.5Zr0.3Y0.16Zn0.04O3-δ)",
         "material_name": "",
         "material_formula": "Ba0.5Sr0.5Co0.8Fe0.2O3-BaCe0.5Zr0.3Y0.16Zn0.04O3",
         "phase": "",
         "additives": [],
         "is_acronym": false,
         "oxygen_deficiency": "-",
-        "amounts_vars": {},
-        "elements_vars": {},
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Ba0.5Sr0.5Co0.8Fe0.2O3",
@@ -2222,9 +2222,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "GdAl3(BO3)4",
@@ -2255,9 +2255,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "(NH4)6Mo7O24",
@@ -2288,8 +2288,8 @@
       "additives": [],
       "is_acronym": false,
       "oxygen_deficiency": "±",
-      "amounts_vars": {},
-      "elements_vars": {},
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "(La0.2Sr0.8)0.9Ti0.9Fe0.1O3",
@@ -2323,9 +2323,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Al(NO3)3",
@@ -2365,9 +2365,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "Mg",
@@ -2388,9 +2388,9 @@
         "phase": "",
         "additives": [],
         "is_acronym": false,
-        "oxygen_deficiency": null,
-        "amounts_vars": {},
-        "elements_vars": {},
+        "oxygen_deficiency": "",
+        "amounts_x": {},
+        "elements_x": {},
         "composition": [
           {
             "formula": "La",
@@ -2416,9 +2416,9 @@
       "phase": "",
       "additives": ["0.02Eu2+", "xDy3+"],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Ba5Si8O21",
@@ -2441,15 +2441,15 @@
   "material": "[Na3Zr2Si2PO12]",
   "parser_output": [
     {
-      "material_string": "[Na3Zr2Si2PO12]",
+      "material_string": "Na3Zr2Si2PO12",
       "material_name": "",
       "material_formula": "Na3Zr2Si2PO12",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Na3Zr2Si2PO12",
@@ -2483,9 +2483,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "MnO2",
@@ -2507,15 +2507,15 @@
   "material": "[Sn0.5Zn0.5]GaO3(ZnO)",
   "parser_output": [
     {
-      "material_string": "[Sn0.5Zn0.5]GaO3(ZnO)",
+      "material_string": "(Sn0.5Zn0.5)GaO3(ZnO)",
       "material_name": "",
       "material_formula": "(Sn0.5Zn0.5)GaO3(ZnO)",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "(Sn0.5Zn0.5)GaO3(ZnO)",
@@ -2523,14 +2523,14 @@
           "elements": {
             "Sn": "0.5",
             "Zn": "1.5",
-            "Ga": "1",
-            "O": "4"
+            "O": "4",
+            "Ga": "1"
           },
           "species": {
             "Sn": "0.5",
             "Zn": "1.5",
-            "Ga": "1",
-            "O": "4"
+            "O": "4",
+            "Ga": "1"
           }
         }
       ]
@@ -2541,15 +2541,15 @@
   "material": "titanium(IV) oxide nanopowder",
   "parser_output": [
     {
-      "material_string": "titanium(IV) oxide nanopowder",
+      "material_string": "titanium (IV) oxide",
       "material_name": "titanium (IV) oxide",
       "material_formula": "TiO2",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "TiO2",
@@ -2571,15 +2571,15 @@
   "material": "Micro-LiMn0.85Fe0.15PO4",
   "parser_output": [
     {
-      "material_string": "Micro-LiMn0.85Fe0.15PO4",
+      "material_string": "LiMn0.85Fe0.15PO4",
       "material_name": "",
       "material_formula": "LiMn0.85Fe0.15PO4",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "LiMn0.85Fe0.15PO4",
@@ -2606,17 +2606,17 @@
   "material": "Ba[Mg(1-x)/3SnxTa2(1-x)/3]O3",
   "parser_output": [
     {
-      "material_string": "Ba[Mg(1-x)/3SnxTa2(1-x)/3]O3",
+      "material_string": "Ba(Mg(1-x)/3SnxTa2(1-x)/3)O3",
       "material_name": "",
       "material_formula": "Ba(Mg1/3-x/3SnxTa2/3-2x/3)O3",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Ba(Mg1/3-x/3SnxTa2/3-2*x/3)O3",
@@ -2650,9 +2650,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": "y",
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "±",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Y0.8Ca0.2Ba2Cu3O",
@@ -2687,10 +2687,10 @@
       "additives": [],
       "is_acronym": false,
       "oxygen_deficiency": "-",
-      "amounts_vars": {
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {
+      "elements_x": {
         "M": ["Sm", "Ce"]
       },
       "composition": [
@@ -2718,18 +2718,18 @@
   "material": "Nasicon (Na1+ x + yZr2- yYySixP3- xO12",
   "parser_output": [
     {
-      "material_string": "Nasicon (Na1+ x + yZr2- yYySixP3- xO12",
+      "material_string": "Nasicon (Na1+x+yZr2-yYySixP3-xO12)",
       "material_name": "Nasicon",
       "material_formula": "Na1+x+yZr2-yYySixP3-xO12",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": [],
         "y": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "Na1+x+yZr2-yYySixP3-xO12",
@@ -2759,17 +2759,17 @@
   "material": "(Ni1-x M x)Mn2O4",
   "parser_output": [
     {
-      "material_string": "(Ni1-x M x)Mn2O4",
+      "material_string": "(Ni1-xMx)Mn2O4",
       "material_name": "",
       "material_formula": "(Ni1-xMx)Mn2O4",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {
+      "elements_x": {
         "M": []
       },
       "composition": [
@@ -2797,15 +2797,15 @@
   "material": "(1 - x)KNN-xBT",
   "parser_output": [
     {
-      "material_string": "(1 - x)KNN-xBT",
+      "material_string": "(1-x)KNN-xBT",
       "material_name": "",
       "material_formula": "(1-x)K0.5Na0.5NbO3-xBaTiO3",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "K0.5Na0.5NbO3",
@@ -2849,27 +2849,27 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": [],
         "y": [],
         "z": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "(La1-xCax)1-zCr1-yTiyO3",
           "amount": "1",
           "elements": {
             "La": "(x-1)*(z-1)",
-            "Ca": "x*(1-z)",
+            "Ca": "x*(-z+1)",
             "Cr": "1-y",
             "Ti": "y",
             "O": "3"
           },
           "species": {
             "La": "(x-1)*(z-1)",
-            "Ca": "x*(1-z)",
+            "Ca": "x*(-z+1)",
             "Cr": "1-y",
             "Ti": "y",
             "O": "3"
@@ -2889,9 +2889,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "SmCl3",
@@ -2930,9 +2930,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {
         "RE": []
       },
       "composition": [
@@ -2943,8 +2943,8 @@
             "La": "0.4",
             "Ba": "0.6",
             "Ti": "0.6",
-            "RE": "0.4",
-            "O": "3"
+            "O": "3",
+            "RE": "0.4"
           },
           "species": {
             "La": "0.4",
@@ -2968,9 +2968,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "(NH4)2HPO4",
@@ -3001,8 +3001,8 @@
       "additives": [],
       "is_acronym": false,
       "oxygen_deficiency": "-",
-      "amounts_vars": {},
-      "elements_vars": {},
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
           "formula": "YBa2Cu3O7",
@@ -3034,9 +3034,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "SnCl2",
@@ -3075,9 +3075,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "Y3Al5O12",
@@ -3107,9 +3107,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "FeTiO3",
@@ -3138,9 +3138,9 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "BaTiO3",
@@ -3192,19 +3192,19 @@
   "material": "LiMn2-y-zLiyMzO4-ηFη",
   "parser_output": [
     {
-      "material_string": "LiMn2-y-zLiyMzO4-ηFη",
+      "material_string": "LiMn2-y-zLiyMzO4-δFδ",
       "material_name": "",
       "material_formula": "LiMn2-y-zLiyMzO4-δFδ",
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "y": [],
         "z": [],
         "δ": []
       },
-      "elements_vars": {
+      "elements_x": {
         "M": []
       },
       "composition": [
@@ -3234,17 +3234,17 @@
   "material": "P2-Na2/3[CoxNi1/3-xMn2/3]O2",
   "parser_output": [
     {
-      "material_string": "P2-Na2/3[CoxNi1/3-xMn2/3]O2",
+      "material_string": "P2-Na2/3(CoxNi1/3-xMn2/3)O2",
       "material_name": "",
       "material_formula": "Na2/3(CoxNi1/3-xMn2/3)O2",
       "phase": "P2",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "Na2/3(CoxNi1/3-xMn2/3)O2",
@@ -3278,9 +3278,9 @@
       "phase": "γ",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {},
-      "elements_vars": {},
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "MnOOH",
@@ -3306,11 +3306,11 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "LiCo1-2xNixMnxO2",
@@ -3344,11 +3344,11 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "Mn1-3*xIn2x□xWO4",
@@ -3381,11 +3381,11 @@
       "phase": "",
       "additives": [],
       "is_acronym": false,
-      "oxygen_deficiency": null,
-      "amounts_vars": {
+      "oxygen_deficiency": "",
+      "amounts_x": {
         "x": []
       },
-      "elements_vars": {},
+      "elements_x": {},
       "composition": [
         {
             "formula": "Mn0.08Zn1.92-2xYxLixSiO4",

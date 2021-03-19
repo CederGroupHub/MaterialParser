@@ -1,8 +1,8 @@
-import chemical_sets as cs
-from formula_processing import Formula2Composition
-from chemical_structure import ChemicalStructure
-from data_descriptors import Compound, Variables
-from preprocessing_tools.preprocessing_abc import PreprocessingABC
+import material_parser.core.chemical_sets as cs
+from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
+from material_parser.core.chemical_structure import ChemicalStructure
+from material_parser.core.data_descriptors import Compound, Variables
+from material_parser.core.formula_processing import process_formula
 
 
 class DefaultProcessing(PreprocessingABC):
@@ -11,7 +11,7 @@ class DefaultProcessing(PreprocessingABC):
 
         data = {}
         if not chemical_structure.composition:
-            data = Formula2Composition().process(material_string)
+            data = process_formula(material_string)
             data["composition"] = [{"formula": data["formula"],
                                     "amount": "1",
                                     "elements": data["elements"],
@@ -20,14 +20,14 @@ class DefaultProcessing(PreprocessingABC):
             composition = []
             oxygen_def = chemical_structure.oxygen_deficiency
             phase = chemical_structure.phase
-            elements_x = chemical_structure.elements_x
-            amounts_x = chemical_structure.amounts_x
+            elements_x = {}
+            amounts_x = {}
 
             for compound in chemical_structure.composition:
                 formula = compound.formula
                 amount = compound.amount
                 formula = cs.default_abbreviations.get(formula, formula)
-                data = Formula2Composition().process(formula)
+                data = process_formula(formula)
                 new_compound = {"formula": data["formula"],
                                 "amount": amount,
                                 "elements": data["elements"],
@@ -40,7 +40,10 @@ class DefaultProcessing(PreprocessingABC):
 
                 elements_x.update(data["elements_x"])
                 amounts_x.update(data["amounts_x"])
+
             data["composition"] = composition
+            data["amounts_x"] = amounts_x
+            data["elements_x"] = elements_x
 
         self.update_chemical_structure(data, chemical_structure)
 
@@ -54,7 +57,6 @@ class DefaultProcessing(PreprocessingABC):
         chem_structure.additives = data.get("additives", chem_structure.additives)
         chem_structure.phase = data.get("phase", chem_structure.phase)
         chem_structure.oxygen_deficiency = data.get("oxygen_deficiency", chem_structure.oxygen_deficiency)
-        chem_structure.is_acronym = data.get("is_acronym", chem_structure.is_acronym)
 
         chem_structure.amounts_x = data.get("amounts_x", chem_structure.amounts_x)
         chem_structure.elements_x = data.get("elements_x", chem_structure.elements_x)

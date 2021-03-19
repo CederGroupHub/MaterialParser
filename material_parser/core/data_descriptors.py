@@ -1,6 +1,6 @@
 from collections import OrderedDict
-import chemical_sets as cs
-from constants import FORMULA_SYMBOLS_SET, AMOUNTS_SYMBOLS_SET
+import material_parser.core.chemical_sets as cs
+from material_parser.core.constants import FORMULA_SYMBOLS_SET, AMOUNTS_SYMBOLS_SET
 
 from pprint import pprint
 
@@ -8,16 +8,6 @@ from pprint import pprint
 class Composition:
     def __init__(self, composition=OrderedDict()):
         self._composition = composition
-
-    @property
-    def data(self):
-        return self._composition
-
-    @data.setter
-    def data(self, value):
-        if not isinstance(value, OrderedDict):
-            raise TypeError('Expected {} to be an OrderedDict'.format(value))
-        self._composition = OrderedDict([(k, v) for k, v in value.items()])
 
     def __repr__(self):
         return "Elements({composition})".format(composition={e: v for e,v in self._composition.items()})
@@ -34,6 +24,16 @@ class Composition:
         if not isinstance(value, str):
             raise TypeError('Expected {} to be an str'.format(value))
         self._composition[key] = value
+
+    @property
+    def data(self):
+        return self._composition
+
+    @data.setter
+    def data(self, value):
+        if not isinstance(value, OrderedDict):
+            raise TypeError('Expected {} to be an OrderedDict'.format(value))
+        self._composition = OrderedDict([(k, v) for k, v in value.items()])
 
 
 class Compound:
@@ -118,6 +118,9 @@ class Variables:
         if not isinstance(data, dict):
             raise TypeError('Expected {} to be a dict'.format(data))
         obj.data = data
+
+    def __get__(self, instance, owner=None):
+        return instance.data
 
     def __repr__(self):
         return "Variables({})".format(self._variables)

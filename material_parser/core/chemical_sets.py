@@ -24,7 +24,8 @@ cations = {ion.get("c_name"): {"valency": ion.get("valency"),
 list_of_anions = set(anions.keys())
 list_of_cations = set(cations.keys())
 
-species = tuple(sorted([ion.get("e_name") for ion in ions.get("anions") if ion.get("e_name") != "O2"] +
+species = tuple(sorted([ion.get("e_name")
+                        for ion in ions.get("anions") if ion.get("e_name") not in ["O2", "S2"]] +
                        [ion.get("e_name") for ion in ions.get("cations")] +
                        [e for e in element2name.keys()] +
                        ions.get("species") +

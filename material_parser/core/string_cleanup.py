@@ -2,14 +2,15 @@
 import json
 import os
 import regex as re
-import chemical_sets as cs
-import constants as C
-import regex_parser as rp
+import material_parser.core.chemical_sets as cs
+import material_parser.core.constants as C
+import material_parser.core.regex_parser as rp
 
-from utils import check_parentheses, parentheses_balanced
+from material_parser.core.utils import check_parentheses, parentheses_balanced
 
 __filename = os.path.dirname(os.path.realpath(__file__))
 typos = json.loads(open(os.path.join(__filename, "rsc/typos.json")).read())
+
 
 def combine_formula_parts(formula):
     """

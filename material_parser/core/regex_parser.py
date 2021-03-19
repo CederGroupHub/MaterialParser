@@ -1,7 +1,7 @@
 # coding=utf-8
 import regex as re
-import chemical_sets as cs
-import constants as C
+import material_parser.core.chemical_sets as cs
+import material_parser.core.constants as C
 
 """
 oxygen deficiency
