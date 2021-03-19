@@ -25,13 +25,13 @@ evaluated thoroughly.
 
 ### Pipeline overview
 
-Material Parser runs as a pipeline of default, pre- and post-processing blocks.
-Default block of the pipeline process chemical formula and converts into a chemical structure.
-Preprocessing blocks deal with an input material string,
+Material Parser runs as a pipeline of default, pre- and post-processing modules.
+Default module of the pipeline process chemical formula and converts into a chemical structure.
+Preprocessing modules deal with an input material string,
 separate relevant information from an input string and fill it into an output chemical structure.
-Postprocessing tools augment chemical structure with any other information that can be found in a surrounding text.
+Postprocessing modules augment chemical structure with any other information that can be found in a surrounding text.
 
-The current version of Material Parser package includes the following preprocessing tools:
+The current version of Material Parser package includes the following preprocessing modules:
  * ``PhaseProcessing`` - gets information about material phase if it is presented in the string,
 e.g. for "P2-Na2/3(CoxNi1/3-xMn2/3)O2", "P2" will be separated and stored in the structure
 while the rest of the string will be sent down the pipeline.
@@ -51,7 +51,7 @@ with the corresponding amounts "(1-x-y)", "x" and "y", respectively.
  * ``PubchemPreprocessing`` - looks up chemical terms in PubChem database, if chemical formula is not found.
 This step usually slows down the overall pipeline perfomance.
 
-The postprocessing tool includes:
+The postprocessing module includes:
  * ``Substitute_Additives`` - appends dopand elements to the formula to have integer total stoichiometry
 or add mixture compound to the composition,
 e.g. i) "Zn1.92-2xYxLixSiO4:0.08Mn2+" becomes "Mn0.08Zn1.92-2xYxLixSiO4" and
@@ -102,7 +102,7 @@ Output:
 ```
 Other attributes can be filled using additional pipeline blockes if required.
 
-### Adding the blocks to the pipeline:
+### Adding modules to the pipeline:
 ```
 from material_parser.core.material_parser import MaterialParserBuilder
 from material_parser.core.preprocessing_tools.additives_processing import AdditivesProcessing
@@ -119,18 +119,44 @@ mp = MaterialParserBuilder() \
     .addPostprocessing(SubstituteAdditives())\
     .build()
 
-mp.parse("manganese (II) nitrate Mn(NO3)2×4H2O")
+mp.parse("Nasicon (Na1+x+yZr2-yYySixP3-xO12)")
 
 ```
-Note: the order of the blocks may affect the resulted output.
+Output:
+```
+{'additives': [],
+ 'amounts_x': {'x': [], 'y': []},
+ 'composition': [{'amount': '1',
+                  'elements': OrderedDict([('Na', 'x+y+1'),
+                                           ('Zr', '2-y'),
+                                           ('Y', 'y'),
+                                           ('Si', 'x'),
+                                           ('P', '3-x'),
+                                           ('O', '12')]),
+                  'formula': 'Na1+x+yZr2-yYySixP3-xO12',
+                  'species': OrderedDict([('Na', 'x+y+1'),
+                                          ('Zr', '2-y'),
+                                          ('Y', 'y'),
+                                          ('Si', 'x'),
+                                          ('P', '3-x'),
+                                          ('O', '12')])}],
+ 'elements_x': {},
+ 'material_formula': 'Na1+x+yZr2-yYySixP3-xO12',
+ 'material_name': 'Nasicon',
+ 'material_string': 'Nasicon (Na1+x+yZr2-yYySixP3-xO12)',
+ 'oxygen_deficiency': '',
+ 'phase': ''}
+
+```
+Note: the order of the modules may affect the resulted output.
 
 
 ### Running customized pipeline:
 
-Material Parser provides capabilities for creating customized pre- and post-processing tools.
+Material Parser provides capabilities for creating customized pre- and post-processing modules.
 This are defined by the corresponding interface:
 ``core/preprocessing_tools/preprocessing_abc.py`` and ``core/postprocessing_tools/postprocessing_abc.py``.
-Add the class implementing the interface into a corresponding directory and import as a regular block.
+Add the class implementing the interface into a corresponding directory and import as a regular module.
 
 ### Output
 
