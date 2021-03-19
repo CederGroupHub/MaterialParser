@@ -66,12 +66,41 @@ pip install -r requirements.txt -e .
 ```
 
 ### Running default setup:
+
+By default, Material Parser gets chemical composition from a proper material formula
+(i.e. no chemical terms, dopants or mixtures):
+
 ```
 from material_parser.core.material_parser import MaterialParserBuilder
 mp = mp = MaterialParserBuilder().build()
-mp.parse("Li5+xLa3Ta2-xGexO12")
+output = mp.parse("Li5+xLa3Ta2-xGexO12")
+print(output.to_dict())
 
 ```
+Output:
+```
+{'additives': [],
+ 'amounts_x': {'x': []},
+ 'composition': [{'amount': '1',
+                  'elements': OrderedDict([('Li', 'x+5'),
+                                           ('La', '3'),
+                                           ('Ta', '2-x'),
+                                           ('Ge', 'x'),
+                                           ('O', '12')]),
+                  'formula': 'Li5+xLa3Ta2-xGexO12',
+                  'species': OrderedDict([('Li', 'x+5'),
+                                          ('La', '3'),
+                                          ('Ta', '2-x'),
+                                          ('Ge', 'x'),
+                                          ('O', '12')])}],
+ 'elements_x': {},
+ 'material_formula': 'Li5+xLa3Ta2-xGexO12',
+ 'material_name': '',
+ 'material_string': 'Li5+xLa3Ta2-xGexO12',
+ 'oxygen_deficiency': '',
+ 'phase': ''}
+```
+Other attributes can be filled using additional pipeline blockes if required.
 
 ### Adding the blocks to the pipeline:
 ```
