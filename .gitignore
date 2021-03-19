@@ -12,6 +12,7 @@ dist/
 .idea/**
 
 */__pycache__/
+*material_parser/core/preprocessing_tools/__pyache__/
 
 env/
 
