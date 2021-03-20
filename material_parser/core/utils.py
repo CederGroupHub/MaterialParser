@@ -4,6 +4,7 @@ import regex as re
 from sympy.abc import _clash
 import material_parser.core.constants as C
 import material_parser.core.regex_parser as rp
+import material_parser.core.chemical_sets as cs
 
 
 def simplify(value):
@@ -135,3 +136,73 @@ def is_int(num):
         return round(float(num), 3) == round(float(num), 0)
     except:
         return False
+
+
+def is_materials_list(material_string):
+    """
+    indicates if the string is in form: element A, element B, ... + plural anion,
+    e.g.: magnesium and lanthanum metals; magnesium, nickel and niobium (V) oxides
+    :param material_string:
+    :return:
+    """
+    if (any(a + "s" in material_string.lower() for a in cs.anions) or "metal" in material_string) and \
+            any(w in material_string for w in ["and ", ",", " of "]):
+        return True
+
+    return False
+
+
+def split_materials_list(material_string):
+    """
+    split material string into list of compounds when it's given in form several anions + cation,
+    e.g.: magnesium and lanthanum metals; magnesium, nickel and niobium (V) oxides
+    :param material_string: <str>
+    :return: <list> of <str> - list of split chemical names
+    """
+
+    parts = [p for p in re.split(r"[\s\,]", material_string) if p != ""]
+
+    """
+    find tokens corresponding to anions, cations and valencies
+    """
+    anion = [(i, p[:-1]) for i, p in enumerate(parts) if p[:-1].lower() in cs.anions or p[:-1].lower() == "metal"]
+    cation = [(i, p) for i, p in enumerate(parts) if p.lower() in cs.cations or p in cs.list_of_elements]
+    valencies = [(i-1, p.strip("()")) for i, p in enumerate(parts) if p.strip("()") in cs.rome2num and i != 0]
+
+    """
+    only consider the situation when one common anion is given
+    """
+    if len(anion) != 1:
+        return []
+
+    result = []
+
+    for c_i, c in cation:
+        """
+        combine each cation with anion (+ valency if given)
+        """
+        name = [cs.element2name[c]] if c in cs.element2name else [c.lower()]
+        valency = "".join([v for v_i, v in valencies if v_i == c_i])
+        if valency != "":
+            name.append("(" + valency + ")")
+        name.append(anion[0][1])
+
+        """
+        checking if hydrates
+        """
+        hydr_i = material_string.find("hydrate")
+        if hydr_i > -1:
+            """
+            find hydrate prefix (if any)
+            """
+            pref = []
+            while material_string[hydr_i - 1] != " " and hydr_i > 0:
+                pref.append(material_string[hydr_i - 1])
+                hydr_i -= 1
+            pref = "".join([p for p in reversed(pref)])
+
+            if pref not in cs.neg_prefixes:
+                name.append(pref + "hydrate")
+        result.append(" ".join(name))
+
+    return result
