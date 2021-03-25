@@ -110,46 +110,44 @@ class Compound:
                     species=self._species.data)
 
 
-class Variables:
-    def __init__(self, variables={}):
-        self._variables = variables
-
-    def __set__(self, obj, data):
-        if not isinstance(data, dict):
-            raise TypeError('Expected {} to be a dict'.format(data))
-        obj.data = data
-
-    def __get__(self, instance, owner=None):
-        return instance.data
-
-    def __repr__(self):
-        return "Variables({})".format(self._variables)
-
-    def __str__(self):
-        return "({})".format(self._variables)
-
-    def __getitem__(self, item):
-        if item not in self._variables:
-            raise ValueError('No item {}'.format(item))
-        return self._variables[item]
-
-    def __setitem__(self, key, value):
-        if not isinstance(value, list):
-            raise TypeError('Expected {} to be a list'.format(value))
-        self._composition[key] = [v for v in value]
-
-    @property
-    def data(self):
-        return self._variables
-
-    @data.setter
-    def data(self, value):
-        if not isinstance(value, dict):
-            raise TypeError('Expected {} to be a dict'.format(value))
-        if any(not isinstance(k, str) for k in value.keys()):
-            raise TypeError('Expected keys to be an str.')
-        if any(not isinstance(v, list) for v in value.values()):
-            raise TypeError('Expected values to be a list.')
-        self._variables = {k: [v for v in vals] for k, vals in value.items()}
+# class Variables:
+#     def __init__(self, variables={}):
+#         self._variables = variables
+#
+#     def __set__(self, obj, data):
+#         if not isinstance(data, dict):
+#             raise TypeError('Expected {} to be a dict'.format(data))
+#         obj.data = data
+#
+#     def __get__(self, instance, owner=None):
+#         return instance.data
+#
+#     def __repr__(self):
+#         return "Variables({})".format(self._variables)
+#
+#     def __str__(self):
+#         return "({})".format(self._variables)
+#
+#     def __getitem__(self, item):
+#         if item not in self._variables:
+#             raise ValueError('No item {}'.format(item))
+#         return self._variables[item]
+#
+#     def __setitem__(self, key, value):
+#         if not isinstance(value, list):
+#             raise TypeError('Expected {} to be a list'.format(value))
+#         self._composition[key] = [v for v in value]
+#
+#     @property
+#     def data(self):
+#         return self._variables
+#
+#     @data.setter
+#     def data(self, value):
+#         if not isinstance(value, dict):
+#             raise TypeError('Expected {} to be a dict'.format(value))
+#         if any(not isinstance(k, str) for k in value.keys()):
+#             raise TypeError('Expected keys to be an str.')
+#         self._variables = {k: [v for v in vals] for k, vals in value.items()}
 
 

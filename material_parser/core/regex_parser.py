@@ -85,3 +85,17 @@ re_trash_terms = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat",
 
 re_parentheses_open = ["{", "["]
 re_parentheses_close = ["}", "]"]
+
+"""
+stoichiometric variables
+"""
+re_stoichiometric_values = r"\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]"
+re_stoichiometric_range_lhs = r"([0-9\.\s]*)\s*[<≤⩽]{0,1}\s*"
+re_stoichiometric_range_rhs = r"\s*[<≤⩽>]{1}\s*([0-9\.\s]+)[\s\)\]\.\,]"
+re_stoichiometric_range_hyphen = r"\s*=\s*([0-9\.]+)\s*[-–]\s*([0-9\.\s]+)[\s\)\]\,m\%]"
+re_stoichiometric_range_ft = r"[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)"
+
+"""
+elements variables
+"""
+re_elements_values = r"\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)"

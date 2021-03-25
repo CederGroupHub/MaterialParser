@@ -1,7 +1,7 @@
 import material_parser.core.chemical_sets as cs
 from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
 from material_parser.core.chemical_structure import ChemicalStructure
-from material_parser.core.data_descriptors import Compound, Variables
+from material_parser.core.data_descriptors import Compound
 from material_parser.core.formula_processing import process_formula
 
 

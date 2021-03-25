@@ -448,7 +448,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -745,7 +745,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -783,7 +783,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1173,8 +1173,8 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": [],
-          "z": []
+          "x": {"max_value": null, "min_value": null, "values": []},
+          "z": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1513,7 +1513,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1551,7 +1551,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1589,7 +1589,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1665,7 +1665,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1701,7 +1701,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -1872,7 +1872,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -2019,7 +2019,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "-",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {},
         "composition": [
@@ -2057,7 +2057,7 @@
         "is_acronym": false,
         "oxygen_deficiency": "-",
         "amounts_x": {
-          "x": []
+          "x": {"max_value": null, "min_value": null, "values": []}
         },
         "elements_x": {
           "M": []
@@ -2614,7 +2614,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -2688,7 +2688,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "-",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {
         "M": ["Sm", "Ce"]
@@ -2726,8 +2726,8 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": [],
-        "y": []
+        "x": {"max_value": null, "min_value": null, "values": []},
+        "y": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -2767,7 +2767,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {
         "M": []
@@ -2851,9 +2851,9 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": [],
-        "y": [],
-        "z": []
+        "x": {"max_value": null, "min_value": null, "values": []},
+        "y": {"max_value": null, "min_value": null, "values": []},
+        "z": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -3200,9 +3200,9 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "y": [],
-        "z": [],
-        "δ": []
+        "y": {"max_value": null, "min_value": null, "values": []},
+        "z": {"max_value": null, "min_value": null, "values": []},
+        "δ": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {
         "M": []
@@ -3242,7 +3242,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -3308,7 +3308,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -3346,7 +3346,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [
@@ -3383,7 +3383,7 @@
       "is_acronym": false,
       "oxygen_deficiency": "",
       "amounts_x": {
-        "x": []
+        "x": {"max_value": null, "min_value": null, "values": []}
       },
       "elements_x": {},
       "composition": [

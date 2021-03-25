@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import material_parser.core.chemical_sets as cs
 from material_parser.core.utils import simplify, cast_stoichiometry
-from material_parser.core.data_descriptors import Variables, Compound
+from material_parser.core.data_descriptors import Compound
 from material_parser.core.constants import DEFICIENCY_CHARS, FORMULA_SYMBOLS_SET
 
 
@@ -15,8 +15,8 @@ class ChemicalStructure:
         self._phase = ""
         self._oxygen_deficiency = ""
 
-        self._amounts_x = Variables()
-        self._elements_x = Variables()
+        self._amounts_x = {} # {var: {"values": [], "max_value": float, "min_value": float}}
+        self._elements_x = {} # {var: []}
 
         self._composition = []
 
@@ -97,7 +97,7 @@ class ChemicalStructure:
 
     @property
     def elements_x(self):
-        return self._elements_x.data
+        return self._elements_x
 
     @elements_x.setter
     def elements_x(self, value):
@@ -107,11 +107,11 @@ class ChemicalStructure:
             raise TypeError('Expected {} to have keys od a str'.format(value))
         if any(not isinstance(v, list) for v in value.values()):
             raise TypeError('Expected {} to have values of alist'.format(value))
-        self._elements_x = value
+        self._elements_x = {k: [v for v in vals] for k, vals in value.items()}
 
     @property
     def amounts_x(self):
-        return self._amounts_x.data
+        return self._amounts_x
 
     @amounts_x.setter
     def amounts_x(self, value):
@@ -119,9 +119,11 @@ class ChemicalStructure:
             raise TypeError('Expected {} to be a dict'.format(value))
         if any(not isinstance(k, str) for k in value.keys()):
             raise TypeError('Expected {} to have keys of a str'.format(value))
-        if any(not isinstance(v, list) for v in value.values()):
-            raise TypeError('Expected {} to have values of a list'.format(value))
-        self._amounts_x = value
+        if any(not isinstance(v, dict) for v in value.values()):
+            raise TypeError('Expected {} to have values of a dict'.format(value))
+        self._amounts_x = {k: {"values": v.get("values", []),
+                               "max_value": v.get("max_value", None),
+                               "min_value": v.get("min_value", None)} for k, v in value.items()}
 
     @property
     def composition(self):

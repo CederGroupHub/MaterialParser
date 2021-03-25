@@ -38,7 +38,7 @@ def process_formula(formula):
         if el not in cs.list_of_elements | formula_data["elements_x"].keys() | cnst.VACANCIES:
             formula_data["elements_x"][el] = []
         for var in re.findall(rp.re_variables, amt):
-            formula_data["amounts_x"][var] = []
+            formula_data["amounts_x"][var] = {}
 
     formula, \
     elements, \
