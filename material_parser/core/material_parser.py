@@ -7,7 +7,7 @@ from pprint import pprint
 
 class MaterialParser:
     def __init__(self, options, regexParser, preprocessings, postprocessings):
-        print ("initializing MP")
+        #print ("initializing MP")
         self._options = options
         self._regexParser = regexParser
         self._default_processing = DefaultProcessing()
@@ -66,7 +66,7 @@ class MaterialParser:
 class MaterialParserBuilder():
 
     def __init__(self):
-        print ("initializing MP builder")
+        #print ("initializing MP builder")
         self._materialParser = None
         self._fileReader = None # DefaultFileReader()
         self._regexParser = None #DefaultRegexpParser()
@@ -75,12 +75,12 @@ class MaterialParserBuilder():
 
     def addPreprocessing(self, preprocessing): # -> Builder
         self._preprocessings.append(preprocessing)
-        print ("adding another preprocessings")
+        #print ("adding another preprocessings")
         return self
 
     def addPostprocessing(self, postprocessing): # -> Builder
         self._postprocessings.append(postprocessing)
-        print ("adding another postprocessings")
+        #print ("adding another postprocessings")
         return self
 
     def setFileReader(self, fileReader): # -> Builder
@@ -89,7 +89,7 @@ class MaterialParserBuilder():
 
     def build(self): # -> MaterialParser
         #data = fileReader.read()
-        print ("building parser")
+        #print ("building parser")
         options = None
         return MaterialParser(options,
                               self._regexParser,

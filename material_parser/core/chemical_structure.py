@@ -33,6 +33,10 @@ class ChemicalStructure:
         obj.composition = data.get("composition", [])
 
     @property
+    def material_string(self):
+        return self._material_string
+
+    @property
     def material_name(self):
         return self._material_name
 

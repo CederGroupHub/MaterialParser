@@ -21,6 +21,9 @@ class MixtureProcessing(PreprocessingABC):
         if not material_string:
             return material_string, chemical_structure
 
+        if chemical_structure.material_formula:
+            material_string = chemical_structure.material_formula
+
         split = self.__split_formula(material_string)
         l = 0
         while len(split) != l:

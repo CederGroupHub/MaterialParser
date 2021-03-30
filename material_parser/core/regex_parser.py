@@ -99,3 +99,8 @@ re_stoichiometric_range_ft = r"[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)"
 elements variables
 """
 re_elements_values = r"\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)"
+
+"""
+acronyms dictionary
+"""
+re_capitals_no_O = "[A-NP-Z]"

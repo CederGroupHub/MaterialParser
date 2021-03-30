@@ -155,7 +155,7 @@
 		{"c_name" : "niobium", "valency" : [5], "e_name" : "Nb", "n_atoms" : 1},
 		{"c_name" : "tantalum", "valency" : [5], "e_name" : "Ta", "n_atoms" : 1},
 		{"c_name" : "chromium", "valency" : [6, 4, 3, 2], "e_name" : "Cr", "n_atoms" : 1},
-		{"c_name" : "molybdenum", "valency" : [6, 4], "e_name" : "Mo", "n_atoms" : 1},
+		{"c_name" : "molybdenum", "valency" : [6, 5, 4], "e_name" : "Mo", "n_atoms" : 1},
 		{"c_name" : "molybdic", "valency" : [6], "e_name" : "Mo", "n_atoms" : 1},
 		{"c_name" : "tungsten", "valency" : [6, 4, 3], "e_name" : "W", "n_atoms" : 1},
 		{"c_name" : "tungstic", "valency" : [6], "e_name" : "W", "n_atoms" : 1},

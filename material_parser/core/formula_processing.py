@@ -51,7 +51,10 @@ def process_formula(formula):
                                            formula_data["oxygen_deficiency"],
                                            formula_data["oxygen_deficiency_sym"])
 
-    if __is_acronym(formula, elements, elements_x):
+    pprint(elements)
+    print ( __has_negative_composition(elements))
+
+    if __is_acronym(formula, elements, elements_x) or __has_negative_composition(elements):
         return dict(formula=formula,
                     elements=OrderedDict(),
                     species=OrderedDict(),
@@ -333,3 +336,14 @@ def __is_acronym(formula, composition, variables):
         return True
 
     return False
+
+
+def __has_negative_composition(composition):
+
+    flag = False
+    try:
+        flag = any(float(amt) < 0 for el, amt in composition.items())
+    except:
+        pass
+
+    return flag

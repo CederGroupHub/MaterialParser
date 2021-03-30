@@ -23,7 +23,7 @@ class StoichiometricVariablesProcessing(PostprocessingABC):
                       "min_value": None}
             i = 0
             while not (len(values['values']) or values['max_value']) and i < len(text_sentences):
-                values = self.__get_values_from_sentence(var, text_sentences[i])
+                values = self.__get_values_from_sentence(variable, text_sentences[i])
                 i += 1
             updated_variables[variable] = values
 

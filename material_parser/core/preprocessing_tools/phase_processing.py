@@ -7,6 +7,9 @@ from material_parser.core.formula_processing import separate_phase
 class PhaseProcessing(PreprocessingABC):
     def process_string(self, material_string, chemical_structure):
 
+        if chemical_structure.material_formula:
+            material_string = chemical_structure.material_formula
+
         phase, material_string = separate_phase(material_string)
 
         if phase:

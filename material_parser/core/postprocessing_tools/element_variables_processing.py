@@ -4,7 +4,7 @@ import material_parser.core.chemical_sets as cs
 from material_parser.core.postprocessing_tools.postprocessing_abc import PostprocessingABC
 
 
-class VariablesProcessing(PostprocessingABC):
+class ElementVariablesProcessing(PostprocessingABC):
 
     def process_data(self, chemical_structure, text_sentences):
         """
