@@ -26,6 +26,8 @@ def process_formula(formula):
     :param formula: str
     :return: chemical_structure
     """
+    for s, r in cs.species_acronyms.items():
+        formula = formula.replace(s, r)
     """
     build dictionary of elements and stoichiometries
     """
@@ -315,6 +317,14 @@ def __fraction_convertion(formula):
 
 
 def __is_acronym(formula, composition, variables):
+    if len(composition) == 2 and variables:
+        return True
+
+    capital_letters = cnst.LATIN_CAPITAL - set(cs.list_of_elements_1) - {"M", "L"}
+    if [r for c in capital_letters for r in re.findall(c + "[A-Z0-9\-]", formula)] \
+            and all(w not in formula for w in ["RE", "OAC", "TM", "ME"]):
+        return True
+
     if all(e.isupper() and s in ["1.0", "1"] for e, s in composition.items()):
         return True
 

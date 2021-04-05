@@ -21,7 +21,7 @@ class ElementVariablesProcessing(PostprocessingABC):
             values = []
             i = 0
             while not values and i < len(text_sentences):
-                values = self.__get_elements_from_sentence(var, text_sentences[i].strip('., '))
+                values = self.__get_elements_from_sentence(variable, text_sentences[i].strip('., '))
                 i += 1
             updated_variables[variable] = values
 

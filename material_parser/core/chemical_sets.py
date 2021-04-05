@@ -73,3 +73,17 @@ number_to_alphabet_dict = {"specie0_": "A",
                            "specie7_": "H",
                            "specie8_": "I",
                            "specie9_": "J"}
+
+species_acronyms = {"Ac": "CH3COO",
+                    "AC": "CH3COO",
+                    "PPh3": "P(C6H5)3",
+                    "Ph3P": "P(C6H5)3",
+                    "phen": "C12H8N2",
+                    "bipy": "(C5H4N)2",
+                    "bpy": "(C5H4N)2",
+                    "tpy": "C15H11N3",
+                    "py": "C5H5N",
+                    "bun": "OCH2CH2CH2CH3",
+                    "Bun": "OCH2CH2CH2CH3",
+                    "Bu": "OCH2CH2CH2CH3"
+                    }

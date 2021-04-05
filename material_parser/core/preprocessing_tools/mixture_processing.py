@@ -5,6 +5,8 @@ from material_parser.core.preprocessing_tools.preprocessing_abc import Preproces
 from material_parser.core.utils import check_parentheses, simplify
 from material_parser.core.chemical_structure import Compound
 
+from pprint import pprint
+
 
 class MixtureProcessing(PreprocessingABC):
 
@@ -42,10 +44,24 @@ class MixtureProcessing(PreprocessingABC):
             f = simplify(f)
             output_compounds.append((m, f))
 
-        chemical_structure.composition = [{"formula": check_parentheses(m),
-                                           "amount": f} for m, f in output_compounds]
         if output_compounds:
             chemical_structure.material_formula = material_string
+
+        composition = []
+        formula = chemical_structure.material_formula
+        for m, f in output_compounds:
+            if "H2O" not in m \
+                    and len([(m,f) for m,f in output_compounds if "H2O" not in m]) == 1 \
+                    and f not in ["1", "1.0"]:
+                material_string = re.sub("^" + f, "", material_string)
+                formula = re.sub("^" + f, "", formula)
+                m = re.sub("^" + f, "", m)
+                f = "1"
+            composition.append({"formula": check_parentheses(m),
+                                "amount": f})
+
+        chemical_structure.composition = composition
+        chemical_structure.material_formula = formula
 
         return chemical_structure.material_formula, chemical_structure
 

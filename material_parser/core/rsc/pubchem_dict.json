@@ -699,5 +699,11 @@
   "yttrium indium germanate": "YInGe2O7",
   "lead barium zirconate": "(Pb1-xBax)ZrO3",
   "etOH": "CH3CH2OH",
-  "ethyl acetoacetate": "CH3COCH2COOC2H5"
+  "ethyl acetoacetate": "CH3COCH2COOC2H5",
+  "sodium titanate": "Na2Ti3O7",
+  "hydrogen titanate": "H2Ti3O7",
+  "diammonium phosphate": "(NH4)2HPO4",
+  "lead acetate": "Pb(C2H3O2)2",
+  "thioacetamide": "C2H5NS",
+  "cobalt nitrate pentahydrate": "Co(NO3)2"
 }

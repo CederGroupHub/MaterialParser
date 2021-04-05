@@ -198,6 +198,21 @@ class ChemicalStructure:
         self._amounts_x = {}
         return self
 
+    def from_dict(self, data):
+        if not isinstance(data, dict):
+            raise TypeError('Expected {} to be a dict'.format(data))
+        self._material_name = data.get("material_name", "")
+        self._material_formula = data.get("material_formula", "")
+        self._additives = data.get("additives", [])
+        self._phase = data.get("phase", "")
+        self._oxygen_deficiency = data.get("oxygen_deficiency", "")
+        self._amounts_x = data.get("amounts_x", {})
+        self._elements_x = data.get("elements_x", {})
+        self._composition = [Compound(formula=c.get("formula", ""),
+                                      amount=c.get("amount", ""),
+                                      elements=c.get("elements", OrderedDict()),
+                                      species=c.get("species", OrderedDict())) for c in data.get("composition", [])]
+
     def to_dict(self):
         return dict(material_string=self._material_string,
                     material_name=self._material_name,

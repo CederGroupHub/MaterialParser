@@ -12,10 +12,12 @@ class DefaultProcessing(PreprocessingABC):
         data = {}
         if not chemical_structure.composition:
             data = process_formula(material_string)
-            data["composition"] = [{"formula": data["formula"],
-                                    "amount": "1",
-                                    "elements": data["elements"],
-                                    "species": data["species"]}]
+            if data["elements"]:
+                data["composition"] = [{"formula": data["formula"],
+                                        "amount": "1",
+                                        "elements": data["elements"],
+                                        "species": data["species"]}]
+
         else:
             composition = []
             oxygen_def = chemical_structure.oxygen_deficiency
@@ -28,6 +30,11 @@ class DefaultProcessing(PreprocessingABC):
                 amount = compound.amount
                 formula = cs.default_abbreviations.get(formula, formula)
                 data = process_formula(formula)
+                if not data["elements"]:
+                    composition = []
+                    amounts_x = {}
+                    elements_x = {}
+                    break
                 new_compound = {"formula": data["formula"],
                                 "amount": amount,
                                 "elements": data["elements"],

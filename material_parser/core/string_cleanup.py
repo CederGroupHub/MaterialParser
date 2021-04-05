@@ -68,8 +68,12 @@ def cleanup_name(material_name):
     # removing phase
     for c in ["(s)", "(l)", "(g)", "(aq)"]:
         material_name = material_name.replace(c, "")
+    material_name = re.sub("\([a-w]{2}\.{0,1}\)$", "", material_name)
 
-    # removing trach words
+    # removing numbers in front of the formula
+    material_name = re.sub("^[0-9]{3,}", "", material_name)
+
+    # removing trash words
     for word in rp.re_trash_terms:
         material_name = re.sub("[A-Za-z-]*" + word + "[a-z-]*", "", material_name)
         material_name = re.sub(word.capitalize() + "[a-z-]*", "", material_name)
@@ -92,6 +96,10 @@ def cleanup_name(material_name):
         split = re.split(c, material_name)
         if len(split) > 1 and (len(split[-1]) == "" or all(not s.isalpha() for s in split[-1])):
             material_name = "".join([s for s in split[:-1]])
+
+    material_name = re.sub("[C]{0,1}N[TFP]{1}[s]{0,1}", "", material_name)
+    if material_name[-2:] not in ["Cs", "As", "Os"]:
+        material_name = re.sub("[\-]([A-NP-Z]+[s]{0,1})$", "", material_name)
 
     for typo, correct in typos.items():
         material_name = material_name.replace(typo, correct)
