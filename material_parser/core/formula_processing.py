@@ -64,6 +64,9 @@ def process_formula(formula):
 
     species = __get_species(formula) if len(elements) > 2 or formula == "H2O" else elements
 
+    # print (formula)
+    # pprint(elements)
+
     return dict(formula=formula,
                 elements=elements,
                 species=species,
@@ -317,6 +320,13 @@ def __fraction_convertion(formula):
 
 
 def __is_acronym(formula, composition, variables):
+
+    if formula in cs.ions:
+        return False
+
+    if any(ion in formula and len(ion) > 1 for ion in cs.ions):
+        return False
+
     if len(composition) == 2 and variables:
         return True
 

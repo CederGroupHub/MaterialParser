@@ -280,7 +280,7 @@
       {
         "material_string": "Copper Sulfate Pentahydrate",
         "material_name": "Copper Sulfate Pentahydrate",
-        "material_formula": "Cu2(SO4)3·5H2O",
+        "material_formula": "CuSO4·5H2O",
         "phase": "",
         "additives": [],
         "is_acronym": false,
@@ -289,16 +289,16 @@
         "elements_x": {},
         "composition": [
           {
-            "formula": "Cu2(SO4)3",
+            "formula": "CuSO4",
             "amount": "1",
             "elements": {
-              "S": "3",
-              "O": "12",
-              "Cu": "2"
+              "Cu": "1",
+              "S": "1",
+              "O": "4"
             },
             "species": {
-              "SO4": "3",
-              "Cu": "2"
+              "Cu": "1",
+              "SO4": "1"
             }
           },
           {
@@ -2862,14 +2862,14 @@
           "amount": "1",
           "elements": {
             "La": "(x-1)*(z-1)",
-            "Ca": "x*(1-z)",
+            "Ca": "x*(-z+1)",
             "Cr": "1-y",
             "Ti": "y",
             "O": "3"
           },
           "species": {
             "La": "(x-1)*(z-1)",
-            "Ca": "x*(1-z)",
+            "Ca": "x*(-z+1)",
             "Cr": "1-y",
             "Ti": "y",
             "O": "3"
@@ -3404,6 +3404,90 @@
               "Y": "x",
               "Li": "x",
               "SiO4": "1"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "(NH4)6Mo7O24.4H2O",
+  "parser_output": [
+    {
+      "material_string": "(NH4)6Mo7O24·4H2O",
+      "material_name": "",
+      "material_formula": "(NH4)6Mo7O24·4H2O",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
+      "composition": [
+        {
+            "formula": "(NH4)6Mo7O24",
+            "amount": "1",
+            "elements": {
+              "N": "6",
+              "H": "24",
+              "Mo": "7",
+              "O": "24"
+            },
+            "species": {
+              "NH4": "6",
+              "Mo7O24": "1"
+            }
+          },
+        {
+            "formula": "H2O",
+            "amount": "4",
+            "elements": {
+              "H": "2",
+              "O": "1"
+            },
+            "species": {
+              "H2O": "1"
+            }
+          }
+      ]
+    }
+  ]
+},
+  {
+  "material": "CdCl2·2.5H2O",
+  "parser_output": [
+    {
+      "material_string": "CdCl2·2.5H2O",
+      "material_name": "",
+      "material_formula": "CdCl2·2.5H2O",
+      "phase": "",
+      "additives": [],
+      "is_acronym": false,
+      "oxygen_deficiency": "",
+      "amounts_x": {},
+      "elements_x": {},
+      "composition": [
+        {
+            "formula": "CdCl2",
+            "amount": "1",
+            "elements": {
+              "Cd": "1",
+              "Cl": "2"
+            },
+            "species": {
+              "Cd": "1",
+              "Cl": "2"
+            }
+          },
+        {
+            "formula": "H2O",
+            "amount": "2.5",
+            "elements": {
+              "H": "2",
+              "O": "1"
+            },
+            "species": {
+              "H2O": "1"
             }
           }
       ]

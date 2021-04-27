@@ -51,6 +51,7 @@ class MaterialParser:
         default functionality: extraction of data from chemical formula
         """
         material_string, output_structure = self._default_processing.process_string(material_string, output_structure)
+        #pprint(output_structure.to_dict())
 
         """
         postprocessing steps

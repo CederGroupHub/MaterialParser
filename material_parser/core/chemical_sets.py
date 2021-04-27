@@ -6,30 +6,33 @@ __filename = os.path.dirname(os.path.realpath(__file__))
 
 pubchem_dictionary = json.loads(open(os.path.join(__filename, "rsc/pubchem_dict.json")).read())
 default_abbreviations = json.loads(open(os.path.join(__filename, "rsc/abbreviations.json")).read())
-ions = json.loads(open(os.path.join(__filename, "rsc/ions_dictionary.json")).read())
+ions_table = json.loads(open(os.path.join(__filename, "rsc/ions_dictionary.json")).read())
 
-element2name = ions.get("elements")
+element2name = ions_table.get("elements")
 list_of_elements_1 = {el for el in element2name.keys() if len(el) == 1}
 list_of_elements_2 = {el for el in element2name.keys() if len(el) == 2}
 list_of_elements = list_of_elements_1 | list_of_elements_2
 name2element = {v: k for k, v in element2name.items()}
 
+ions = {ion["e_name"] for ion in ions_table.get("anions")}
+ions.update({ion["e_name"] for ion in ions_table.get("cations")})
+
 anions = {ion.get("c_name"): {"valency": ion.get("valency"),
                               "e_name": ion.get("e_name"),
-                              "n_atoms": ion.get("n_atoms")} for ion in ions.get("anions")}
+                              "n_atoms": ion.get("n_atoms")} for ion in ions_table.get("anions")}
 
 cations = {ion.get("c_name"): {"valency": ion.get("valency"),
                                "e_name": ion.get("e_name"),
-                               "n_atoms": ion.get("n_atoms")} for ion in ions.get("cations")}
+                               "n_atoms": ion.get("n_atoms")} for ion in ions_table.get("cations")}
 list_of_anions = set(anions.keys())
 list_of_cations = set(cations.keys())
 
 species = tuple(sorted([ion.get("e_name")
-                        for ion in ions.get("anions") if ion.get("e_name") not in ["O2", "S2"]] +
-                       [ion.get("e_name") for ion in ions.get("cations")] +
+                        for ion in ions_table.get("anions") if ion.get("e_name") not in ["O2", "S2"]] +
+                       [ion.get("e_name") for ion in ions_table.get("cations")] +
                        [e for e in element2name.keys()] +
-                       ions.get("species") +
-                       ions["oxyanions"], key=lambda x: len(x), reverse=True))
+                       ions_table.get("species") +
+                       ions_table["oxyanions"], key=lambda x: len(x), reverse=True))
 
 diatomic_molecules = {"O2", "N2", "H2"}
 

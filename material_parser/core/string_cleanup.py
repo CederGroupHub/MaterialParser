@@ -55,6 +55,8 @@ def cleanup_name(material_name):
     re_str = "[\\" + "".join(C.DOTS) + "]"
     material_name = re.sub(re_str, chr(183), material_name)
     material_name = re.sub(r"\s" + chr(183) + r"\s", chr(183), material_name)
+    if chr(183) not in material_name:
+        material_name = re.sub(r"\.([0-9x]*H2O)", chr(183)+"\\1", material_name)
 
     # correcting slashes
     slashes = [8725]

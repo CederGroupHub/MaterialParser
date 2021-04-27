@@ -93,7 +93,7 @@ class ChemicalStructure:
         if not isinstance(value, str):
             raise TypeError('Expected {} to be an str'.format(value))
         if len(value) > 1:
-            raise ValueError('Expected {oxy_def} to be a symbol'.format(value))
+            raise ValueError('Expected {} to be a symbol'.format(value))
         if value not in DEFICIENCY_CHARS:
             raise ValueError('Expected {oxy_def} symbols to be one of {sym_set}'
                              .format(oxy_def=value, sym_set=DEFICIENCY_CHARS))
@@ -137,13 +137,14 @@ class ChemicalStructure:
     def composition(self, value):
         if not isinstance(value, list):
             raise TypeError('Expected {} to be a list'.format(value))
-        if any(not isinstance(c, dict) for c in value):
-            raise TypeError('Expected {} to have items of type dict'.format(value))
-        self._composition = [Compound(formula=v.get("formula", ""),
-                                      amount=v.get("amount", ""),
-                                      elements=v.get("elements", OrderedDict()),
-                                      species=v.get("species", OrderedDict()))
-                             for v in value]
+        if all(isinstance(c, dict) for c in value):
+            self._composition = [Compound(formula=v.get("formula", ""),
+                                          amount=v.get("amount", ""),
+                                          elements=v.get("elements", OrderedDict()),
+                                          species=v.get("species", OrderedDict()))
+                                 for v in value]
+        else:
+            self._composition = [v for v in value]
 
     def add_compound(self, compound_data):
         if not isinstance(compound_data, dict):
@@ -170,7 +171,7 @@ class ChemicalStructure:
             delimiter = chr(183) if "H2O" in formula else "-"
             new_formula = new_formula + delimiter + coeff + formula
 
-        new_formula = new_formula.replace("*", "").lstrip("-")
+        new_formula = new_formula.replace("*", "").lstrip("-").lstrip(chr(183))
         self._material_formula = new_formula
 
     def element_structure(self, element):
@@ -197,6 +198,21 @@ class ChemicalStructure:
         self._elements_x = {}
         self._amounts_x = {}
         return self
+
+    def copy(self):
+        new_obj = ChemicalStructure(self._material_string)
+        new_obj._material_formula = self._material_formula
+        new_obj._material_name = self._material_name
+        new_obj._additives = self._additives.copy()
+        new_obj._phase = self._phase
+        new_obj._oxygen_deficiency = self._oxygen_deficiency
+        new_obj._amounts_x = self._amounts_x.copy()
+        new_obj._elements_x = self._elements_x.copy()
+        new_obj._composition = [Compound(formula=c.formula,
+                                         amount=c.amount,
+                                         elements=c.elements.copy(),
+                                         species=c.species.copy()) for c in self._composition]
+        return new_obj
 
     def from_dict(self, data):
         if not isinstance(data, dict):
