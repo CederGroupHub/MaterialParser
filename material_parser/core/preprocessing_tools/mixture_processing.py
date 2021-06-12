@@ -1,6 +1,4 @@
 import regex as re
-import material_parser.core.regex_parser as rp
-import material_parser.core.chemical_sets as cs
 from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
 from material_parser.core.utils import check_parentheses, simplify
 from material_parser.core.chemical_structure import Compound
@@ -37,19 +35,15 @@ class MixtureProcessing(PreprocessingABC):
 
         output_compounds = []
         for m, f in split:
-            # try:
-            #     f = smp.simplify(f)
-            #     if f.is_Number:
-            #         f = round(float(f), 3)
-            #     f = str(f)
-            # except:
-            #     f = "1"
             f = simplify(f)
             output_compounds.append((m, f))
 
         if output_compounds:
             chemical_structure.material_formula = material_string
 
+        """
+        create composition object for output from compounds and fraction
+        """
         composition = []
         formula = chemical_structure.material_formula
         for m, f in output_compounds:
@@ -76,50 +70,24 @@ class MixtureProcessing(PreprocessingABC):
         :param init_fraction:
         :return: list of tuples (compound, fraction/amount)
         """
-
         material_name = material_name_.replace(" ", "")
 
         """
         cases: (N-x-y)compound1+(x)compound2+(y)compound3
         """
-        pref = [s for s in re.split(rp.re_split_prefix, material_name) if s]
-        if len(pref) > 1:
-            material_name_temp = pref.pop()
-            amount = pref.pop()
-            variables = re.findall("[a-z]", amount)
-            for v in variables:
-                material_name = material_name.replace("(" + v + ")", v)
-            compounds = []
-            while variables:
-                v = variables.pop()
-                parts = re.findall(rp.re_separators + v + "(.*)$", material_name_temp)
-                if parts:
-                    compounds.append((parts[0][1], v))
-                    material_name_temp = parts[0][0]
-            compounds.append((material_name_temp, amount.strip("()")))
-            return [c for c in reversed(compounds)]
+        compounds = self._re.split_mixture_fractions(material_name)
+        if compounds:
+            return compounds
 
         """
         general case xA-yB-zC
         """
-        parts = [p for p in re.split(rp.re_split_mixture, material_name) if p]
-        #print("-->", material_name, parts)
+        compounds = self._re.split_mixture(material_name)
+        return self.__prettify_compound_fraction(compounds, init_fraction)
 
-        parts_upd = [p for part in parts for p in re.split(rp.re_split_mixture_2, part)] if len(parts) > 1 else parts
-
-        if any(m.strip("0987654321") in cs.list_of_elements for m in parts_upd[:-1]):
-            parts_upd = ["".join([p + "-" for p in parts_upd]).rstrip("-")]
-
-        merged_parts = [parts_upd[0]]
-        for m in parts_upd[1:]:
-            if re.findall("[A-Z]", m) == ["O"]:
-                to_merge = merged_parts.pop() + "-" + m
-                merged_parts.append(to_merge)
-            else:
-                merged_parts.append(m)
-
-        composition = []
-        for m in merged_parts:
+    def __prettify_compound_fraction(self, compounds, init_fraction):
+        compound_fraction = []
+        for m in compounds:
             fraction = ""
             i = 0
             while i < len(m) and not m[i].isupper():
@@ -134,5 +102,5 @@ class MixtureProcessing(PreprocessingABC):
             fraction = "(" + fraction + ")*(" + init_fraction + ")"
 
             if m != "":
-                composition.append((m, fraction))
-        return composition
+                compound_fraction.append((m, fraction))
+        return compound_fraction

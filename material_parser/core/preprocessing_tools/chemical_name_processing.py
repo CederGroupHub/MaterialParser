@@ -1,6 +1,5 @@
 # coding=utf-8
 import regex as re
-import material_parser.core.regex_parser as rp
 import material_parser.core.chemical_sets as cs
 from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
 from material_parser.core.formula_processing import process_formula
@@ -71,7 +70,7 @@ class ChemicalNameProcessing(PreprocessingABC):
         material_string = re.sub(r"\s{2,}", " ", material_string)
         split = re.split(r"\s", material_string)
         """
-        if it is one term - return the term only
+        if one term - return the term only
         """
         if len(split) == 1:
             return "", material_string

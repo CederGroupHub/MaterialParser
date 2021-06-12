@@ -77,7 +77,7 @@ def parse_formula(formula, regex_parser):
     """
     separate oxygen deficiency
     """
-    formula, oxygen_deficiency, oxygen_deficiency_sym = regex_parser.get_oxygen_deficiency(formula)
+    formula, oxygen_deficiency, oxygen_deficiency_sym = regex_parser.separate_oxygen_deficiency(formula)
 
     """
     converting fractions a(b+x)/c into (a/c*b+a/c*x)
@@ -136,11 +136,9 @@ def __get_composition(init_formula):
 
 
 def __parse_parentheses(init_formula, init_factor, curr_dict):
-
-    for m in re.finditer(rp.re_in_parentheses, init_formula):
-        # print("--->", m.group(0), m.group(1), m.group(2))
+    re_in_parentheses = r"\(((?>[^\(\)]+|(?R))*)\)\s*([-*\.\da-z\+/]*)"
+    for m in re.finditer(re_in_parentheses, init_formula):
         factor = m.group(2) if m.group(2) != "" else "1"
-
         factor = simplify("(" + str(init_factor) + ")*(" + str(factor) + ")")
         unit_sym_dict = __parse_parentheses(m.group(1), factor, curr_dict)
         init_formula = init_formula.replace(m.group(0), "")
@@ -159,6 +157,7 @@ def __parse_parentheses(init_formula, init_factor, curr_dict):
 
 
 def __get_sym_dict(f, factor):
+    re_sym_dict = r"([A-Z□]{1}[a-z]{0,1})\s*([\-\*\.\da-z" + "".join(cnst.GREEK_CHARS) + r"\+\/]*)"
     sym_dict = OrderedDict()
 
     def get_code_value(code, iterator):
@@ -168,7 +167,7 @@ def __get_sym_dict(f, factor):
                         "00": (iterator.group(1)[0], iterator.group(1)[1:] + iterator.group(2))}
         return code_mapping[code]
 
-    for m in re.finditer(rp.re_sym_dict, f):
+    for m in re.finditer(re_sym_dict, f):
         """
         checking for correct elements names
         """

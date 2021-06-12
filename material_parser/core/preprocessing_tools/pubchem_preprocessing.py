@@ -1,5 +1,4 @@
 import pubchempy as pcp
-import regex as re
 from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
 
 
@@ -17,7 +16,7 @@ class PubchemProcessing(PreprocessingABC):
         :return:
         """
         material_formula = material_string
-        if re.findall("[a-z]{4,}", material_string) and not chemical_structure.material_formula:
+        if self._re.is_chemical_term(material_string) and not chemical_structure.material_formula:
             pcp_compounds = pcp.get_compounds(material_string, 'name')
             if len(pcp_compounds) != 0:
                 material_formula = pcp_compounds[0].molecular_formula
