@@ -2008,44 +2008,6 @@
     ]
   },
   {
-    "material": "La8Y2(GeO4)6-x(GaO4)xO3-x2",
-    "parser_output": [
-      {
-        "material_string": "La8Y2(GeO4)6-x(GaO4)xO3-x2",
-        "material_name": "",
-        "material_formula": "La8Y2(GeO4)6-x(GaO4)xO3",
-        "phase": "",
-        "additives": [],
-        "is_acronym": false,
-        "oxygen_deficiency": "-",
-        "amounts_x": {
-          "x": {"max_value": null, "min_value": null, "values": []}
-        },
-        "elements_x": {},
-        "composition": [
-          {
-            "formula": "La8Y2(GeO4)6-x(GaO4)xO3",
-            "amount": "1",
-            "elements": {
-              "Ge": "6-x",
-              "O": "27",
-              "Ga": "x",
-              "La": "8",
-              "Y": "2"
-            },
-            "species": {
-              "Ge": "6-x",
-              "O": "27",
-              "Ga": "x",
-              "La": "8",
-              "Y": "2"
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
     "material": "SrFe1-xMxO3-z",
     "parser_output": [
       {

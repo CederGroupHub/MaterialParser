@@ -10,6 +10,9 @@ from pprint import pprint
 
 class MixtureProcessing(PreprocessingABC):
 
+    def __init__(self, regex_parser):
+        super(MixtureProcessing, self).__init__(regex_parser)
+
     def process_string(self, material_string, chemical_structure):
         """
         splitting the complex mixture/composite/alloy formula into compounds

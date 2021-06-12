@@ -8,6 +8,9 @@ from material_parser.core.preprocessing_tools.preprocessing_abc import Preproces
 class AdditivesProcessing(PreprocessingABC):
     __doping_terms = {"activated", "modified", "stabilized", "doped", "added"}
 
+    def __init__(self, regex_parser):
+        super(AdditivesProcessing, self).__init__(regex_parser)
+
     def process_string(self, material_string, chemical_structure):
         """
         resolves doped part in material string

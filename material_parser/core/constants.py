@@ -7,7 +7,7 @@ LATIN_LOWERCASE = {chr(i) for i in range(97, 123)}
 PUNCTUATIONS = {".", "(", ")"}
 PUNCTUATIONS_EXT = PUNCTUATIONS | {",", "-", "[", "]", "%"}
 GREEK_CHARS = {chr(i) for i in range(945, 970)}
-SIGNS = {"+", "-", chr(177), chr(8723)} #plus-minus, minus-plus
+SIGNS = {"+", "-", "±", "∓"} #plus-minus, minus-plus
 DEFICIENCY_CHARS = SIGNS | {chr(948), ""} #delta, empty
 
 DASHES = {chr(8722)} | {chr(i) for i in range(8208, 8214)}

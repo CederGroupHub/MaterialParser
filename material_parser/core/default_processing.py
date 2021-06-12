@@ -6,12 +6,17 @@ from material_parser.core.formula_processing import process_formula
 
 
 class DefaultProcessing(PreprocessingABC):
+    
+    def __init__(self, regex_parser):
+        super(DefaultProcessing, self).__init__(regex_parser)
+    # def __init__(self):
+    #     self._re = None
 
     def process_string(self, material_string, chemical_structure):
 
         data = {}
         if not chemical_structure.composition:
-            data = process_formula(material_string)
+            data = process_formula(material_string, self._re)
             if data["elements"]:
                 data["composition"] = [{"formula": data["formula"],
                                         "amount": "1",
@@ -29,7 +34,7 @@ class DefaultProcessing(PreprocessingABC):
                 formula = compound.formula
                 amount = compound.amount
                 formula = cs.default_abbreviations.get(formula, formula)
-                data = process_formula(formula)
+                data = process_formula(formula, self._re)
                 if not data["elements"]:
                     composition = []
                     amounts_x = {}

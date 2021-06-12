@@ -78,6 +78,7 @@ number_to_alphabet_dict = {"specie0_": "A",
                            "specie9_": "J"}
 
 species_acronyms = {"Ac": "CH3COO",
+                    "(ac)": "(CH3COO)",
                     "AC": "CH3COO",
                     "PPh3": "P(C6H5)3",
                     "Ph3P": "P(C6H5)3",

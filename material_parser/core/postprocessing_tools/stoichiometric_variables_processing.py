@@ -5,6 +5,9 @@ from material_parser.core.utils import simplify
 
 
 class StoichiometricVariablesProcessing(PostprocessingABC):
+    
+    def __init__(self, regex_parser):
+        super(StoichiometricVariablesProcessing, self).__init__(regex_parser)
 
     def process_data(self, chemical_structure, text_sentences):
         """

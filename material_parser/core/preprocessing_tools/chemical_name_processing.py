@@ -9,6 +9,9 @@ from material_parser.core.utils import lcm, cast_stoichiometry
 
 class ChemicalNameProcessing(PreprocessingABC):
 
+    def __init__(self, regex_parser):
+        super(ChemicalNameProcessing, self).__init__(regex_parser)
+
     def process_string(self, material_string, chemical_structure):
         """
         attempts to reconstruct chemical formula from arbitrary chemical name
@@ -67,7 +70,6 @@ class ChemicalNameProcessing(PreprocessingABC):
         material_string = material_string.replace("[", " [").strip()
         material_string = re.sub(r"\s{2,}", " ", material_string)
         split = re.split(r"\s", material_string)
-
         """
         if it is one term - return the term only
         """
@@ -265,12 +267,12 @@ class ChemicalNameProcessing(PreprocessingABC):
         if re.match(r"(\s*\([IV,]+\))", formula):
             return {}
 
-        try:
-            chem_struct = process_formula(formula)
-            composition = {"elements": chem_struct["elements"],
-                           "elements_x": chem_struct["elements_x"]}
-        except:
-            composition = {'elements': {}, 'elements_x': {}}
+        #try:
+        chem_struct = process_formula(formula, self._re)
+        composition = {"elements": chem_struct["elements"],
+                       "elements_x": chem_struct["elements_x"]}
+        # except:
+        #     composition = {'elements': {}, 'elements_x': {}}
         if self.__is_abbreviation_composition(composition):
             return {}
 

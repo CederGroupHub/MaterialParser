@@ -6,8 +6,13 @@ class PostprocessingABC(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (hasattr(subclass, 'process_data') and
-                callable(subclass.process_data) or
+                callable(subclass.process_data) and
+                hasattr(subclass, '_re') or
                 NotImplemented)
+
+    @abc.abstractmethod
+    def __init__(self, regex_parser):
+        self._re = regex_parser
 
     @abc.abstractmethod
     def process_data(self, chemical_structure, text_sentences=[]):

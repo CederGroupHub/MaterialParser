@@ -1,4 +1,5 @@
 import material_parser.core.chemical_sets as cs
+
 from material_parser.core.chemical_structure import ChemicalStructure, Compound
 from material_parser.core.default_processing import DefaultProcessing
 
@@ -6,11 +7,11 @@ from pprint import pprint
 
 
 class MaterialParser:
-    def __init__(self, options, regexParser, preprocessings, postprocessings):
+    def __init__(self, options, regex_parser, preprocessings, postprocessings):
         #print ("initializing MP")
         self._options = options
-        self._regexParser = regexParser
-        self._default_processing = DefaultProcessing()
+        self._regex_parser = regex_parser
+        self._default_processing = DefaultProcessing(regex_parser)
         self._preprocessings = preprocessings
         self._postprocessings = postprocessings
 
@@ -41,8 +42,9 @@ class MaterialParser:
         preprocessing steps
         """
         for p in self._preprocessings:
-            material_string, output_structure = p.process_string(material_string, output_structure)
-            # print (p.__class__.__name__)
+            material_string, output_structure = p(self._regex_parser).process_string(material_string,
+                                                                                     output_structure)
+            #print (p.__class__.__name__)
             # print ("String: {}, formula: {}, name: {}".format(material_string,
             #                                                   output_structure.material_formula,
             #                                                   output_structure.material_name))
@@ -50,14 +52,15 @@ class MaterialParser:
         """
         default functionality: extraction of data from chemical formula
         """
-        material_string, output_structure = self._default_processing.process_string(material_string, output_structure)
+        material_string, output_structure = self._default_processing.process_string(material_string,
+                                                                                    output_structure)
         #pprint(output_structure.to_dict())
 
         """
         postprocessing steps
         """
         for p in self._postprocessings:
-            output_structure = p.process_data(output_structure)
+            output_structure = p(self._regex_parser).process_data(output_structure)
 
         output_structure.combine_formula()
 
@@ -69,30 +72,33 @@ class MaterialParserBuilder():
     def __init__(self):
         #print ("initializing MP builder")
         self._materialParser = None
-        self._fileReader = None # DefaultFileReader()
-        self._regexParser = None #DefaultRegexpParser()
+        self._file_reader = None # DefaultFileReader()
+        self._regex_parser = None #DefaultRegexpParser()
         self._preprocessings = []
         self._postprocessings = []
 
-    def addPreprocessing(self, preprocessing): # -> Builder
+    def add_preprocessing(self, preprocessing): # -> Builder
         self._preprocessings.append(preprocessing)
         #print ("adding another preprocessings")
         return self
 
-    def addPostprocessing(self, postprocessing): # -> Builder
+    def add_postprocessing(self, postprocessing): # -> Builder
         self._postprocessings.append(postprocessing)
         #print ("adding another postprocessings")
         return self
 
-    def setFileReader(self, fileReader): # -> Builder
-        self._fileReader = fileReader
+    def set_file_reader(self, fileReader): # -> Builder
+        self._file_reader = file_reader
         return self
 
-    def build(self): # -> MaterialParser
+    def set_regex_parser(self, regex_parser): # -> Builder
+        self._regex_parser = regex_parser()
+        return self
+
+    def build(self, options=None): # -> MaterialParser
         #data = fileReader.read()
         #print ("building parser")
-        options = None
         return MaterialParser(options,
-                              self._regexParser,
+                              self._regex_parser,
                               self._preprocessings,
                               self._postprocessings)

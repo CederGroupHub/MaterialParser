@@ -8,6 +8,9 @@ import material_parser.core.chemical_sets as cs
 
 class SubstituteAdditives(PostprocessingABC):
 
+    def __init__(self, regex_parser):
+        super(SubstituteAdditives, self).__init__(regex_parser)
+
     def process_data(self, chemical_structure, text_sentences=[]):
         additives = chemical_structure.additives
 
@@ -15,7 +18,7 @@ class SubstituteAdditives(PostprocessingABC):
             return chemical_structure
 
         additive = additives[0]
-        additive_data = process_formula(additive)
+        additive_data = process_formula(additive, self._re)
 
         if len(additive_data["elements"]) > 1:
             """

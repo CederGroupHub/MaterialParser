@@ -4,6 +4,9 @@ from material_parser.core.preprocessing_tools.preprocessing_abc import Preproces
 
 
 class PubchemProcessing(PreprocessingABC):
+    
+    def __init__(self, regex_parser):
+        super(PubchemProcessing, self).__init__(regex_parser)
 
     def process_string(self, material_string, chemical_structure):
         """

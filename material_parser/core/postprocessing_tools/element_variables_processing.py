@@ -5,6 +5,9 @@ from material_parser.core.postprocessing_tools.postprocessing_abc import Postpro
 
 
 class ElementVariablesProcessing(PostprocessingABC):
+    
+    def __init__(self, regex_parser):
+        super(ElementVariablesProcessing, self).__init__(regex_parser)
 
     def process_data(self, chemical_structure, text_sentences):
         """
