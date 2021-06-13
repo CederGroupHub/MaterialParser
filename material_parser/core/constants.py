@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+SETS
+"""
 NUMBERS = {chr(i) for i in range(48, 58)}
 OPERATIONS = {"+", "-", "/", "*"}
 VARIABLES = {"x", "y", "z", "a", "b", "c", "k", "n", "m", "d"}
@@ -21,6 +24,15 @@ NAME_SYMBOLS_SET = LATIN_CAPITAL | LATIN_LOWERCASE | PUNCTUATIONS_EXT | GREEK_CH
 FORMULA_SYMBOLS_SET = NUMBERS | LATIN_CAPITAL | LATIN_LOWERCASE | OPERATIONS | PUNCTUATIONS | GREEK_CHARS | \
                       HYDRATE | VACANCIES | {","} | DEFICIENCY_CHARS
 AMOUNTS_SYMBOLS_SET = NUMBERS | VARIABLES | OPERATIONS | PUNCTUATIONS
+
+"""
+REGEX STRINGS
+"""
+NUMBERS_STR = "0987654321+-"
+ANY_LOWERCASE = "[a-z]*"
+ONE_LOWERCASE = "[a-z]+"
+ANY_UPPERCASE = "[A-Z]*"
+ONE_UPPERCASE = "[A-Z]+"
 
 #chr(ord("\ue5f8"))
 #chr(173)

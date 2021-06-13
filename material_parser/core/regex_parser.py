@@ -184,7 +184,7 @@ class RegExParser:
                 for e in cs.list_of_elements_2:
                     part = part.replace(e, "&&")
 
-            if all(e.strip("zyx,+0987654321. ") in self._list_of_elements_1 | {"R", "&&"}
+            if all(e.strip("zyx,. "+C.NUMBERS_STR) in self._list_of_elements_1 | {"R", "&&"}
                    for e in re.split(r"[\s,/]", part) if e != ""):
                 additives.append(part_.strip(" "))
             else:
@@ -265,6 +265,51 @@ class RegExParser:
         return re.findall("[a-z]{4,}", material_string) != []
 
     """
+    ADDITIVES SUBSTITUTION
+    """
+    def get_additives_coefficient(self, additive):
+        """
+        find any stoichiometric coefficient next to the additive and split the list of additives
+        e.g. 0.05Eu -> 0.05 and Eu
+        :param additives: List
+        :return:
+        """
+        r = r"^[x0-9\.]+|[x0-9\.]+$"
+        coeff = re.findall(r, additive)
+        element = [s for s in re.split(r, additive) if s != ""][0]
+        return element, coeff
+
+    def additive_symbolic_substitution(self, elements, coeff):
+        """
+        create symbolic expression of substition of additive into total composition
+        :param elements: Compound.elements
+        :param coeff:
+        :return:
+        """
+        expr = "".join(["(" + v + ")+" for e, v in elements.items()]).rstrip("+")
+        coeff = coeff[0] if not re.match("^[0]+[1-9]", coeff[0]) else "0." + coeff[0][1:]
+        expr = expr + "+(" + coeff + ")"
+
+        return expr, coeff
+
+    """
+    ELEMENTS VARIABLES PROCESSING
+    """
+    def get_elements_from_sentence(self, var, sentence):
+        """
+        find elements values for var in the sentence
+        :param var: <str> variable name
+        :param sentence: <str> sentence to look for
+        :return: <list> of <str> found values
+        """
+        RE_ELEMENTS_VALUES = r"\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)"
+        values = re.findall(var + RE_ELEMENTS_VALUES, sentence)
+        values = [c.rstrip(C.NUMBERS_STR) for v in values for c in re.split(r"[,\s]", v)
+                  if c.rstrip(C.NUMBERS_STR) in self._list_of_elements]
+
+        return list(set(values))
+
+    """
     formula processing: finding stoichiometric variables
     """
     @property
@@ -272,7 +317,7 @@ class RegExParser:
         return r"[a-z" + self._greek_symbols + r"]"
 
     """
-    finding stoichiometric variables
+    STOICHIOMETRIC VARIABLES PROCESSING
     """
     @property
     def re_stoichiometric_values(self):
@@ -294,54 +339,11 @@ class RegExParser:
     def re_stoichiometric_range_ft(self):
         return r"[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)"
 
-    """
-    finding elements variables
-    """
-    @property
-    def re_elements_values(self):
-        return r"\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)"
-
 
 """
 stoichiometric variables
 """
 re_variables = r"[a-z" + "".join(C.GREEK_CHARS) + r"]"
-
-"""
-string cleanup
-"""
-re_compare_signs = r"\({0,1}[0-9\.]*\s*[" + \
-                   "".join(C.COMPARE_SIGNS) + \
-                   r"]{0,1}\s*[x,y]{0,1}\s*[" + \
-                   "".join(C.COMPARE_SIGNS) + \
-                   r"=]\s*[0-9\.-]*\){0,1}"
-
-re_oxygen_deficiency_replace = r"O[0-9\.]*\s*[±\+\-∓]\s*([" + r"".join(C.GREEK_CHARS) + r"]{1})"
-
-re_tail_trash = [r"\(⩾99", r"\(99", r"\(98", r"\(90", r"\(95", r"\(96", r"\(Alfa", r"\(Aldrich", r"\(A.R.",
-                 r"\(Aladdin", r"\(Sigma", r"\(A.G", r"\(Fuchen", r"\(Furuuchi", r"\(AR\)", "（x", r"\(x",
-                 r"\(Acr[a-z]*", r"\(Koj", r"\(Sho", r"\(＞99"]
-
-re_trash_syms = ["#", "$", "!", "@", "©", "®", chr(8201), "Ⓡ", "\u200b"]
-
-re_trash_terms = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat", "crystal", "particl", "glass"]
-
-re_parentheses_open = ["{", "["]
-re_parentheses_close = ["}", "]"]
-
-"""
-stoichiometric variables
-"""
-re_stoichiometric_values = r"\s*=\s*([-]{0,1}[0-9\.\,/and\s]+)[\s\)\]\,]"
-re_stoichiometric_range_lhs = r"([0-9\.\s]*)\s*[<≤⩽]{0,1}\s*"
-re_stoichiometric_range_rhs = r"\s*[<≤⩽>]{1}\s*([0-9\.\s]+)[\s\)\]\.\,]"
-re_stoichiometric_range_hyphen = r"\s*=\s*([0-9\.]+)\s*[-–]\s*([0-9\.\s]+)[\s\)\]\,m\%]"
-re_stoichiometric_range_ft = r"[a-z\s]*from\s([0-9\./]+)\sto\s([0-9\./]+)"
-
-"""
-elements variables
-"""
-re_elements_values = r"\s*[=:]{1}\s*([A-Za-z0-9\+,\s]+)"
 
 """
 acronyms dictionary

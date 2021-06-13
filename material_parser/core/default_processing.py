@@ -9,8 +9,6 @@ class DefaultProcessing(PreprocessingABC):
     
     def __init__(self, regex_parser):
         super(DefaultProcessing, self).__init__(regex_parser)
-    # def __init__(self):
-    #     self._re = None
 
     def process_string(self, material_string, chemical_structure):
 

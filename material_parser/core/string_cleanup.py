@@ -8,6 +8,26 @@ import material_parser.core.regex_parser as rp
 
 from material_parser.core.utils import check_parentheses, parentheses_balanced
 
+
+RE_COMPARE_SIGNS = r"\({0,1}[0-9\.]*\s*[" + \
+                   "".join(C.COMPARE_SIGNS) + \
+                   r"]{0,1}\s*[x,y]{0,1}\s*[" + \
+                   "".join(C.COMPARE_SIGNS) + \
+                   r"=]\s*[0-9\.-]*\){0,1}"
+
+RE_OXY_DEF_REPLACE = r"O[0-9\.]*\s*[±\+\-∓]\s*([" + r"".join(C.GREEK_CHARS) + r"]{1})"
+
+RE_TAIL_TRASH = [r"\(⩾99", r"\(99", r"\(98", r"\(90", r"\(95", r"\(96", r"\(Alfa", r"\(Aldrich", r"\(A.R.",
+                 r"\(Aladdin", r"\(Sigma", r"\(A.G", r"\(Fuchen", r"\(Furuuchi", r"\(AR\)", "（x", r"\(x",
+                 r"\(Acr[a-z]*", r"\(Koj", r"\(Sho", r"\(＞99"]
+
+TRASH_SYMBOLS = ["#", "$", "!", "@", "©", "®", chr(8201), "Ⓡ", "\u200b"]
+
+TRASH_TERMS = ["powder", "ceramic", "rear", "earth", "micro", "nano", "coat", "crystal", "particl", "glass"]
+
+re_parentheses_open = ["{", "["]
+re_parentheses_close = ["}", "]"]
+
 __filename = os.path.dirname(os.path.realpath(__file__))
 typos = json.loads(open(os.path.join(__filename, "rsc/typos.json")).read())
 
@@ -64,7 +84,7 @@ def cleanup_name(material_name):
     re_str = "[\\" + re_str + "]"
     material_name = re.sub(re_str, chr(47), material_name)
 
-    for c in re.findall(rp.re_oxygen_deficiency_replace, material_name):
+    for c in re.findall(RE_OXY_DEF_REPLACE, material_name):
         material_name = material_name.replace(c, chr(948))
 
     # removing phase
@@ -76,7 +96,7 @@ def cleanup_name(material_name):
     material_name = re.sub("^[0-9]{3,}", "", material_name)
 
     # removing trash words
-    for word in rp.re_trash_terms:
+    for word in TRASH_TERMS:
         material_name = re.sub("[A-Za-z-]*" + word + "[a-z-]*", "", material_name)
         material_name = re.sub(word.capitalize() + "[a-z-]*", "", material_name)
 
@@ -89,12 +109,12 @@ def cleanup_name(material_name):
             material_name = material_name.replace(t, "")
         material_name = material_name.rstrip("\\")
 
-    material_name = re.sub(rp.re_compare_signs, "", material_name)
+    material_name = re.sub(RE_COMPARE_SIGNS, "", material_name)
 
     if material_name == "" or len([c for c in material_name if c.isalpha()]) < 1:
         return ""
 
-    for c in rp.re_tail_trash:
+    for c in RE_TAIL_TRASH:
         split = re.split(c, material_name)
         if len(split) > 1 and (len(split[-1]) == "" or all(not s.isalpha() for s in split[-1])):
             material_name = "".join([s for s in split[:-1]])
@@ -121,12 +141,12 @@ def cleanup_name(material_name):
     # if material_name != "":
     #     material_name = cs.check_parentheses(material_name)
 
-    for c in rp.re_trash_syms:
+    for c in TRASH_SYMBOLS:
         material_name = material_name.replace(c, "")
 
-    for c in rp.re_parentheses_open:
+    for c in re_parentheses_open:
         material_name = material_name.replace(c, "(")
-    for c in rp.re_parentheses_close:
+    for c in re_parentheses_close:
         material_name = material_name.replace(c, ")")
 
     material_name = material_name.lstrip(") -")

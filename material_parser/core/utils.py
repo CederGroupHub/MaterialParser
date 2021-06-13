@@ -6,6 +6,8 @@ import material_parser.core.constants as C
 import material_parser.core.regex_parser as rp
 import material_parser.core.chemical_sets as cs
 
+re_parentheses_open = ["{", "["]
+re_parentheses_close = ["}", "]"]
 
 def simplify(value):
     """
@@ -98,9 +100,9 @@ def check_parentheses(formula):
         return ""
 
     new_formula = formula
-    for p in rp.re_parentheses_open:
+    for p in re_parentheses_open:
         new_formula = new_formula.replace(p, "(")
-    for p in rp.re_parentheses_close:
+    for p in re_parentheses_close:
         new_formula = new_formula.replace(p, ")")
 
     if new_formula[0] == '(' and new_formula[-1] == ')' and parentheses_balanced(new_formula[1:-1]):

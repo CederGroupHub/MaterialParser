@@ -1,5 +1,6 @@
 # coding=utf-8
 import regex as re
+import material_parser.core.constants as cnst
 import material_parser.core.chemical_sets as cs
 from material_parser.core.preprocessing_tools.preprocessing_abc import PreprocessingABC
 from material_parser.core.formula_processing import process_formula
@@ -91,7 +92,7 @@ class ChemicalNameProcessing(PreprocessingABC):
         terms = []
         for part in split:
             composition_part = self.__try_formula(part)
-            if composition_part != {} or part.strip('+-1234567890') in cs.list_of_elements:
+            if composition_part != {} or part.strip(cnst.NUMBERS_STR) in cs.list_of_elements:
                 formulas.append(part)
             else:
                 terms.append(part)
@@ -111,7 +112,7 @@ class ChemicalNameProcessing(PreprocessingABC):
         """
         string can be a formula split into pieces due to tokenization errors
         """
-        if any(t.strip('+-1234567890') in cs.list_of_elements for t in terms):
+        if any(t.strip(cnst.NUMBERS_STR) in cs.list_of_elements for t in terms):
             return material_string, ""
 
         """

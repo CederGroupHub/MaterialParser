@@ -1,5 +1,5 @@
 import regex as re
-import material_parser.core.regex_parser as rp
+import material_parser.core.constants as cnst
 from material_parser.core.postprocessing_tools.postprocessing_abc import PostprocessingABC
 from material_parser.core.utils import simplify
 
@@ -52,10 +52,10 @@ class StoichiometricVariablesProcessing(PostprocessingABC):
         3. range ... < x < ...
         4. x from ... to ...
         """
-        regs = [(var + rp.re_stoichiometric_values, "discrete"),
-                (var + rp.re_stoichiometric_range_hyphen, "range"),
-                (rp.re_stoichiometric_range_lhs + var + rp.re_stoichiometric_range_rhs, "range"),
-                (var + rp.re_stoichiometric_range_ft, "range")]
+        regs = [(var + self._re.re_stoichiometric_values, "discrete"),
+                (var + self._re.re_stoichiometric_range_hyphen, "range"),
+                (self._re.re_stoichiometric_range_lhs + var + self._re.re_stoichiometric_range_rhs, "range"),
+                (var + self._re.re_stoichiometric_range_ft, "range")]
 
         for r, m in regs:
             if values["values"] == [] and values["max_value"] is None:
@@ -83,8 +83,8 @@ class StoichiometricVariablesProcessing(PostprocessingABC):
         min_value, max_value = string[0]
         max_value = max_value.rstrip("., ")
         min_value = min_value.rstrip("., ")
-        max_value = re.sub("[a-z]*", "", max_value)
-        min_value = re.sub("[a-z]*", "", min_value)
+        max_value = re.sub(cnst.ANY_LOWERCASE, "", max_value)
+        min_value = re.sub(cnst.ANY_LOWERCASE, "", min_value)
         try:
             max_value = round(float(simplify(max_value)), 4)
             min_value = round(float(simplify(min_value)), 4) if min_value else None
@@ -102,7 +102,7 @@ class StoichiometricVariablesProcessing(PostprocessingABC):
 
     @staticmethod
     def __get_discrete_values(string):
-        values = re.split(r"[,\s]", re.sub("[a-z]+", "", string[0]))
+        values = re.split(r"[,\s]", re.sub(cnst.ONE_LOWERCASE, "", string[0]))
         try:
             values = [round(float(simplify(c.rstrip("., "))), 4) for c in values if c.rstrip("., ") not in ["", "and"]]
             max_value = max(values) if values else None

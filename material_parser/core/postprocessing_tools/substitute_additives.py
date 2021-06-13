@@ -1,4 +1,3 @@
-import regex as re
 from collections import OrderedDict
 from material_parser.core.postprocessing_tools.postprocessing_abc import PostprocessingABC
 from material_parser.core.formula_processing import process_formula
@@ -59,9 +58,7 @@ class SubstituteAdditives(PostprocessingABC):
         chem_structure.additives = []
         return chem_structure
 
-
-    @staticmethod
-    def __substitute_element(additive, formula, composition):
+    def __substitute_element(self, additive, formula, composition):
 
         new_composition = []
         new_formula = formula
@@ -72,12 +69,10 @@ class SubstituteAdditives(PostprocessingABC):
         """
         find any stoichiometric coefficient next to the additive and split the list of additives
         """
-        r = r"^[x0-9\.]+|[x0-9\.]+$"
-        coeff = re.findall(r, additive)
-        element = [s for s in re.split(r, additive) if s != ""][0]
+        element, coeff = self._re.get_additives_coefficient(additive)
 
         """
-        if not meaningfull result, skip substitution
+        if not meaningful result, skip substitution
         """
         if coeff == [] or element not in cs.list_of_elements:
             return new_formula, composition
@@ -87,10 +82,7 @@ class SubstituteAdditives(PostprocessingABC):
         substitute element if it makes total stoichiometry to sum up to integer
         """
         for compound in composition:
-            expr = "".join(["(" + v + ")+" for e, v in compound.elements.items()]).rstrip("+")
-
-            coeff = coeff[0] if not re.match("^[0]+[1-9]", coeff[0]) else "0." + coeff[0][1:]
-            expr = expr + "+(" + coeff + ")"
+            expr, coeff = self._re.additive_symbolic_substitution(compound.elements, coeff)
 
             if is_int(simplify(expr)):
                 new_name = element + coeff + compound.formula
