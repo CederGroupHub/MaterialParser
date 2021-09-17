@@ -1,5 +1,7 @@
 # MaterialParser
 
+This is an old repo for the text2chem parser. The new one is available at https://github.com/CederGroupHub/text2chem.
+
 Material Parser is a package that provides various functionality to parse material entities and convert them into a
 chemical structure.
 
