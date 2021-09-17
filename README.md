@@ -61,6 +61,13 @@ ii) "(Na0.5K0.5)NbO3 + 1.5 mol% CuF2" becomes "(1-x)(Na0.5K0.5)NbO3-(x)CuF2".
 
 
 ### Installation:
+
+The installation can be performed directly via `pip`: 
+```
+pip install git+https://github.com/CederGroupHub/MaterialParser.git
+```
+
+or, in two steps: 
 ```
 git clone https://github.com/CederGroupHub/MaterialParser.git
 cd MaterialParser
