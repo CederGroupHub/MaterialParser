@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='Materials Parser',
     packages=find_packages(),
-    version='6.0.1',
+    version='7.0.0',
     author='Synthesis Project Team',
     author_email='0lgaGkononova@yandex.ru',
     description='Material Synthesis Project',

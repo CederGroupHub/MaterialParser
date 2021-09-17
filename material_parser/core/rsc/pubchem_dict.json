@@ -637,7 +637,7 @@
   "malayaite": "CaSnO(SiO4)",
   "iron pentacarbonyl": "Fe(CO)5",
   "dimethylformamide": "(CH3)2NC(O)H",
-  "ethanol": "C2H5OH",
+  "ethanol": "CH3CH2OH",
   "magnesium carbonate hydroxide": "Mg5(CO3)4(OH)2",
   "cobalt copper ferrite": "Co(1-x)CuxFe2O4",
   "strontium pyrovanadate": "Sr2V2O7",
@@ -697,5 +697,13 @@
   "manganese (II,III) oxide": "Mn3O4",
   "lithium fluorooxoborate": "LiB6O9F",
   "yttrium indium germanate": "YInGe2O7",
-  "lead barium zirconate": "(Pb1-xBax)ZrO3"
+  "lead barium zirconate": "(Pb1-xBax)ZrO3",
+  "etOH": "CH3CH2OH",
+  "ethyl acetoacetate": "CH3COCH2COOC2H5",
+  "sodium titanate": "Na2Ti3O7",
+  "hydrogen titanate": "H2Ti3O7",
+  "diammonium phosphate": "(NH4)2HPO4",
+  "lead acetate": "Pb(C2H3O2)2",
+  "thioacetamide": "C2H5NS",
+  "cobalt nitrate pentahydrate": "Co(NO3)2"
 }
